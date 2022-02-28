@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "326926280660",
+    "project_id": "bigfun-ac245",
+    "storage_bucket": "bigfun-ac245.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:326926280660:android:3c47038d763a438293d841",
+        "android_client_info": {
+          "package_name": "com.bigfun.sdk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "326926280660-2t36gs35a7i1pqpl213bfgqkc33a75hf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAK_uV3w8K3fNmDa3A5XIaAHYPC2gOsUq8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "326926280660-2t36gs35a7i1pqpl213bfgqkc33a75hf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
