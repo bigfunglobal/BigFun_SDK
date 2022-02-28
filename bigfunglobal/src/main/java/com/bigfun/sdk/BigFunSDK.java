@@ -6,6 +6,7 @@ import static com.bigfun.sdk.HttpUtils.ORDER_SDK;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -45,8 +46,11 @@ import com.bigfun.sdk.utils.SystemUtil;
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
 import com.facebook.ads.AdSize;
 import com.facebook.ads.AudienceNetworkAds;
+import com.facebook.ads.InterstitialAd;
+import com.facebook.ads.InterstitialAdListener;
 import com.facebook.login.LoginManager;
 import com.facebook.share.model.ShareLinkContent;
 
@@ -54,10 +58,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.identity.GetSignInIntentRequest;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.GoogleApiClient;
+
 import com.google.gson.Gson;
 import com.tendcloud.tenddata.TalkingDataSDK;
 
@@ -69,6 +70,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 
 @Keep
@@ -88,11 +90,11 @@ public class BigFunSDK {
     private static String ClientId="";
     private String bannerAdId = "",interstitialId="",rewardedVideoId="";
 //    private MyBillingImpl myBilling;
-    private GoogleSignInClient mGoogleSignInClient;
+    private GetSignInIntentRequest mGetSignInIntentRequest;
     private AdSize bfAdSize;
     private static boolean google=false,sms = false, sdk = false, shar = false, fblonig = false, adjust = false, tkdata = false,firebase=false,adnet=false;
     private static JSONObject fbgv = new JSONObject();
-
+    private static int insetAdTM,insetAdFB,incentiveVideoTM,incentiveVideoFB,streamerAdFB,streamerAdTM;
     //获取时间
     public static long xaPhax() {
         Date date = new Date(System.currentTimeMillis());
@@ -104,8 +106,7 @@ public class BigFunSDK {
      */
 
     static boolean isDebug = false;
-    private static String mSource = "googleplay";
-    private static final String VERSION = "1.0.0";
+
     private long mTime;
     private String data;
     private static final String EVENT_URL = "http://gmgateway.xiaoxiangwan.com:5702/TestAPI/TestAPIDataHandler.ashx?action=sdktestinfo";
@@ -133,25 +134,23 @@ public class BigFunSDK {
                 Log.e("SDK",throwable.getMessage());
             }
         });
-//        GoldSource.initialize(mContext, "2a935f695894e3d17e982c6bd0778b8f", "13a46de69", new GoldListener() {
-//            @Override
-//            public void onInitializationCompleted() {
-//                Log.e("BigFun", "init");
-//            }
-//        });
+
         loginModel = new LoginModel();
 //        myBilling = new MyBillingImpl();
         adNetwork = new AdNetwork();
         HttpUtils.getInstance().bigfunsdk(NetConstant.BINFUN_SDK, mChannelCode, new ResponseListener() {
             @Override
             public void onSuccess() {
-                sdk = true;
+
                 data = (String) SPUtils.getInstance().get(BigFunSDK.mContext, Constant.KEY_DATA, "");
                 SdkConfigurationInfoBean bean =
                         new Gson().fromJson(data, SdkConfigurationInfoBean.class);
                 if (!TextUtils.isEmpty(bean.getAdjustAppToken()) && !TextUtils.isEmpty(bean.getBuriedPointType()) && bean.getBuriedPointType().contains("3")) {
                     adjust = true;
                     adjust(bean.getAdjustAppToken());
+                }
+                if(!TextUtils.isEmpty(bean.getIronSourceAppKey())){
+//                    GoldSource(bean.getIronSourceAppKey());
                 }if (!TextUtils.isEmpty(bean.getAdjustAppToken()) && !TextUtils.isEmpty(bean.getBuriedPointType()) && bean.getBuriedPointType().contains("2")) {
                     firebase = true;
                 }
@@ -168,7 +167,6 @@ public class BigFunSDK {
                         rewardedVideoId = bean.getPlacementIdTest();
                     }
                 }
-
                 if (!TextUtils.isEmpty(bean.getTalkingDataAppId()) && !TextUtils.isEmpty(bean.getBuriedPointType()) && bean.getBuriedPointType().contains("2")) {
                     tkdata = true;
                     talkingDataSDK(bean.getTalkingDataAppId(), bean.getChannelName());
@@ -182,11 +180,31 @@ public class BigFunSDK {
                 }if (!TextUtils.isEmpty(bean.getLoginType()) && bean.getLoginType().contains("3")) {
                     google = true;
                     ClientId=bean.getGoogleClientId();
+                    Googleinit(ClientId);
                 }
                 if (!TextUtils.isEmpty(bean.getShareType())) {
                     shar = true;
                     facebookSdk();
                 }
+                if(!TextUtils.isEmpty(bean.getInsetAdTM())){
+                    insetAdTM= Integer.parseInt(bean.getInsetAdTM());
+                }
+                if(!TextUtils.isEmpty(bean.getInsetAdFB())){
+                    insetAdFB= Integer.parseInt(bean.getInsetAdFB());
+                }
+                if(!TextUtils.isEmpty(bean.getIncentiveVideoTM())){
+                    incentiveVideoTM= Integer.parseInt(bean.getIncentiveVideoTM());
+                }
+                if(!TextUtils.isEmpty(bean.getIncentiveVideoFB())){
+                    incentiveVideoFB= Integer.parseInt(bean.getIncentiveVideoFB());
+                }
+                if(!TextUtils.isEmpty(bean.getStreamerAdFB())){
+                    streamerAdFB= Integer.parseInt(bean.getStreamerAdFB());
+                }
+                if(!TextUtils.isEmpty(bean.getStreamerAdTM())){
+                    streamerAdTM= Integer.parseInt(bean.getStreamerAdTM());
+                }
+                sdk = true;
                 Log.e("BigFun", "tm init succeeded");
             }
 
@@ -243,6 +261,15 @@ public class BigFunSDK {
 //        LogUtils.log("sdk init success");
     }
 
+//    private static void GoldSource(String AppKey){
+//        GoldSource.initialize(mContext, "2a935f695894e3d17e982c6bd0778b8f", AppKey, new GoldListener() {
+//            @Override
+//            public void onInitializationCompleted() {
+//                sdk = true;
+//                Log.e("BigFun", "tm init succeeded");
+//            }
+//        });
+//    }
     private static void facebookSdk() {
 //        if (fblonig || shar)
 //            return;
@@ -301,7 +328,6 @@ public class BigFunSDK {
             }
         });
         Adjust.onCreate(acaaigxc);
-
     }
 
     /**
@@ -371,17 +397,25 @@ public class BigFunSDK {
     }
 
     private static FragmentActivity activity;
+
+    private void Googleinit(String clientId){
+        mGetSignInIntentRequest =
+                GetSignInIntentRequest.builder()
+                        .setServerClientId(clientId)
+                        .build();
+    }
+
     /**
      *
      * @param activity Activity上下文
      */
     @Keep
-    public void BigFunGoogleLogin(FragmentActivity activity,String ClientId){
+    public void BigFunGoogleLogin(FragmentActivity activity){
         this.activity=activity;
         if (checkSdkNotInit()) {
             return;
         }
-        if(TextUtils.isEmpty(ClientId)){
+        if(!google||mGetSignInIntentRequest==null){
             Log.e("BigFunSDK", "Background not set");
             return ;
         }
@@ -389,12 +423,9 @@ public class BigFunSDK {
         Map<String,Object> map=new HashMap<>();
         map.put("BFLogin_Google","Google");
         onEvent(mContext,"BFLogin_Google",map);
-        GetSignInIntentRequest request =
-                GetSignInIntentRequest.builder()
-                        .setServerClientId(ClientId)
-                        .build();
+
         Identity.getSignInClient(activity)
-                .getSignInIntent(request)
+                .getSignInIntent(mGetSignInIntentRequest)
                 .addOnSuccessListener(
                         result -> {
                             try {
@@ -414,12 +445,14 @@ public class BigFunSDK {
                         e -> {
                             Log.e("BigFunSDK", "Google Sign-in failed", e);
                         });
+
     }
 
     @Keep
-    public SignInClient BigFunIdentity(Context context){
-        return  Identity.getSignInClient(context);
+    public SignInClient BigFunIdentity(){
+        return  Identity.getSignInClient(activity);
     }
+
 
 
     /**
@@ -447,7 +480,8 @@ public class BigFunSDK {
     /**
      * 退出Facebook登录
      */
-    public void Logout() {
+    public void BigFunLogout() {
+
         Map<String,Object> map=new HashMap<>();
         map.put("BFLogout_FB","BFLogout_FB");
         onEvent(mContext,"BFLogout_FB",map);
@@ -557,6 +591,63 @@ public class BigFunSDK {
     }
 
     /**
+     * 奖励式视频广告
+     */
+//    @Keep
+//    public void showRewardedVideo(){
+//        Map<String,Object> map=new HashMap<>();
+//        map.put("RewardsVedio","TM");
+//        onEvent(mContext,"BFAd_TM_RewardsVedio",map);
+//        GoldSource.showRewardedVideo();
+//    }
+
+    /**
+     * 插屏广告
+     */
+//    @Keep
+//    public void showInterstitial(Context context){
+////        Map<String,Object> map=new HashMap<>();
+////        map.put("Interstitial","TM");
+////        onEvent(mContext,"BFAd_TM_Interstitial",map);
+////        GoldSource.showInterstitial();
+////        InterstitialAd interstitialAd=new InterstitialAd(context,"PLAYABLE#1279284552593528_1281077885747528");
+////        InterstitialAdListener interstitialAdListener=new InterstitialAdListener() {
+////            @Override
+////            public void onInterstitialDismissed(Ad ad) {
+////
+////            }
+////
+////            @Override
+////            public void onInterstitialDisplayed(Ad ad) {
+////
+////            }
+////
+////            @Override
+////            public void onError(Ad ad, AdError adError) {
+////                Log.e("adError",adError.getErrorMessage());
+////            }
+////
+////            @Override
+////            public void onAdLoaded(Ad ad) {
+////                interstitialAd.show();
+////            }
+////
+////            @Override
+////            public void onAdClicked(Ad ad) {
+////
+////            }
+////
+////            @Override
+////            public void onLoggingImpression(Ad ad) {
+////
+////            }
+////        };
+////        InterstitialAd.InterstitialLoadAdConfig lo=interstitialAd.buildLoadAdConfig().withAdListener(interstitialAdListener).build();
+////        interstitialAd.loadAd(lo);
+//    }
+
+
+    /**
      * 横幅广告
      *
      * @param context     上下文 “必填”
@@ -583,7 +674,7 @@ public class BigFunSDK {
             Log.e("BigFunSDK","AdsID not null");
             return;
         }
-        adBFPlatForm=Distribution_es.RandomMooncake();
+        adBFPlatForm=Distribution_es.RandomMooncake(insetAdFB,insetAdTM);
         if(AdBFPlatForm.Facebook.equals(adBFPlatForm)) {
             Map<String, Object> map = new HashMap<>();
             map.put("placementId", bannerAdId);
@@ -616,7 +707,7 @@ public class BigFunSDK {
             Log.e("BigFunSDK", "后台未配置 横幅广告 id");
             return;
         }
-        adBFPlatForm=Distribution_es.RandomMooncake();
+        adBFPlatForm=Distribution_es.RandomMooncake(insetAdFB,insetAdTM);
         if(AdBFPlatForm.Facebook.equals(adBFPlatForm)) {
             Map<String, Object> map = new HashMap<>();
             map.put("placementId", bannerAdId);
@@ -650,14 +741,15 @@ public class BigFunSDK {
             Log.e("BigFunSDK","AdsID not null");
             return;
         }
-        adBFPlatForm=Distribution_es.RandomMooncake();
+        adBFPlatForm=Distribution_es.RandomMooncake(incentiveVideoFB,incentiveVideoTM);
         if(AdBFPlatForm.Facebook.equals(adBFPlatForm)) {
             Map<String, Object> map = new HashMap<>();
             map.put("placementId", rewardedVideoId);
             map.put("adBFPlatForm", adBFPlatForm);
             onEvent(mContext, "BFAd_FB_RewardsVedio", map);
             adNetwork.rewardedVideoLoadAd(context, rewardedVideoId, listener);
-        }else if(AdBFPlatForm.TigerMedia.equals(adBFPlatForm)){
+        }
+        else if(AdBFPlatForm.TigerMedia.equals(adBFPlatForm)){
             Map<String, Object> map = new HashMap<>();
             map.put("placementId", rewardedVideoId);
             map.put("adBFPlatForm", adBFPlatForm);
@@ -665,6 +757,7 @@ public class BigFunSDK {
 //            GoldSource.showRewardedVideo();
         }
     }
+
     /**
      * 奖励式视频广告
      *
@@ -685,7 +778,7 @@ public class BigFunSDK {
             Log.e("BigFunSDK", "后台未配置 奖励式视频广告 id");
             return;
         }
-        adBFPlatForm=Distribution_es.RandomMooncake();
+        adBFPlatForm=Distribution_es.RandomMooncake(incentiveVideoFB,incentiveVideoTM);
         if(AdBFPlatForm.Facebook.equals(adBFPlatForm)) {
             Map<String, Object> map = new HashMap<>();
             map.put("placementId", rewardedVideoId);
@@ -700,6 +793,9 @@ public class BigFunSDK {
 //            GoldSource.showRewardedVideo();
         }
     }
+
+
+
 
     /**
      * 插屏广告
@@ -724,7 +820,7 @@ public class BigFunSDK {
             Log.e("BigFunSDK","AdsID not null");
             return;
         }
-        adBFPlatForm=Distribution_es.RandomMooncake();
+        adBFPlatForm=Distribution_es.RandomMooncake(streamerAdFB,streamerAdTM);
         if(AdBFPlatForm.Facebook.equals(adBFPlatForm)) {
             Map<String, Object> map = new HashMap<>();
             map.put("placementId", interstitialId);
@@ -739,6 +835,7 @@ public class BigFunSDK {
 //            GoldSource.showInterstitial();
         }
     }
+
     /**
      * 插屏广告
      *
@@ -759,7 +856,7 @@ public class BigFunSDK {
             Log.e("BigFunSDK", "后台未配置 插屏广告 id");
             return;
         }
-        adBFPlatForm=Distribution_es.RandomMooncake();
+        adBFPlatForm=Distribution_es.RandomMooncake(streamerAdFB,streamerAdTM);
         if(AdBFPlatForm.Facebook.equals(adBFPlatForm)) {
             Map<String, Object> map = new HashMap<>();
             map.put("placementId", interstitialId);
