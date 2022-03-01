@@ -2,12 +2,19 @@ package com.bigfun.sdk.NetWork;
 
 import static android.content.ContentValues.TAG;
 
+import static com.bigfun.sdk.BigFunSDK.getInstance;
+import static com.bigfun.sdk.BigFunSDK.mContext;
+
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bigfun.sdk.BigFunSDK;
+import com.bigfun.sdk.login.LoginModel;
+import com.bigfun.sdk.model.BigFunViewModel;
+import com.bigfun.sdk.type.AdBFSize;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
@@ -17,6 +24,10 @@ import com.facebook.ads.InterstitialAd;
 import com.facebook.ads.InterstitialAdListener;
 import com.facebook.ads.RewardedVideoAd;
 import com.facebook.ads.RewardedVideoAdListener;
+import com.ironsource.mediationsdk.ISBannerSize;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class AdNetwork {
@@ -26,10 +37,32 @@ public class AdNetwork {
     public AdNetwork(){
 
     }
+    private static AdNetwork instance;
 
-    public void adViewLoadAd(Context context, String placementId, LinearLayout adContainer, AdSize adSize, AdViewListener listener){
+    public static AdNetwork getInstance() {
+        if (instance == null) {
+            synchronized (AdNetwork.class) {
+                if (instance == null) {
+                    instance = new AdNetwork();
+                }
+            }
+        }
+        return instance;
+    }
+    private AdSize adSize=AdSize.BANNER_HEIGHT_50;
+    public void adViewLoadAd(Context context, String placementId, LinearLayout adContainer, AdBFSize size, AdViewListener listener){
+        Map<String, Object> map = new HashMap<>();
+        map.put("placementId", BigFunViewModel.bannerAdId);
+        map.put("adBFPlatForm", "Facebook");
+        map.put("adSize", adSize);
+        BigFunSDK.getInstance().onEvent(mContext, "BFAd_FB_Banner", map);
+        if(size.equals(AdBFSize.BANNER_HEIGHT_50))
+            adSize= AdSize.BANNER_HEIGHT_50;
+        if(size.equals(AdBFSize.BANNER_HEIGHT_90))
+            adSize=AdSize.BANNER_HEIGHT_90;
+        if(size.equals(AdBFSize.RECTANGLE_HEIGHT_250))
+            adSize=AdSize.RECTANGLE_HEIGHT_250;
         adView = new AdView(context, placementId, adSize);
-
         // Add the ad view to your activity layout
         adContainer.addView(adView);
 
@@ -65,6 +98,10 @@ public class AdNetwork {
     }
 
     public void rewardedVideoLoadAd(Context context,String placementId,RewardVideoListener listener){
+        Map<String, Object> map = new HashMap<>();
+        map.put("placementId", BigFunViewModel.rewardedVideoId);
+        map.put("adBFPlatForm", "Facebook");
+        BigFunSDK.getInstance().onEvent(mContext, "BFAd_FB_RewardedVideo", map);
         rewardedVideoAd=new RewardedVideoAd(context, placementId);
         RewardedVideoAdListener rewardedVideoAdListener=new RewardedVideoAdListener() {
             /**
@@ -128,6 +165,10 @@ public class AdNetwork {
 
 
     public void interstitialAdLoadAd(Context context,String placementId,InterstListener listener){
+        Map<String, Object> map = new HashMap<>();
+        map.put("placementId", BigFunViewModel.interstitialId);
+        map.put("adBFPlatForm", "Facebook");
+        BigFunSDK.getInstance().onEvent(mContext, "BFAd_FB_Interstitial", map);
                 interstitialAd = new InterstitialAd(context, placementId);
         // Create listeners for the Interstitial Ad
         InterstitialAdListener interstitialAdListener = new InterstitialAdListener() {
@@ -208,6 +249,7 @@ public class AdNetwork {
 //            }
 //        }, 1000 * 6); // Show the ad after 15 minutes
 //    }
+
 
     public void dstroy(){
         if (adView != null) {

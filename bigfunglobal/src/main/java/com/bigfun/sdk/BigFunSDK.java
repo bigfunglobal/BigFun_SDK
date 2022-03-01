@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -31,11 +32,14 @@ import com.adjust.sdk.AdjustConfig;
 import com.adjust.sdk.OnAttributionChangedListener;
 import com.bigfun.sdk.NetWork.AdNetwork;
 import com.bigfun.sdk.NetWork.AdViewListener;
+import com.bigfun.sdk.NetWork.ISRewardedVideoListener;
 import com.bigfun.sdk.NetWork.InterstListener;
 import com.bigfun.sdk.NetWork.RewardVideoListener;
+import com.bigfun.sdk.NetWork.SourceNetWork;
 import com.bigfun.sdk.login.LoginListener;
 import com.bigfun.sdk.login.ShareListener;
 import com.bigfun.sdk.login.LoginModel;
+import com.bigfun.sdk.model.BigFunViewModel;
 import com.bigfun.sdk.model.SdkConfigurationInfoBean;
 import com.bigfun.sdk.type.AdBFPlatForm;
 import com.bigfun.sdk.type.AdBFSize;
@@ -60,6 +64,9 @@ import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
 
 import com.google.gson.Gson;
+import com.ironsource.mediationsdk.ISBannerSize;
+import com.ironsource.mediationsdk.IronSource;
+import com.ironsource.mediationsdk.integration.IntegrationHelper;
 import com.tendcloud.tenddata.TalkingDataSDK;
 
 
@@ -80,21 +87,16 @@ public class BigFunSDK {
     public static Context mContext;
     public static String mChannel,mChannelCode;
     private static BigFunSDK instance;
-    private IAttributionListener mListener;
-    private LoginModel loginModel;
-    private AdNetwork adNetwork;
+    public static final String TAG = "BIgFunSDk";
     private static Application mApplication;
     public static boolean isIn=false;
     private static long rgqwtime = 0;
     public final static int SIGN_LOGIN=1001;
-    private static String ClientId="";
-    private String bannerAdId = "",interstitialId="",rewardedVideoId="";
+
 //    private MyBillingImpl myBilling;
     private GetSignInIntentRequest mGetSignInIntentRequest;
-    private AdSize bfAdSize;
-    private static boolean google=false,sms = false, sdk = false, shar = false, fblonig = false, adjust = false, tkdata = false,firebase=false,adnet=false;
     private static JSONObject fbgv = new JSONObject();
-    private static int insetAdTM,insetAdFB,incentiveVideoTM,incentiveVideoFB,streamerAdFB,streamerAdTM;
+
     //获取时间
     public static long xaPhax() {
         Date date = new Date(System.currentTimeMillis());
@@ -108,6 +110,7 @@ public class BigFunSDK {
     static boolean isDebug = false;
 
     private long mTime;
+    private static Activity mActivity;
     private String data;
     private static final String EVENT_URL = "http://gmgateway.xiaoxiangwan.com:5702/TestAPI/TestAPIDataHandler.ashx?action=sdktestinfo";
 
@@ -135,9 +138,7 @@ public class BigFunSDK {
             }
         });
 
-        loginModel = new LoginModel();
 //        myBilling = new MyBillingImpl();
-        adNetwork = new AdNetwork();
         HttpUtils.getInstance().bigfunsdk(NetConstant.BINFUN_SDK, mChannelCode, new ResponseListener() {
             @Override
             public void onSuccess() {
@@ -145,131 +146,39 @@ public class BigFunSDK {
                 data = (String) SPUtils.getInstance().get(BigFunSDK.mContext, Constant.KEY_DATA, "");
                 SdkConfigurationInfoBean bean =
                         new Gson().fromJson(data, SdkConfigurationInfoBean.class);
-                if (!TextUtils.isEmpty(bean.getAdjustAppToken()) && !TextUtils.isEmpty(bean.getBuriedPointType()) && bean.getBuriedPointType().contains("3")) {
-                    adjust = true;
+                BigFunViewModel.getInstance().BigFunViewModelGosn(bean);
+                if (BigFunViewModel.adnet) {
+                    audienceNetwork();
+                }
+                if(BigFunViewModel.adjust){
                     adjust(bean.getAdjustAppToken());
                 }
-                if(!TextUtils.isEmpty(bean.getIronSourceAppKey())){
-//                    GoldSource(bean.getIronSourceAppKey());
-                }if (!TextUtils.isEmpty(bean.getAdjustAppToken()) && !TextUtils.isEmpty(bean.getBuriedPointType()) && bean.getBuriedPointType().contains("2")) {
-                    firebase = true;
-                }
-                if (!TextUtils.isEmpty(bean.getAdsType())) {
-                    adnet=true;
-                    audienceNetwork();
-                    if (!TextUtils.isEmpty(bean.getBannerAdId())) {
-                        bannerAdId = bean.getPlacementIdProduction();
-                    }
-                    if (!TextUtils.isEmpty(bean.getInterstitialId())) {
-                        interstitialId = bean.getPlacementIdTest();
-                    }
-                    if (!TextUtils.isEmpty(bean.getRewardedVideoId())) {
-                        rewardedVideoId = bean.getPlacementIdTest();
-                    }
-                }
-                if (!TextUtils.isEmpty(bean.getTalkingDataAppId()) && !TextUtils.isEmpty(bean.getBuriedPointType()) && bean.getBuriedPointType().contains("2")) {
-                    tkdata = true;
+                if(BigFunViewModel.tkdata){
                     talkingDataSDK(bean.getTalkingDataAppId(), bean.getChannelName());
                 }
-                if (!TextUtils.isEmpty(bean.getLoginType()) && bean.getLoginType().contains("1")) {
-                    fblonig = true;
+                if(BigFunViewModel.fblonig||BigFunViewModel.shar){
                     facebookSdk();
                 }
-                if (!TextUtils.isEmpty(bean.getLoginType()) && bean.getLoginType().contains("2")) {
-                    sms = true;
-                }if (!TextUtils.isEmpty(bean.getLoginType()) && bean.getLoginType().contains("3")) {
-                    google = true;
-                    ClientId=bean.getGoogleClientId();
-                    Googleinit(ClientId);
+                if(BigFunViewModel.google){
+                    Googleinit(bean.getGoogleClientId());
                 }
-                if (!TextUtils.isEmpty(bean.getShareType())) {
-                    shar = true;
-                    facebookSdk();
-                }
-                if(!TextUtils.isEmpty(bean.getInsetAdTM())){
-                    insetAdTM= Integer.parseInt(bean.getInsetAdTM());
-                }
-                if(!TextUtils.isEmpty(bean.getInsetAdFB())){
-                    insetAdFB= Integer.parseInt(bean.getInsetAdFB());
-                }
-                if(!TextUtils.isEmpty(bean.getIncentiveVideoTM())){
-                    incentiveVideoTM= Integer.parseInt(bean.getIncentiveVideoTM());
-                }
-                if(!TextUtils.isEmpty(bean.getIncentiveVideoFB())){
-                    incentiveVideoFB= Integer.parseInt(bean.getIncentiveVideoFB());
-                }
-                if(!TextUtils.isEmpty(bean.getStreamerAdFB())){
-                    streamerAdFB= Integer.parseInt(bean.getStreamerAdFB());
-                }
-                if(!TextUtils.isEmpty(bean.getStreamerAdTM())){
-                    streamerAdTM= Integer.parseInt(bean.getStreamerAdTM());
-                }
-                sdk = true;
-                Log.e("BigFun", "tm init succeeded");
             }
 
             @Override
             public void onFail(String msg) {
                 Log.e("BigFunSDK", msg);
             }
+
         });
 //        myBilling.initialize(mContext);
-        mApplication.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
-            @Override
-            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
 
-            }
-
-            @Override
-            public void onActivityStarted(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivityResumed(final Activity activity) {
-
-                if(!isIn)
-                HttpUtils.getInstance().upload(activity);
-                if(adjust)
-                Adjust.onResume();
-            }
-
-            @Override
-            public void onActivityPaused(Activity activity) {
-
-                if(adjust)
-                Adjust.onPause();
-            }
-
-            @Override
-            public void onActivityStopped(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-            }
-
-            @Override
-            public void onActivityDestroyed(Activity activity) {
-
-            }
-        });
 //        initLogin();
         //是否已经归因
 //        LogUtils.log("sdk init success");
+        Log.e("BigFun", "tm init succeeded");
     }
 
-//    private static void GoldSource(String AppKey){
-//        GoldSource.initialize(mContext, "2a935f695894e3d17e982c6bd0778b8f", AppKey, new GoldListener() {
-//            @Override
-//            public void onInitializationCompleted() {
-//                sdk = true;
-//                Log.e("BigFun", "tm init succeeded");
-//            }
-//        });
-//    }
+
     private static void facebookSdk() {
 //        if (fblonig || shar)
 //            return;
@@ -328,6 +237,49 @@ public class BigFunSDK {
             }
         });
         Adjust.onCreate(acaaigxc);
+        mApplication.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityResumed(final Activity activity) {
+                mActivity=activity;
+                if(!isIn)
+                    HttpUtils.getInstance().upload(activity);
+
+                if(BigFunViewModel.adjust)
+                    Adjust.onResume();
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+
+                if(BigFunViewModel.adjust)
+                    Adjust.onPause();
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+
+            }
+        });
     }
 
     /**
@@ -341,11 +293,11 @@ public class BigFunSDK {
             return;
         }
 
-        if (tkdata)
+        if (BigFunViewModel.tkdata)
             TalkingDataEvent.WKeeNM(context, eventId, map);
-        if (adjust)
+        if (BigFunViewModel.adjust)
             AdjustonEvent.TrackEvent(eventId, map);
-        if(firebase)
+        if(BigFunViewModel.firebase)
             FirebaseEvent.TrackEvent(context,eventId, map);
     }
 
@@ -415,7 +367,7 @@ public class BigFunSDK {
         if (checkSdkNotInit()) {
             return;
         }
-        if(!google||mGetSignInIntentRequest==null){
+        if(!BigFunViewModel.google||mGetSignInIntentRequest==null){
             Log.e("BigFunSDK", "Background not set");
             return ;
         }
@@ -467,14 +419,14 @@ public class BigFunSDK {
         if (checkSdkNotInit()) {
             return;
         }
-        if (!fblonig) {
+        if (!BigFunViewModel.fblonig) {
             Log.e("BigFunSDK","后台未配置 Facebook登录");
             return;
         }
         Map<String,Object> map=new HashMap<>();
         map.put("BFLogin_FB",permissionList.toString());
         onEvent(mContext,"BFLogin_FB",map);
-        loginModel.facebookLogin(context, permissionList, listener);
+        LoginModel.getInstance().facebookLogin(context, permissionList, listener);
     }
 
     /**
@@ -512,14 +464,14 @@ public class BigFunSDK {
         if (checkSdkNotInit()) {
             return;
         }
-        if (!shar) {
+        if (!BigFunViewModel.shar) {
             Log.e("BigFunSDK","后台未配置 Facebook分享");
             return;
         }
         Map<String,Object> map=new HashMap<>();
         map.put("linkContent",linkContent.getQuote());
         onEvent(mContext,"BFShare_FB",map);
-        loginModel.facebookShare(context, linkContent, listener);
+        LoginModel.getInstance().facebookShare(context, linkContent, listener);
     }
 
     /**
@@ -658,30 +610,30 @@ public class BigFunSDK {
      */
 
     @Keep
-    public void AdViewLoadAd(Context context, AdBFPlatForm adBFPlatForm,String AdsID, LinearLayout adContainer, AdSize adSize, AdViewListener listener) {
+    public void AdViewLoadAd(Context context, AdBFPlatForm adBFPlatForm,String AdsID, LinearLayout adContainer, AdBFSize adSize, AdViewListener listener) {
         if (checkSdkNotInit()) {
             return;
         }
-        if(!adnet){
+        if(!BigFunViewModel.adnet){
             Log.e("BigFunSDK","后台未配置 Facebook 广告");
             return;
         }
 //        if(adBFPlatForm.equals(AdBFPlatForm.Facebook))
 
         if(!TextUtils.isEmpty(AdsID))
-            bannerAdId=AdsID;
+            BigFunViewModel.bannerAdId=AdsID;
         else {
             Log.e("BigFunSDK","AdsID not null");
             return;
         }
-        adBFPlatForm=Distribution_es.RandomMooncake(insetAdFB,insetAdTM);
+        adBFPlatForm=Distribution_es.RandomMooncake(BigFunViewModel.insetAdFB,BigFunViewModel.insetAdTM);
         if(AdBFPlatForm.Facebook.equals(adBFPlatForm)) {
             Map<String, Object> map = new HashMap<>();
-            map.put("placementId", bannerAdId);
+            map.put("placementId", BigFunViewModel.bannerAdId);
             map.put("adBFPlatForm", adBFPlatForm);
             map.put("adSize", adSize);
             onEvent(mContext, "BFAd_FB_Banner", map);
-            adNetwork.adViewLoadAd(context, bannerAdId, adContainer, adSize, listener);
+            AdNetwork.getInstance().adViewLoadAd(context, BigFunViewModel.bannerAdId, adContainer, adSize, listener);
         }
     }
     /**
@@ -693,28 +645,24 @@ public class BigFunSDK {
      * @param adBFPlatForm    广告类型
      */
     @Keep
-    public void AdViewLoadAd(Context context, AdBFPlatForm adBFPlatForm, LinearLayout adContainer, AdSize adSize, AdViewListener listener) {
+    public void AdViewLoadAd(Context context, AdBFPlatForm adBFPlatForm, LinearLayout adContainer, AdBFSize adSize, AdViewListener listener) {
         if (checkSdkNotInit()) {
             return;
         }
-        if(!adnet){
+        if(!BigFunViewModel.adnet){
             Log.e("BigFunSDK","后台未配置 Facebook 广告");
             return;
         }
 //        if(adBFPlatForm.equals(AdBFPlatForm.Facebook))
 
-        if(!TextUtils.isEmpty(bannerAdId)) {
+        if(!TextUtils.isEmpty(BigFunViewModel.bannerAdId)) {
             Log.e("BigFunSDK", "后台未配置 横幅广告 id");
             return;
         }
-        adBFPlatForm=Distribution_es.RandomMooncake(insetAdFB,insetAdTM);
+        adBFPlatForm=Distribution_es.RandomMooncake(BigFunViewModel.insetAdFB,BigFunViewModel.insetAdTM);
         if(AdBFPlatForm.Facebook.equals(adBFPlatForm)) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("placementId", bannerAdId);
-            map.put("adBFPlatForm", adBFPlatForm);
-            map.put("adSize", adSize);
-            onEvent(mContext, "BFAd_FB_Banner", map);
-            adNetwork.adViewLoadAd(context, bannerAdId, adContainer, adSize, listener);
+
+            AdNetwork.getInstance().adViewLoadAd(context, BigFunViewModel.bannerAdId, adContainer, adSize, listener);
         }
     }
 
@@ -731,27 +679,23 @@ public class BigFunSDK {
         if (checkSdkNotInit()) {
             return;
         }
-        if(!adnet){
+        if(!BigFunViewModel.adnet){
             Log.e("BigFunSDK","后台未配置 Facebook 广告");
             return;
         }
         if(!TextUtils.isEmpty(AdsID))
-            rewardedVideoId=AdsID;
+            BigFunViewModel.rewardedVideoId=AdsID;
         else {
             Log.e("BigFunSDK","AdsID not null");
             return;
         }
-        adBFPlatForm=Distribution_es.RandomMooncake(incentiveVideoFB,incentiveVideoTM);
+        adBFPlatForm=Distribution_es.RandomMooncake(BigFunViewModel.incentiveVideoFB,BigFunViewModel.incentiveVideoTM);
         if(AdBFPlatForm.Facebook.equals(adBFPlatForm)) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("placementId", rewardedVideoId);
-            map.put("adBFPlatForm", adBFPlatForm);
-            onEvent(mContext, "BFAd_FB_RewardsVedio", map);
-            adNetwork.rewardedVideoLoadAd(context, rewardedVideoId, listener);
+            AdNetwork.getInstance().rewardedVideoLoadAd(context, BigFunViewModel.rewardedVideoId, listener);
         }
         else if(AdBFPlatForm.TigerMedia.equals(adBFPlatForm)){
             Map<String, Object> map = new HashMap<>();
-            map.put("placementId", rewardedVideoId);
+            map.put("placementId", BigFunViewModel.rewardedVideoId);
             map.put("adBFPlatForm", adBFPlatForm);
             onEvent(mContext, "BFAd_TM_RewardsVedio", map);
 //            GoldSource.showRewardedVideo();
@@ -770,24 +714,20 @@ public class BigFunSDK {
         if (checkSdkNotInit()) {
             return;
         }
-        if(!adnet){
+        if(!BigFunViewModel.adnet){
             Log.e("BigFunSDK","后台未配置 Facebook 广告");
             return;
         }
-        if(!TextUtils.isEmpty(rewardedVideoId)) {
+        if(!TextUtils.isEmpty(BigFunViewModel.rewardedVideoId)) {
             Log.e("BigFunSDK", "后台未配置 奖励式视频广告 id");
             return;
         }
-        adBFPlatForm=Distribution_es.RandomMooncake(incentiveVideoFB,incentiveVideoTM);
+        adBFPlatForm=Distribution_es.RandomMooncake(BigFunViewModel.incentiveVideoFB,BigFunViewModel.incentiveVideoTM);
         if(AdBFPlatForm.Facebook.equals(adBFPlatForm)) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("placementId", rewardedVideoId);
-            map.put("adBFPlatForm", "adBFPlatForm");
-            onEvent(mContext, "BFAd_FB_RewardsVedio", map);
-            adNetwork.rewardedVideoLoadAd(context, rewardedVideoId, listener);
+            AdNetwork.getInstance().rewardedVideoLoadAd(context, BigFunViewModel.rewardedVideoId, listener);
         }else if(AdBFPlatForm.TigerMedia.equals(adBFPlatForm)){
             Map<String, Object> map = new HashMap<>();
-            map.put("placementId", rewardedVideoId);
+            map.put("placementId", BigFunViewModel.rewardedVideoId);
             map.put("adBFPlatForm", adBFPlatForm);
             onEvent(mContext, "BFAd_TM_RewardsVedio", map);
 //            GoldSource.showRewardedVideo();
@@ -810,26 +750,22 @@ public class BigFunSDK {
         if (checkSdkNotInit()) {
             return;
         }
-        if(!adnet){
+        if(!BigFunViewModel.adnet){
             Log.e("BigFunSDK","后台未配置 Facebook 广告");
             return;
         }
         if(!TextUtils.isEmpty(AdsID))
-            interstitialId=AdsID;
+            BigFunViewModel.interstitialId=AdsID;
         else {
             Log.e("BigFunSDK","AdsID not null");
             return;
         }
-        adBFPlatForm=Distribution_es.RandomMooncake(streamerAdFB,streamerAdTM);
+        adBFPlatForm=Distribution_es.RandomMooncake(BigFunViewModel.streamerAdFB,BigFunViewModel.streamerAdTM);
         if(AdBFPlatForm.Facebook.equals(adBFPlatForm)) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("placementId", interstitialId);
-            map.put("adBFPlatForm", adBFPlatForm);
-            onEvent(mContext, "BFAd_FB_Interstitial", map);
-            adNetwork.interstitialAdLoadAd(context, interstitialId, listener);
+            AdNetwork.getInstance().interstitialAdLoadAd(context, BigFunViewModel.interstitialId, listener);
         }else if(AdBFPlatForm.TigerMedia.equals(adBFPlatForm)){
             Map<String, Object> map = new HashMap<>();
-            map.put("placementId", interstitialId);
+            map.put("placementId", BigFunViewModel.interstitialId);
             map.put("adBFPlatForm", adBFPlatForm);
             onEvent(mContext, "BFAd_TM_Interstitial", map);
 //            GoldSource.showInterstitial();
@@ -848,30 +784,43 @@ public class BigFunSDK {
         if (checkSdkNotInit()) {
             return;
         }
-        if(!adnet){
+        if(!BigFunViewModel.adnet){
             Log.e("BigFunSDK","后台未配置 Facebook 广告");
             return;
         }
-        if(!TextUtils.isEmpty(interstitialId)) {
+        if(!TextUtils.isEmpty(BigFunViewModel.interstitialId)) {
             Log.e("BigFunSDK", "后台未配置 插屏广告 id");
             return;
         }
-        adBFPlatForm=Distribution_es.RandomMooncake(streamerAdFB,streamerAdTM);
+        adBFPlatForm=Distribution_es.RandomMooncake(BigFunViewModel.streamerAdFB,BigFunViewModel.streamerAdTM);
         if(AdBFPlatForm.Facebook.equals(adBFPlatForm)) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("placementId", interstitialId);
-            map.put("adBFPlatForm", adBFPlatForm);
-            onEvent(mContext, "BFAd_FB_Interstitial", map);
-            adNetwork.interstitialAdLoadAd(context, interstitialId, listener);
+            AdNetwork.getInstance().interstitialAdLoadAd(context, BigFunViewModel.interstitialId, listener);
         }else if(AdBFPlatForm.TigerMedia.equals(adBFPlatForm)){
             Map<String, Object> map = new HashMap<>();
-            map.put("placementId", interstitialId);
+            map.put("placementId", BigFunViewModel.interstitialId);
             map.put("adBFPlatForm", adBFPlatForm);
             onEvent(mContext, "BFAd_TM_Interstitial", map);
-//            GoldSource.showInterstitial();
         }
     }
 
+    /**
+     * IS的插屏
+     */
+    @Keep
+    public void ISourceShowInterstitialAdLoadAd(Activity activity){
+        SourceNetWork.getInstance(activity).showInterstitial();
+    }
+    /**
+     * IS的奖励视屏
+     */
+    @Keep
+    public void ISourceShowRewardedVideo(Activity activity,ISRewardedVideoListener listener){
+        SourceNetWork.getInstance(activity).showRewardedVideo(listener);
+    }
+    @Keep
+    public void ISourceShowBanner(Activity activity, FrameLayout mBannerParentLayout, AdBFSize size){
+        SourceNetWork.getInstance(activity).createAndloadBanner(activity,mBannerParentLayout,size);
+    }
 
     /**
      * 资源释放
@@ -882,7 +831,8 @@ public class BigFunSDK {
         if (checkSdkNotInit()) {
             return;
         }
-        adNetwork.dstroy();
+        AdNetwork.getInstance().dstroy();
+        SourceNetWork.getInstance(mActivity).onDestroy();
     }
 
 
@@ -896,14 +846,14 @@ public class BigFunSDK {
      */
     @Keep
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        loginModel.onActivityResult(requestCode, resultCode, data);
+        LoginModel.getInstance().onActivityResult(requestCode, resultCode, data);
     }
 
     /**
      * 检查是否初始化
      */
     private boolean checkSdkNotInit() {
-        if (TextUtils.isEmpty(mChannelCode) || mContext == null || !sdk) {
+        if (TextUtils.isEmpty(mChannelCode) || mContext == null || !BigFunViewModel.sdk) {
             Log.e("BigFunSDK","sdk not init");
             return true;
         }

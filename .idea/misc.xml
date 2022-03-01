@@ -3,7 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/BigFunSDK-master/app/src/main/res/drawable/ironsource_button_shape.xml" value="0.2490740740740741" />
+        <entry key="..\:/AndroidStudioProjects/BigFunSDK-master/app/src/main/res/layout/activity_demo.xml" value="0.276268115942029" />
         <entry key="..\:/AndroidStudioProjects/BigFunSDK-master/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/BigFunSDK-master/app/src/main/res/layout/fragment_banner.xml" value="0.1276595744680851" />
       </map>
     </option>
   </component>

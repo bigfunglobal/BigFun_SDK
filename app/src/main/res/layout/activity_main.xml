@@ -243,8 +243,8 @@
                 android:layout_height="wrap_content"
                 android:text="google_pay"
                 android:id="@+id/google"/>
-            <LinearLayout
-                android:id="@+id/banner_container"
+            <FrameLayout
+                android:id="@+id/bannerContainer"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_alignParentBottom="true"

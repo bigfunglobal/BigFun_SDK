@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,12 +33,14 @@ import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.bigfun.sdk.BigFunSDK;
 import com.bigfun.sdk.NetWork.AdViewListener;
+import com.bigfun.sdk.NetWork.ISRewardedVideoListener;
 import com.bigfun.sdk.NetWork.InterstListener;
 import com.bigfun.sdk.NetWork.RewardVideoListener;
 import com.bigfun.sdk.ResponseListener;
 import com.bigfun.sdk.google.GooglePayUpdatedListener;
 import com.bigfun.sdk.login.LoginListener;
 import com.bigfun.sdk.login.ShareListener;
+import com.bigfun.sdk.model.ISPlacement;
 import com.bigfun.sdk.type.AdBFPlatForm;
 import com.bigfun.sdk.type.AdBFSize;
 import com.bigfun.sdk.type.ShareContentType;
@@ -63,6 +66,18 @@ import com.google.android.gms.auth.api.identity.SignInCredential;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.ironsource.mediationsdk.ISBannerSize;
+import com.ironsource.mediationsdk.IronSource;
+import com.ironsource.mediationsdk.IronSourceBannerLayout;
+import com.ironsource.mediationsdk.impressionData.ImpressionData;
+import com.ironsource.mediationsdk.impressionData.ImpressionDataListener;
+import com.ironsource.mediationsdk.integration.IntegrationHelper;
+import com.ironsource.mediationsdk.logger.IronSourceError;
+import com.ironsource.mediationsdk.model.Placement;
+import com.ironsource.mediationsdk.sdk.BannerListener;
+import com.ironsource.mediationsdk.sdk.InterstitialListener;
+import com.ironsource.mediationsdk.sdk.OfferwallListener;
+import com.ironsource.mediationsdk.sdk.RewardedVideoListener;
 
 
 import java.security.MessageDigest;
@@ -106,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
         btn_verification = findViewById(R.id.btn_verification);
         et_phone = findViewById(R.id.et_phone);
         btn_phone_login = findViewById(R.id.btn_phone_login);
+//        integrationHelper用于验证集成。在开始使用之前删除integrationHelper！
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -169,89 +186,21 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Find the Ad Container
-        AdSettings.setTestMode(true);
-        LinearLayout adContainer = (LinearLayout) findViewById(R.id.banner_container);
+//        AdSettings.setTestMode(true);
+//        LinearLayout adContainer = (LinearLayout) findViewById(R.id.bannerContainer);
 //        AdSettings.addTestDevice(uniqueID);
+        FrameLayout mBannerParentLayout = (FrameLayout) findViewById(R.id.bannerContainer);
+
         AdView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BigFunSDK.getInstance().AdViewLoadAd(MainActivity.this, AdBFPlatForm.Facebook,"YOUR_PLACEMENT_ID", adContainer, AdBFSize.BANNER_HEIGHT_50, new AdViewListener() {
-
-                    @Override
-                    public void onAdError(AdError adError) {
-                        Log.e("adadad",adError.getErrorMessage());
-                    }
-
-                    @Override
-                    public void onAdLoaded(Ad ad) {
-
-                    }
-
-                    @Override
-                    public void onAdClicked(Ad ad) {
-
-                    }
-
-                    @Override
-                    public void onLoggingImpression(Ad ad) {
-
-                    }
-                });
+                BigFunSDK.getInstance().ISourceShowBanner(MainActivity.this,mBannerParentLayout,AdBFSize.BANNER);
             }
         });
         Inter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BigFunSDK.getInstance().InterstitialAdLoadAd(MainActivity.this,AdBFPlatForm.Facebook,"1998327616988725_2104448113043341", new InterstListener() {
-                    /**
-                     * 广告开始播放
-                     * @param ad
-                     */
-                    @Override
-                    public void onInterstitialDisplayed(Ad ad) {
-
-                    }
-                    /**
-                     * 广告页消失
-                     * @param ad
-                     */
-                    @Override
-                    public void onInterstitialDismissed(Ad ad) {
-
-                    }
-                    /**
-                     * 错误
-                     * @param adError
-                     */
-                    @Override
-                    public void onAdError(AdError adError) {
-                        Log.e("onError",adError.getErrorMessage());
-                    }
-                    /**
-                     * 加载完成回调
-                     * @param ad
-                     */
-                    @Override
-                    public void onAdLoaded(Ad ad) {
-
-                    }
-                    /**
-                     * 点击回调
-                     * @param ad
-                     */
-                    @Override
-                    public void onAdClicked(Ad ad) {
-
-                    }
-                    /**
-                     * 日志回调
-                     * @param ad
-                     */
-                    @Override
-                    public void onLoggingImpression(Ad ad) {
-
-                    }
-                });
+                BigFunSDK.getInstance().ISourceShowInterstitialAdLoadAd(MainActivity.this);
             }
         });
 
@@ -345,62 +294,23 @@ public class MainActivity extends AppCompatActivity {
 //                });
             }
         });
-//        out.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                BigFunSDK.getInstance().Logout();
-//                BigFunSDK.getInstance().RewardedVideoLoadAd(MainActivity.this,AdBFPlatForm.Facebook,"YOUR_PLACEMENT_ID", new RewardVideoListener() {
-//                    /**
-//                     * 错误
-//                     * @param adError
-//                     */
-//                    @Override
-//                    public void onAdError(AdError adError) {
-//
-//                    }
-//                    /**
-//                     * 加载完成回调
-//                     * @param ad
-//                     */
-//                    @Override
-//                    public void onAdLoaded(Ad ad) {
-//
-//                    }
-//                    /**
-//                     * 点击回调
-//                     * @param ad
-//                     */
-//                    @Override
-//                    public void onAdClicked(Ad ad) {
-//
-//                    }
-//                    /**
-//                     * 日志回调
-//                     * @param ad
-//                     */
-//                    @Override
-//                    public void onLoggingImpression(Ad ad) {
-//
-//                    }
-//                    /**
-//                     *视频一直播放到最后。
-//                     * 您可以使用此事件初始化奖励
-//                     */
-//                    @Override
-//                    public void onRewardedVideoCompleted() {
-//
-//                    }
-//                    /**
-//                     * 奖励视频广告已关闭
-//                     * 通过关闭应用程序，或关闭终端车
-//                     */
-//                    @Override
-//                    public void onRewardedVideoClosed() {
-//
-//                    }
-//                });
-//            }
-//        });
+
+        out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BigFunSDK.getInstance().ISourceShowRewardedVideo(MainActivity.this,new ISRewardedVideoListener() {
+                    @Override
+                    public void onRewardedVideoAdClosed() {
+
+                    }
+
+                    @Override
+                    public void onRewardedVideoAdRewarded(ISPlacement placement) {
+                        Log.e("dadad",placement+"");
+                    }
+                });
+            }
+        });
 
         google.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -414,19 +324,13 @@ public class MainActivity extends AppCompatActivity {
 //                        Log.e("adad","1313131");
 //                    }
 //                });
-                BigFunSDK.getInstance().BigFunGoogleLogin(MainActivity.this,"539033930849-l4gkqgs24fm72fh2hu5u9bkn2csajn6l.apps.googleusercontent.com");
+//                BigFunSDK.getInstance().BigFunGoogleLogin(MainActivity.this,"539033930849-l4gkqgs24fm72fh2hu5u9bkn2csajn6l.apps.googleusercontent.com");
             }
         });
 
     }
 
 
-    private PurchasesUpdatedListener purchasesUpdatedListener = new PurchasesUpdatedListener() {
-        @Override
-        public void onPurchasesUpdated(BillingResult billingResult, List<Purchase> purchases) {
-            // 在这里处理从 Billing 库更新购买的回，对 purchases 进行处理
-        }
-    };
 
     /**
      * 广告释放资源
@@ -434,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        BigFunSDK.getInstance().onDestroy();
+//        BigFunSDK.getInstance().onDestroy();
     }
 
     @Override
@@ -448,15 +352,16 @@ public class MainActivity extends AppCompatActivity {
 
         } else if (requestCode == REQUEST_SHARE_FILE_CODE) {
             // todo share complete.
-        }else if(requestCode == BigFunSDK.SIGN_LOGIN) {
-                try {
-                    SignInCredential credential = BigFunSDK.getInstance().BigFunIdentity(this).getSignInCredentialFromIntent(data);
-                    Log.e("credential",credential.getId());
-                } catch (ApiException e) {
-                    // The ApiException status code indicates the detailed failure reason.
-                    Log.e("asdadasd",e.getMessage());
-            }
         }
+//        else if(requestCode == BigFunSDK.SIGN_LOGIN) {
+//                try {
+//                    SignInCredential credential = BigFunSDK.getInstance().BigFunIdentity().getSignInCredentialFromIntent(data);
+//                    Log.e("credential",credential.getId());
+//                } catch (ApiException e) {
+//                    // The ApiException status code indicates the detailed failure reason.
+//                    Log.e("asdadasd",e.getMessage());
+//            }
+//        }
     }
 
 }

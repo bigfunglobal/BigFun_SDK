@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 
+import com.bigfun.sdk.model.BigFunViewModel;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -28,7 +29,18 @@ public class LoginModel {
         callbackManager = CallbackManager.Factory.create();
     }
 
+    private static LoginModel instance;
 
+    public static LoginModel getInstance() {
+        if (instance == null) {
+            synchronized (LoginModel.class) {
+                if (instance == null) {
+                    instance = new LoginModel();
+                }
+            }
+        }
+        return instance;
+    }
 
     public final void facebookLogin(Context activity,List<String> permissionList,final LoginListener listener) {
 

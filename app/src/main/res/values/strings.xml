@@ -38,6 +38,7 @@
     <string name="adview_type">Height</string>
     <string name="show_code">Show Code</string>
 
+
     <string-array name="code_snippet_mediumrect_template">
         <item>protected void onCreate(Bundle savedInstanceState) {</item>
         <item>\t…</item>
