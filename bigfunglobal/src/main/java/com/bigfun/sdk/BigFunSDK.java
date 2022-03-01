@@ -808,6 +808,9 @@ public class BigFunSDK {
      */
     @Keep
     public void ISourceShowInterstitialAdLoadAd(Activity activity){
+        if (checkSdkNotInit()) {
+            return;
+        }
         SourceNetWork.getInstance(activity).showInterstitial();
     }
     /**
@@ -815,10 +818,16 @@ public class BigFunSDK {
      */
     @Keep
     public void ISourceShowRewardedVideo(Activity activity,ISRewardedVideoListener listener){
+        if (checkSdkNotInit()) {
+            return;
+        }
         SourceNetWork.getInstance(activity).showRewardedVideo(listener);
     }
     @Keep
     public void ISourceShowBanner(Activity activity, FrameLayout mBannerParentLayout, AdBFSize size){
+        if (checkSdkNotInit()) {
+            return;
+        }
         SourceNetWork.getInstance(activity).createAndloadBanner(activity,mBannerParentLayout,size);
     }
 
