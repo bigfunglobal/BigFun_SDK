@@ -1,9 +1,5 @@
 package com.bigfun.sdk;
 
-import static androidx.core.app.ActivityCompat.startIntentSenderForResult;
-import static com.bigfun.sdk.Constant.PAY_TAG;
-import static com.bigfun.sdk.HttpUtils.ORDER_SDK;
-
 import android.app.Activity;
 import android.app.Application;
 import android.app.PendingIntent;
@@ -30,43 +26,34 @@ import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustAttribution;
 import com.adjust.sdk.AdjustConfig;
 import com.adjust.sdk.OnAttributionChangedListener;
+
 import com.bigfun.sdk.NetWork.AdNetwork;
 import com.bigfun.sdk.NetWork.AdViewListener;
 import com.bigfun.sdk.NetWork.ISRewardedVideoListener;
 import com.bigfun.sdk.NetWork.InterstListener;
 import com.bigfun.sdk.NetWork.RewardVideoListener;
 import com.bigfun.sdk.NetWork.SourceNetWork;
+
 import com.bigfun.sdk.login.LoginListener;
-import com.bigfun.sdk.login.ShareListener;
 import com.bigfun.sdk.login.LoginModel;
+import com.bigfun.sdk.login.ShareListener;
 import com.bigfun.sdk.model.BigFunViewModel;
 import com.bigfun.sdk.model.SdkConfigurationInfoBean;
 import com.bigfun.sdk.type.AdBFPlatForm;
 import com.bigfun.sdk.type.AdBFSize;
 import com.bigfun.sdk.type.ShareContentType;
 import com.bigfun.sdk.utils.Distribution_es;
-import com.bigfun.sdk.utils.LocationUtils;
-import com.bigfun.sdk.utils.SystemUtil;
 import com.facebook.AccessToken;
-import com.facebook.FacebookSdk;
-import com.facebook.ads.Ad;
-import com.facebook.ads.AdError;
-import com.facebook.ads.AdSize;
 import com.facebook.ads.AudienceNetworkAds;
-import com.facebook.ads.InterstitialAd;
-import com.facebook.ads.InterstitialAdListener;
 import com.facebook.login.LoginManager;
 import com.facebook.share.model.ShareLinkContent;
 
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.identity.GetSignInIntentRequest;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
 
 import com.google.gson.Gson;
-import com.ironsource.mediationsdk.ISBannerSize;
 import com.ironsource.mediationsdk.IronSource;
-import com.ironsource.mediationsdk.integration.IntegrationHelper;
 import com.tendcloud.tenddata.TalkingDataSDK;
 
 
@@ -110,7 +97,7 @@ public class BigFunSDK {
     static boolean isDebug = false;
 
     private long mTime;
-    private static Activity mActivity;
+    public static Activity mActivity;
     private String data;
     private static final String EVENT_URL = "http://gmgateway.xiaoxiangwan.com:5702/TestAPI/TestAPIDataHandler.ashx?action=sdktestinfo";
 
@@ -162,6 +149,8 @@ public class BigFunSDK {
                 if(BigFunViewModel.google){
                     Googleinit(bean.getGoogleClientId());
                 }
+
+                Log.e("BigFun", "tm init succeeded");
             }
 
             @Override
@@ -170,12 +159,60 @@ public class BigFunSDK {
             }
 
         });
+        mApplication.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityResumed(final Activity activity) {
+                mActivity=activity;
+                SourceNetWork.getInstance();
+                if(!isIn)
+                    HttpUtils.getInstance().upload(activity);
+                if(BigFunViewModel.adjust)
+                    Adjust.onResume();
+
+//                IronSource.onResume(activity);
+
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+
+                if(BigFunViewModel.adjust)
+                    Adjust.onPause();
+
+//                IronSource.onPause(activity);
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+
+            }
+        });
 //        myBilling.initialize(mContext);
 
 //        initLogin();
         //是否已经归因
 //        LogUtils.log("sdk init success");
-        Log.e("BigFun", "tm init succeeded");
+
     }
 
 
@@ -237,49 +274,7 @@ public class BigFunSDK {
             }
         });
         Adjust.onCreate(acaaigxc);
-        mApplication.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
-            @Override
-            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
 
-            }
-
-            @Override
-            public void onActivityStarted(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivityResumed(final Activity activity) {
-                mActivity=activity;
-                if(!isIn)
-                    HttpUtils.getInstance().upload(activity);
-
-                if(BigFunViewModel.adjust)
-                    Adjust.onResume();
-            }
-
-            @Override
-            public void onActivityPaused(Activity activity) {
-
-                if(BigFunViewModel.adjust)
-                    Adjust.onPause();
-            }
-
-            @Override
-            public void onActivityStopped(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-            }
-
-            @Override
-            public void onActivityDestroyed(Activity activity) {
-
-            }
-        });
     }
 
     /**
@@ -610,7 +605,7 @@ public class BigFunSDK {
      */
 
     @Keep
-    public void AdViewLoadAd(Context context, AdBFPlatForm adBFPlatForm,String AdsID, LinearLayout adContainer, AdBFSize adSize, AdViewListener listener) {
+    public void AdViewLoadAd(Context context, AdBFPlatForm adBFPlatForm, String AdsID, LinearLayout adContainer, AdBFSize adSize, AdViewListener listener) {
         if (checkSdkNotInit()) {
             return;
         }
@@ -626,7 +621,7 @@ public class BigFunSDK {
             Log.e("BigFunSDK","AdsID not null");
             return;
         }
-        adBFPlatForm=Distribution_es.RandomMooncake(BigFunViewModel.insetAdFB,BigFunViewModel.insetAdTM);
+        adBFPlatForm= Distribution_es.RandomMooncake(BigFunViewModel.insetAdFB,BigFunViewModel.insetAdTM);
         if(AdBFPlatForm.Facebook.equals(adBFPlatForm)) {
             Map<String, Object> map = new HashMap<>();
             map.put("placementId", BigFunViewModel.bannerAdId);
@@ -807,28 +802,28 @@ public class BigFunSDK {
      * IS的插屏
      */
     @Keep
-    public void ISourceShowInterstitialAdLoadAd(Activity activity){
+    public void ISourceShowInterstitialAdLoadAd(){
         if (checkSdkNotInit()) {
             return;
         }
-        SourceNetWork.getInstance(activity).showInterstitial();
+        SourceNetWork.getInstance().showInterstitial();
     }
     /**
      * IS的奖励视屏
      */
     @Keep
-    public void ISourceShowRewardedVideo(Activity activity,ISRewardedVideoListener listener){
+    public void ISourceShowRewardedVideo( ISRewardedVideoListener listener){
         if (checkSdkNotInit()) {
             return;
         }
-        SourceNetWork.getInstance(activity).showRewardedVideo(listener);
+        SourceNetWork.getInstance().showRewardedVideo(listener);
     }
     @Keep
-    public void ISourceShowBanner(Activity activity, FrameLayout mBannerParentLayout, AdBFSize size){
+    public void ISourceShowBanner(FrameLayout mBannerParentLayout, AdBFSize size){
         if (checkSdkNotInit()) {
             return;
         }
-        SourceNetWork.getInstance(activity).createAndloadBanner(activity,mBannerParentLayout,size);
+        SourceNetWork.getInstance().createAndloadBanner(mBannerParentLayout,size);
     }
 
     /**
@@ -841,7 +836,7 @@ public class BigFunSDK {
             return;
         }
         AdNetwork.getInstance().dstroy();
-        SourceNetWork.getInstance(mActivity).onDestroy();
+        SourceNetWork.getInstance().onDestroy();
     }
 
 

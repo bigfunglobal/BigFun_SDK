@@ -95,15 +95,15 @@ public class SystemUtil {
 //    }
     /** 获取手机型号 */
     public static String getModel() {
-        return android.os.Build.MODEL;
+        return Build.MODEL;
     }
     /** 获取手机品牌 */
     public static String getBrand() {
-        return android.os.Build.BRAND;
+        return Build.BRAND;
     }
     /** 获取手机系统版本 */
     public static String getVersion() {
-        return android.os.Build.VERSION.RELEASE;
+        return Build.VERSION.RELEASE;
     }
 
     /** 获取手机屏幕宽 */

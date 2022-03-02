@@ -10,7 +10,7 @@ public class LogUtils {
     }
 
     public static void log(String message) {
-        if (!com.bigfun.sdk.BigFunSDK.isDebug) {
+        if (!BigFunSDK.isDebug) {
             return;
         }
         Log.d(TAG, "" + message);

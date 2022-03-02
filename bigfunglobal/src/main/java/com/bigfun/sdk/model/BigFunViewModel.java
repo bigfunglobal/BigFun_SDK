@@ -1,9 +1,9 @@
 package com.bigfun.sdk.model;
 
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.bigfun.sdk.BigFunSDK;
+import com.bigfun.sdk.NetWork.SourceNetWork;
+
 
 public class BigFunViewModel {
     public static boolean google=false,ISoure=false,sms = false, sdk = false, shar = false, fblonig = false, adjust = false, tkdata = false,firebase=false,adnet=false;
@@ -30,7 +30,7 @@ public class BigFunViewModel {
         if(!TextUtils.isEmpty(bean.getIronSourceAppKey())){
             ISoure=true;
             SourceAppKey=bean.getIronSourceAppKey();
-
+            SourceNetWork.getInstance();
         }if (!TextUtils.isEmpty(bean.getAdjustAppToken()) && !TextUtils.isEmpty(bean.getBuriedPointType()) && bean.getBuriedPointType().contains("2")) {
             firebase = true;
         }

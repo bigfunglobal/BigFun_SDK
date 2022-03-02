@@ -1,6 +1,33 @@
 package com.bigfun.sdk.model;
 
 public class SdkConfigurationInfoBean {
+
+    private String adjustAppToken;
+    private String adsType;
+    private String buriedPointType;
+    private String channelId;
+    private String id;
+    private String loginType;
+    private String placementIdProduction;
+    private String placementIdTest;
+    private String bannerAdId;
+    private String interstitialId;
+    private String rewardedVideoId;
+    private String shareType;
+    private String channelName;
+    private String talkingDataAppId;
+    private String googleClientId;
+    private String insetAdTM;
+    private String insetAdFB;
+    private String incentiveVideoTM;
+    private String incentiveVideoFB;
+    private String streamerAdFB;
+    private String streamerAdTM;
+    private String paymentType;
+    private String ironSourceAppKey;
+    private String skuTypeSubsSkuList;
+    private String skuTypeInAppSkuList;
+
     //--------------get --------------------------------
     public String getAdjustAppToken() {
         return adjustAppToken == null ? "" : adjustAppToken;
@@ -102,16 +129,6 @@ public class SdkConfigurationInfoBean {
     }
 
 
-
-    private String adjustAppToken;
-    private String adsType;
-    private String buriedPointType;
-    private String channelId;
-    private String id;
-    private String loginType;
-    private String placementIdProduction;
-    private String placementIdTest;
-
     //--------------get --------------------------------
     public String getBannerAdId() {
         return bannerAdId == null ? "" : bannerAdId;
@@ -142,10 +159,6 @@ public class SdkConfigurationInfoBean {
         this.rewardedVideoId = rewardedVideoId == null ? "" : rewardedVideoId;
     }
 
-    private String bannerAdId;
-    private String interstitialId;
-    private String rewardedVideoId;
-    private String shareType;
 
     //--------------get --------------------------------
     public String getChannelName() {
@@ -157,8 +170,6 @@ public class SdkConfigurationInfoBean {
         this.channelName = channelName == null ? "" : channelName;
     }
 
-    private String channelName;
-    private String talkingDataAppId;
 
     //--------------get --------------------------------
     public String getGoogleClientId() {
@@ -170,7 +181,6 @@ public class SdkConfigurationInfoBean {
         this.googleClientId = googleClientId == null ? "" : googleClientId;
     }
 
-    private String googleClientId;
 
     //--------------get --------------------------------
     public String getInsetAdTM() {
@@ -272,47 +282,37 @@ public class SdkConfigurationInfoBean {
         this.skuTypeInAppSkuList = skuTypeInAppSkuList == null ? "" : skuTypeInAppSkuList;
     }
 
-    private String insetAdTM;
-    private String insetAdFB;
-    private String incentiveVideoTM;
-    private String incentiveVideoFB;
-    private String streamerAdFB;
-    private String streamerAdTM;
-    private String paymentType;
-    private String ironSourceAppKey;
-    private String skuTypeSubsSkuList;
-    private String skuTypeInAppSkuList;
+
 //    private String shareType;
 
-
-    @Override
-    public String toString() {
-        return "SdkConfigurationInfoBean{" +
-                "adjustAppToken='" + adjustAppToken + '\'' +
-                ", adsType='" + adsType + '\'' +
-                ", buriedPointType='" + buriedPointType + '\'' +
-                ", channelId='" + channelId + '\'' +
-                ", id='" + id + '\'' +
-                ", loginType='" + loginType + '\'' +
-                ", placementIdProduction='" + placementIdProduction + '\'' +
-                ", placementIdTest='" + placementIdTest + '\'' +
-                ", bannerAdId='" + bannerAdId + '\'' +
-                ", interstitialId='" + interstitialId + '\'' +
-                ", rewardedVideoId='" + rewardedVideoId + '\'' +
-                ", shareType='" + shareType + '\'' +
-                ", channelName='" + channelName + '\'' +
-                ", talkingDataAppId='" + talkingDataAppId + '\'' +
-                ", googleClientId='" + googleClientId + '\'' +
-                ", insetAdTM='" + insetAdTM + '\'' +
-                ", insetAdFB='" + insetAdFB + '\'' +
-                ", incentiveVideoTM='" + incentiveVideoTM + '\'' +
-                ", incentiveVideoFB='" + incentiveVideoFB + '\'' +
-                ", streamerAdFB='" + streamerAdFB + '\'' +
-                ", streamerAdTM='" + streamerAdTM + '\'' +
-                ", paymentType='" + paymentType + '\'' +
-                ", ironSourceAppKey='" + ironSourceAppKey + '\'' +
-                ", skuTypeSubsSkuList='" + skuTypeSubsSkuList + '\'' +
-                ", skuTypeInAppSkuList='" + skuTypeInAppSkuList + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "SdkConfigurationInfoBean{" +
+//                "adjustAppToken='" + adjustAppToken + '\'' +
+//                ", adsType='" + adsType + '\'' +
+//                ", buriedPointType='" + buriedPointType + '\'' +
+//                ", channelId='" + channelId + '\'' +
+//                ", id='" + id + '\'' +
+//                ", loginType='" + loginType + '\'' +
+//                ", placementIdProduction='" + placementIdProduction + '\'' +
+//                ", placementIdTest='" + placementIdTest + '\'' +
+//                ", bannerAdId='" + bannerAdId + '\'' +
+//                ", interstitialId='" + interstitialId + '\'' +
+//                ", rewardedVideoId='" + rewardedVideoId + '\'' +
+//                ", shareType='" + shareType + '\'' +
+//                ", channelName='" + channelName + '\'' +
+//                ", talkingDataAppId='" + talkingDataAppId + '\'' +
+//                ", googleClientId='" + googleClientId + '\'' +
+//                ", insetAdTM='" + insetAdTM + '\'' +
+//                ", insetAdFB='" + insetAdFB + '\'' +
+//                ", incentiveVideoTM='" + incentiveVideoTM + '\'' +
+//                ", incentiveVideoFB='" + incentiveVideoFB + '\'' +
+//                ", streamerAdFB='" + streamerAdFB + '\'' +
+//                ", streamerAdTM='" + streamerAdTM + '\'' +
+//                ", paymentType='" + paymentType + '\'' +
+//                ", ironSourceAppKey='" + ironSourceAppKey + '\'' +
+//                ", skuTypeSubsSkuList='" + skuTypeSubsSkuList + '\'' +
+//                ", skuTypeInAppSkuList='" + skuTypeInAppSkuList + '\'' +
+//                '}';
+//    }
 }

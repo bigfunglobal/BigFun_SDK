@@ -1,10 +1,11 @@
 package com.bigfun.sdk.NetWork;
 
 import static com.bigfun.sdk.BigFunSDK.TAG;
+import static com.bigfun.sdk.BigFunSDK.mActivity;
 import static com.bigfun.sdk.BigFunSDK.mContext;
 
 import android.app.Activity;
-import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -28,90 +29,120 @@ import com.ironsource.mediationsdk.sdk.RewardedVideoListener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SourceNetWork implements RewardedVideoListener, InterstitialListener, ImpressionDataListener {
     private FrameLayout mBannerParentLayout;
     private IronSourceBannerLayout mIronSourceBannerLayout;
     private ISRewardedVideoListener listener;
-    public SourceNetWork(Activity activity){
-        initIronSource();
-        IronSource.init(activity, BigFunViewModel.SourceAppKey);
-        IntegrationHelper.validateIntegration(activity);
+
+    public SourceNetWork() {
+        TimerIronSource();
     }
+
     private static SourceNetWork instance;
 
-    public static SourceNetWork getInstance(Activity activity) {
+    public static SourceNetWork getInstance() {
+
         if (instance == null) {
             synchronized (SourceNetWork.class) {
                 if (instance == null) {
-                    instance = new SourceNetWork(activity);
+                    instance = new SourceNetWork();
                 }
             }
         }
         return instance;
     }
-    public void initIronSource() {
-        //确保为正在启动的每个产品设置一个侦听器
-        //设置视频侦听器
-        IronSource.setRewardedVideoListener(this);
-        //设置插屏侦听器
-        IronSource.setInterstitialListener(this);
-        //添加Impression数据侦听器
-        IronSource.addImpressionDataListener(this);
 
-        //初始化IronSource SDK
+    Timer timer = new Timer();
+    private void TimerIronSource() {
 
-        IronSource.setUserId(IronSource.getAdvertiserId(mContext));
-        IronSource.getAdvertiserId(mContext);
-//        网络连接状态
-        IronSource.shouldTrackNetworkState(mContext, true);
-
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Log.e("time","1000");
+                Log.e("Activity",mActivity+"Ket");
+                if (mActivity != null && !TextUtils.isEmpty(BigFunViewModel.SourceAppKey)) {
+                    timer.cancel();
+                    initIronSource();
+                }
+            }
+        }, 0,1000);
     }
 
-    public void showRewardedVideo(ISRewardedVideoListener listener){
+    private void initIronSource() {
+
+            IntegrationHelper.validateIntegration(mActivity);
+            //确保为正在启动的每个产品设置一个侦听器
+            //设置视频侦听器
+            IronSource.setRewardedVideoListener(this);
+            //设置插屏侦听器
+            IronSource.setInterstitialListener(this);
+            //添加Impression数据侦听器
+            IronSource.addImpressionDataListener(this);
+
+            //设置IronSource用户id
+            IronSource.setUserId(IronSource.getAdvertiserId(mContext));
+             //初始化IronSource SDK
+            IronSource.getAdvertiserId(mContext);
+            IronSource.init(mActivity, BigFunViewModel.SourceAppKey);
+//        网络连接状态
+            IronSource.shouldTrackNetworkState(mContext, true);
+            IronSource.isRewardedVideoAvailable();
+            IronSource.loadInterstitial();
+    }
+
+
+    public void showRewardedVideo(ISRewardedVideoListener listener) {
         Map<String, Object> map = new HashMap<>();
         map.put("adBFPlatForm", "IronSource");
         BigFunSDK.getInstance().onEvent(mContext, "BFAd_IS_RewardedVideo", map);
-        this.listener=listener;
+        this.listener = listener;
         if (IronSource.isRewardedVideoAvailable())
             //show rewarded video
             IronSource.showRewardedVideo();
     }
-    public void showInterstitial(){
+
+    public void showInterstitial() {
         Map<String, Object> map = new HashMap<>();
         map.put("adBFPlatForm", "IronSource");
         BigFunSDK.getInstance().onEvent(mContext, "BFAd_IS_Interstitial", map);
-        IronSource.loadInterstitial();
-
+        if (IronSource.isInterstitialReady()) {
+//                    //show the interstitial
+            IronSource.showInterstitial();
+        }
     }
+
     public void onDestroy() {
-        if(mIronSourceBannerLayout!=null) {
+        if (mIronSourceBannerLayout != null) {
             IronSource.destroyBanner(mIronSourceBannerLayout);
             if (mBannerParentLayout != null) {
                 mBannerParentLayout.removeView(mIronSourceBannerLayout);
             }
         }
     }
+
     /**
      * 创建并加载IronSource横幅
-     *
      */
-    private ISBannerSize isBannerSize=ISBannerSize.BANNER;
-    public void createAndloadBanner(Activity activity, FrameLayout mBannerParentLayout, AdBFSize size) {
+    private ISBannerSize isBannerSize = ISBannerSize.BANNER;
+
+    public void createAndloadBanner(FrameLayout mBannerParentLayout, AdBFSize size) {
         Map<String, Object> map = new HashMap<>();
         map.put("adBFPlatForm", "IronSource");
         map.put("adSize", size);
         BigFunSDK.getInstance().onEvent(mContext, "BFAd_IS_Banner", map);
-        if(size.equals(AdBFSize.BANNER_HEIGHT_50))
-            isBannerSize=ISBannerSize.BANNER;
-        if(size.equals(AdBFSize.BANNER_HEIGHT_90))
-            isBannerSize=ISBannerSize.LARGE;
-        if(size.equals(AdBFSize.RECTANGLE_HEIGHT_250))
-            isBannerSize=ISBannerSize.RECTANGLE;
-        this.mBannerParentLayout=mBannerParentLayout;
+        if (size.equals(AdBFSize.BANNER_HEIGHT_50))
+            isBannerSize = ISBannerSize.BANNER;
+        if (size.equals(AdBFSize.BANNER_HEIGHT_90))
+            isBannerSize = ISBannerSize.LARGE;
+        if (size.equals(AdBFSize.RECTANGLE_HEIGHT_250))
+            isBannerSize = ISBannerSize.RECTANGLE;
+        this.mBannerParentLayout = mBannerParentLayout;
 
         //使用IronSource实例化IronSourceBanner对象。createBanner API
-        mIronSourceBannerLayout = IronSource.createBanner(activity, isBannerSize);
+        mIronSourceBannerLayout = IronSource.createBanner(mActivity, isBannerSize);
 
         //将IronSourceBanner添加到容器中
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
@@ -157,7 +188,7 @@ public class SourceNetWork implements RewardedVideoListener, InterstitialListene
             //将广告加载到创建的横幅中
             IronSource.loadBanner(mIronSourceBannerLayout);
         } else {
-            Toast.makeText(activity, "IronSource.createBanner returned null", Toast.LENGTH_LONG).show();
+            Toast.makeText(mActivity, "IronSource.createBanner returned null", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -228,10 +259,7 @@ public class SourceNetWork implements RewardedVideoListener, InterstitialListene
     @Override
     public void onInterstitialAdReady() {
         //当间隙准备好时调用
-        if (IronSource.isInterstitialReady()) {
-//                    //show the interstitial
-            IronSource.showInterstitial();
-        }
+
         Log.d(TAG, "onInterstitialAdReady");
     }
 

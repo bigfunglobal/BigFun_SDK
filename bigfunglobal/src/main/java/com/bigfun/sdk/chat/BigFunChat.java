@@ -1,4 +1,4 @@
-//package com.bigfun.sdk.chat;
+package com.bigfun.sdk.chat;//package com.bigfun.sdk.chat;
 //
 //import android.app.Activity;
 //import android.content.Context;

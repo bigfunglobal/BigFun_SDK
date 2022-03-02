@@ -1,18 +1,11 @@
 package com.bigfun.sdk.NetWork;
 
-import static android.content.ContentValues.TAG;
-
-import static com.bigfun.sdk.BigFunSDK.getInstance;
 import static com.bigfun.sdk.BigFunSDK.mContext;
 
 import android.content.Context;
-import android.os.Handler;
-import android.util.Log;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.bigfun.sdk.BigFunSDK;
-import com.bigfun.sdk.login.LoginModel;
 import com.bigfun.sdk.model.BigFunViewModel;
 import com.bigfun.sdk.type.AdBFSize;
 import com.facebook.ads.Ad;
@@ -24,7 +17,6 @@ import com.facebook.ads.InterstitialAd;
 import com.facebook.ads.InterstitialAdListener;
 import com.facebook.ads.RewardedVideoAd;
 import com.facebook.ads.RewardedVideoAdListener;
-import com.ironsource.mediationsdk.ISBannerSize;
 
 import java.util.HashMap;
 import java.util.Map;

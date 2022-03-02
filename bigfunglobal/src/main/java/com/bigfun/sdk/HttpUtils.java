@@ -249,7 +249,7 @@ public class HttpUtils{
                                                 BigFunSDK.mContext,
                                                 Constant.KEY_DATA,
                                                 EncryptUtil.decryptDataSDK(bean.getData()));
-                                        Log.e("EncryptUtil",EncryptUtil.decryptDataSDK(bean.getData()));
+
                                         listener.onSuccess();
                                     } else {
                                         listener.onFail(bean.getMsg());
@@ -639,7 +639,7 @@ public class HttpUtils{
         if (!TextUtils.isEmpty(mOrderId) && mOrderId.equals(orderId)) {
             return;
         }
-        if (com.bigfun.sdk.NetworkUtils.getNetworkState(BigFunSDK.mContext) == 0) {
+        if (NetworkUtils.getNetworkState(BigFunSDK.mContext) == 0) {
             return;
         }
         if (TextUtils.isEmpty(url)) throw new IllegalArgumentException("url.length() == 0");

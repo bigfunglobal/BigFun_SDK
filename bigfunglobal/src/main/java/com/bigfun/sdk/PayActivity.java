@@ -23,7 +23,7 @@ public class PayActivity extends AppCompatActivity {
         FrameLayout mFl = findViewById(R.id.fl);
         ImageView ivBack = findViewById(R.id.iv_back);
 
-        String url = getIntent().getStringExtra(com.bigfun.sdk.Constant.EXTRA_KEY_PAY_URL);
+        String url = getIntent().getStringExtra(Constant.EXTRA_KEY_PAY_URL);
         mAgentWeb = AgentWeb.with(this)
                 .setAgentWebParent(mFl, new LinearLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()

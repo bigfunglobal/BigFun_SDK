@@ -60,7 +60,7 @@ public class IpUtils {
                 e.printStackTrace();
             }
         } else {
-            return com.bigfun.sdk.Utils.getIp(context);
+            return Utils.getIp(context);
         }
         return getOutNetIP(context, ++index);
     }
