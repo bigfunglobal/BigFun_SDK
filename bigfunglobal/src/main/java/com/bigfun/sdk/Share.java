@@ -2,6 +2,7 @@ package com.bigfun.sdk;
 
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -12,8 +13,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.bigfun.sdk.type.ShareContentType;
-
 import java.util.List;
 
 public class Share {
@@ -22,13 +21,7 @@ public class Share {
     /**
      * Current activity
      */
-    private Activity activity;
-
-    /**
-     * Share content type
-     */
-    private @ShareContentType
-    String contentType;
+    private Context activity;
 
     /**
      * Share title
@@ -38,6 +31,7 @@ public class Share {
     /**
      * Share file Uri
      */
+
     private Uri shareFileUri;
 
     /**
@@ -60,14 +54,14 @@ public class Share {
      */
     private int requestCode;
 
+
     /**
      * Forced Use System Chooser
      */
     private boolean forcedUseSystemChooser;
 
     private Share(@NonNull Builder builder) {
-        this.activity = builder.activity;
-        this.contentType = builder.contentType;
+        this.activity = builder.context;
         this.title = builder.title;
         this.shareFileUri = builder.shareFileUri;
         this.contentText = builder.textContent;
@@ -80,7 +74,7 @@ public class Share {
     /**
      * shareBySystem
      */
-    public void shareBySystem () {
+    public void shareBySystem() {
         if (checkShareParam()) {
             Intent shareIntent = createShareIntent();
 
@@ -99,11 +93,7 @@ public class Share {
 
             if (shareIntent.resolveActivity(activity.getPackageManager()) != null) {
                 try {
-                    if (requestCode != -1) {
-                        activity.startActivityForResult(shareIntent, requestCode);
-                    } else {
-                        activity.startActivity(shareIntent);
-                    }
+                    activity.startActivity(shareIntent);
                 } catch (Exception e) {
                     Log.e(TAG, Log.getStackTraceString(e));
                 }
@@ -117,41 +107,31 @@ public class Share {
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         shareIntent.addCategory("android.intent.category.DEFAULT");
 
-        if (!TextUtils.isEmpty(this.componentPackageName) && !TextUtils.isEmpty(componentClassName)){
+        if (!TextUtils.isEmpty(this.componentPackageName) && !TextUtils.isEmpty(componentClassName)) {
             ComponentName comp = new ComponentName(componentPackageName, componentClassName);
             shareIntent.setComponent(comp);
         }
 
-        switch (contentType) {
-            case ShareContentType.TEXT :
-                shareIntent.putExtra(Intent.EXTRA_TEXT, contentText);
-                shareIntent.setType("text/plain");
-                break;
-            case ShareContentType.IMAGE :
-            case ShareContentType.AUDIO :
-            case ShareContentType.VIDEO :
-            case ShareContentType.FILE:
-                shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.addCategory("android.intent.category.DEFAULT");
-                shareIntent.setType(contentType);
-                shareIntent.putExtra(Intent.EXTRA_STREAM, shareFileUri);
-                shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        if (shareFileUri == null) {
+            shareIntent.putExtra(Intent.EXTRA_TEXT, contentText);
+            shareIntent.setType("text/plain");
+        } else {
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.addCategory("android.intent.category.DEFAULT");
+            shareIntent.setType("*/*");
+            shareIntent.putExtra(Intent.EXTRA_STREAM, shareFileUri);
+            shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-                Log.d(TAG, "Share uri: " + shareFileUri.toString());
+            Log.d(TAG, "Share uri: " + shareFileUri.toString());
 
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-                    List<ResolveInfo> resInfoList = activity.getPackageManager().queryIntentActivities(shareIntent, PackageManager.MATCH_DEFAULT_ONLY);
-                    for (ResolveInfo resolveInfo : resInfoList) {
-                        String packageName = resolveInfo.activityInfo.packageName;
-                        activity.grantUriPermission(packageName, shareFileUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    }
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+                List<ResolveInfo> resInfoList = activity.getPackageManager().queryIntentActivities(shareIntent, PackageManager.MATCH_DEFAULT_ONLY);
+                for (ResolveInfo resolveInfo : resInfoList) {
+                    String packageName = resolveInfo.activityInfo.packageName;
+                    activity.grantUriPermission(packageName, shareFileUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 }
-                break;
-            default:
-                Log.e(TAG, contentType + " is not support share type.");
-                shareIntent = null;
-                break;
+            }
         }
 
         return shareIntent;
@@ -164,29 +144,11 @@ public class Share {
             return false;
         }
 
-        if (TextUtils.isEmpty(this.contentType)) {
-            Log.e(TAG, "Share content type is empty.");
-            return false;
-        }
-
-        if (ShareContentType.TEXT.equals(contentType)) {
-            if (TextUtils.isEmpty(contentText)) {
-                Log.e(TAG, "Share text context is empty.");
-                return false;
-            }
-        } else {
-            if (this.shareFileUri == null) {
-                Log.e(TAG, "Share file path is null.");
-                return false;
-            }
-        }
-
         return true;
     }
 
     public static class Builder {
-        private Activity activity;
-        private @ShareContentType String contentType = ShareContentType.FILE;
+        private Context context;
         private String title;
         private String componentPackageName;
         private String componentClassName;
@@ -195,22 +157,14 @@ public class Share {
         private int requestCode = -1;
         private boolean forcedUseSystemChooser = true;
 
-        public Builder(Activity activity) {
-            this.activity = activity;
+        public Builder(Context context) {
+            this.context = context;
         }
 
-        /**
-         * 设置内容类型
-         * @param contentType {@link ShareContentType}
-         * @return Builder
-         */
-        public Builder setContentType(@ShareContentType String contentType) {
-            this.contentType = contentType;
-            return this;
-        }
 
         /**
          * 设置标题
+         *
          * @param title title
          * @return Builder
          */
@@ -221,6 +175,7 @@ public class Share {
 
         /**
          * 设置共享文件路径
+         *
          * @param shareFileUri shareFileUri
          * @return Builder
          */
@@ -231,7 +186,8 @@ public class Share {
 
         /**
          * 设置文本内容
-         * @param textContent  textContent
+         *
+         * @param textContent textContent
          * @return Builder
          */
         public Builder setTextContent(String textContent) {
@@ -241,8 +197,9 @@ public class Share {
 
         /**
          * 将共享设置为组件
+         *
          * @param componentPackageName componentPackageName
-         * @param componentClassName componentPackageName
+         * @param componentClassName   componentPackageName
          * @return Builder
          */
         public Builder setShareToComponent(String componentPackageName, String componentClassName) {
@@ -253,26 +210,29 @@ public class Share {
 
         /**
          * 设置为ActivityResult requestCode，默认值为-1
+         *
          * @param requestCode requestCode
          * @return Builder
          */
-        public Builder setOnActivityResult (int requestCode) {
+        public Builder setOnActivityResult(int requestCode) {
             this.requestCode = requestCode;
             return this;
         }
 
         /**
          * 强制使用系统选择器来共享
+         *
          * @param enable default is true
          * @return Builder
          */
-        public Builder forcedUseSystemChooser (boolean enable) {
+        public Builder forcedUseSystemChooser(boolean enable) {
             this.forcedUseSystemChooser = enable;
             return this;
         }
 
         /**
          * build
+         *
          * @return Share
          */
         public Share build() {

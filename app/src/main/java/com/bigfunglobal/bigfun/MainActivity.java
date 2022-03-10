@@ -1,16 +1,11 @@
 package com.bigfunglobal.bigfun;
 
-import static androidx.core.app.ActivityCompat.startIntentSenderForResult;
 import static com.bigfun.sdk.AdvertisingIdClient.getAdId;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -22,28 +17,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingClientStateListener;
-import com.android.billingclient.api.BillingResult;
-import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchasesUpdatedListener;
+
 import com.bigfun.sdk.BigFunSDK;
-import com.bigfun.sdk.NetWork.AdViewListener;
-import com.bigfun.sdk.NetWork.ISRewardedVideoListener;
-import com.bigfun.sdk.NetWork.InterstListener;
-import com.bigfun.sdk.NetWork.RewardVideoListener;
-import com.bigfun.sdk.ResponseListener;
-import com.bigfun.sdk.google.GooglePayUpdatedListener;
+import com.bigfun.sdk.NetWork.BFRewardedVideoListener;
 import com.bigfun.sdk.login.LoginListener;
-import com.bigfun.sdk.login.ShareListener;
+import com.bigfun.sdk.model.BFLoginModel;
 import com.bigfun.sdk.model.ISPlacement;
-import com.bigfun.sdk.type.AdBFPlatForm;
 import com.bigfun.sdk.type.AdBFSize;
-import com.bigfun.sdk.type.ShareContentType;
 
 
 import com.facebook.FacebookException;
@@ -51,26 +35,10 @@ import com.facebook.FacebookException;
 
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.facebook.share.Sharer;
-import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
-import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.auth.api.identity.BeginSignInResult;
-import com.google.android.gms.auth.api.identity.GetSignInIntentRequest;
-import com.google.android.gms.auth.api.identity.Identity;
-import com.google.android.gms.auth.api.identity.SignInClient;
-import com.google.android.gms.auth.api.identity.SignInCredential;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
     private String text = "";
@@ -179,13 +147,13 @@ public class MainActivity extends AppCompatActivity {
         AdView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BigFunSDK.getInstance().ISourceShowBanner(MainActivity.this,mBannerParentLayout,AdBFSize.BANNER_HEIGHT_50);
+                BigFunSDK.getInstance().ShowBanner(mBannerParentLayout,AdBFSize.BANNER_HEIGHT_50);
             }
         });
         Inter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BigFunSDK.getInstance().ISourceShowInterstitialAdLoadAd(MainActivity.this);
+                BigFunSDK.getInstance().ShowInterstitialAdLoadAd();
             }
         });
 
@@ -209,22 +177,20 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<String> permissionList = new ArrayList<>();
-                permissionList.add("public_profile");
-                permissionList.add("email");
-                BigFunSDK.getInstance().BigFunFBLogin(MainActivity.this, permissionList, new LoginListener() {
+
+                BigFunSDK.getInstance().BigFunLogin(MainActivity.this, new LoginListener() {
                     @Override
                     public void onCancel() {
                         Log.e(TAG, "onCancel: facebook登录取消");
                     }
 
                     @Override
-                    public void onError(FacebookException error) {
-                        Log.e(TAG, "onError: " + error.getMessage());
+                    public void onError(String error) {
+                        Log.e(TAG, "onError: " + error);
                     }
 
                     @Override
-                    public void onComplete(LoginResult loginResult) {
+                    public void onComplete(BFLoginModel loginResult) {
                         Log.e(TAG, "onSuccess: " + loginResult.toString());
                         Toast.makeText(MainActivity.this, "Facebook登录成功",
                                 Toast.LENGTH_LONG).show();
@@ -246,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                  * @param title 设置标题
                  * @param requestCode 置为ActivityResult requestCode，默认值为-1
                  */
-                BigFunSDK.getInstance().BigFunShare(MainActivity.this, ShareContentType.TEXT, uri, "11111", "22222", 100);
+                BigFunSDK.getInstance().BigFunShare(MainActivity.this,"11111");
 //                Intent sendIntent = new Intent();
 //                sendIntent.setAction(Intent.ACTION_SEND);
 //                // 比如发送文本形式的数据内容
@@ -256,10 +222,15 @@ public class MainActivity extends AppCompatActivity {
 //                sendIntent.setType("text/plain");
 //                startActivity(Intent.createChooser(sendIntent, "share to"));
 //                if (ShareDialog.canShow(ShareLinkContent.class)) {
+//                SharePhoto mSharePhoto=new SharePhoto.Builder()
+//                         .setCaption("Test share")
+//                            .setBitmap(bitmap)
+//                         .build();
+
 //                ShareLinkContent linkContent = new ShareLinkContent.Builder()
-////                            .setContentUrl(Uri.parse("http://developers.facebook.com/android"))
+//                            .setContentUrl(Uri.parse("http://developers.facebook.com/android"))
 //                        .build();
-//                BigFunSDK.getInstance().BigFunFBShare(MainActivity.this,linkContent,new ShareListener() {
+//                BigFunSDK.getInstance().BigFunShare(MainActivity.this,linkContent,new ShareListener() {
 //                    @Override
 //                    public void onCancel() {
 //                        Log.e(TAG, "onCancel: facebook取消");
@@ -283,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
         out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BigFunSDK.getInstance().ISourceShowRewardedVideo(MainActivity.this,new ISRewardedVideoListener() {
+                BigFunSDK.getInstance().ShowRewardedVideo(new BFRewardedVideoListener() {
                     @Override
                     public void onRewardedVideoAdClosed() {
 
@@ -303,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
                 /**
                  *
                  */
+                BigFunSDK.getInstance().BigFunLogin(MainActivity.this);
 //                BigFunSDK.getInstance().GooglePay(MainActivity.this, "premium_upgrade", new GooglePayUpdatedListener() {
 //                    @Override
 //                    public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
@@ -330,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         BigFunSDK.getInstance().onActivityResult(requestCode, resultCode, data);
-        Log.e("DemoActivity", "requestCode=" + requestCode + " resultCode=" + resultCode);
+        Log.e("DemoActivity", "requestCode=" + requestCode + " resultCode=" + resultCode+" data=" + data.toString());
         if (requestCode == FILE_SELECT_CODE && resultCode == RESULT_OK) {
             shareFileUrl = data.getData();
             tvShareFileUri.setText(shareFileUrl.toString());

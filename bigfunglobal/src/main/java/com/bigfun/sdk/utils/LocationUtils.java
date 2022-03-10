@@ -17,6 +17,7 @@ import android.util.Log;
 import androidx.core.app.ActivityCompat;
 
 import com.bigfun.sdk.BigFunSDK;
+import com.bigfun.sdk.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +83,7 @@ public class LocationUtils {
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Location location = locationManager
                     .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            Log.e("locationGPS",location+"");
+            LogUtils.log(location+"");
             if (location != null) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
@@ -123,7 +124,7 @@ public class LocationUtils {
 //                            1000, 0, locationListener, Looper.myLooper());
             Location location = locationManager
                     .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            Log.e("locationNet",location+"");
+            LogUtils.log(location+"");
             if (location != null) {
                 latitude = location.getLatitude(); // 经度
                 longitude = location.getLongitude(); // 纬度

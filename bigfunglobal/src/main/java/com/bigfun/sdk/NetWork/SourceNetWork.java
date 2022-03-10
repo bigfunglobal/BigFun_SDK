@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.bigfun.sdk.BigFunSDK;
+import com.bigfun.sdk.LogUtils;
 import com.bigfun.sdk.model.BigFunViewModel;
 import com.bigfun.sdk.model.ISPlacement;
 import com.bigfun.sdk.type.AdBFSize;
@@ -33,9 +34,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class SourceNetWork implements RewardedVideoListener, InterstitialListener, ImpressionDataListener {
-    private FrameLayout mBannerParentLayout;
-    private IronSourceBannerLayout mIronSourceBannerLayout;
-    private ISRewardedVideoListener listener;
+    private static FrameLayout mBannerParentLayout;
+    private static IronSourceBannerLayout mIronSourceBannerLayout;
+    private static BFRewardedVideoListener listener;
 
     public SourceNetWork() {
         TimerIronSource();
@@ -55,16 +56,18 @@ public class SourceNetWork implements RewardedVideoListener, InterstitialListene
         return instance;
     }
 
-    Timer timer = new Timer();
+    static Timer timer;
     private void TimerIronSource() {
-
+        timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Log.e("time","1000");
-                Log.e("Activity",mActivity+"Ket");
+                LogUtils.log( "timer: "+"1000");
+                LogUtils.log("mActivity: "+ mActivity+"Ket");
                 if (mActivity != null && !TextUtils.isEmpty(BigFunViewModel.SourceAppKey)) {
+                    LogUtils.log("mActivity123: "+ mActivity+"Ket11");
                     timer.cancel();
+                    timer=null;
                     initIronSource();
                 }
             }
@@ -94,27 +97,30 @@ public class SourceNetWork implements RewardedVideoListener, InterstitialListene
     }
 
 
-    public void showRewardedVideo(ISRewardedVideoListener listener) {
+    public static void showRewardedVideo(BFRewardedVideoListener bflistener) {
         Map<String, Object> map = new HashMap<>();
         map.put("adBFPlatForm", "IronSource");
-        BigFunSDK.getInstance().onEvent(mContext, "BFAd_IS_RewardedVideo", map);
-        this.listener = listener;
+        BigFunSDK.onEvent(mContext, "BFAd_IS_RewardedVideo", map);
+        listener = bflistener;
         if (IronSource.isRewardedVideoAvailable())
             //show rewarded video
             IronSource.showRewardedVideo();
     }
 
-    public void showInterstitial() {
+    public static void showInterstitial() {
         Map<String, Object> map = new HashMap<>();
         map.put("adBFPlatForm", "IronSource");
-        BigFunSDK.getInstance().onEvent(mContext, "BFAd_IS_Interstitial", map);
+        BigFunSDK.onEvent(mContext, "BFAd_IS_Interstitial", map);
         if (IronSource.isInterstitialReady()) {
 //                    //show the interstitial
             IronSource.showInterstitial();
         }
     }
 
-    public void onDestroy() {
+    public static void onDestroy() {
+        if(timer!=null){
+            timer.cancel();
+        }
         if (mIronSourceBannerLayout != null) {
             IronSource.destroyBanner(mIronSourceBannerLayout);
             if (mBannerParentLayout != null) {
@@ -126,20 +132,20 @@ public class SourceNetWork implements RewardedVideoListener, InterstitialListene
     /**
      * 创建并加载IronSource横幅
      */
-    private ISBannerSize isBannerSize = ISBannerSize.BANNER;
+    private static ISBannerSize isBannerSize = ISBannerSize.BANNER;
 
-    public void createAndloadBanner(FrameLayout mBannerParentLayout, AdBFSize size) {
+    public static void createAndloadBanner(FrameLayout mbannerParentLayout, AdBFSize size) {
         Map<String, Object> map = new HashMap<>();
         map.put("adBFPlatForm", "IronSource");
         map.put("adSize", size);
-        BigFunSDK.getInstance().onEvent(mContext, "BFAd_IS_Banner", map);
+        BigFunSDK.onEvent(mContext, "BFAd_IS_Banner", map);
         if (size.equals(AdBFSize.BANNER_HEIGHT_50))
             isBannerSize = ISBannerSize.BANNER;
         if (size.equals(AdBFSize.BANNER_HEIGHT_90))
             isBannerSize = ISBannerSize.LARGE;
         if (size.equals(AdBFSize.RECTANGLE_HEIGHT_250))
             isBannerSize = ISBannerSize.RECTANGLE;
-        this.mBannerParentLayout = mBannerParentLayout;
+        mBannerParentLayout = mbannerParentLayout;
 
         //使用IronSource实例化IronSourceBanner对象。createBanner API
         mIronSourceBannerLayout = IronSource.createBanner(mActivity, isBannerSize);
@@ -154,37 +160,36 @@ public class SourceNetWork implements RewardedVideoListener, InterstitialListene
             mIronSourceBannerLayout.setBannerListener(new BannerListener() {
                 @Override
                 public void onBannerAdLoaded() {
-                    Log.d(TAG, "onBannerAdLoaded");
+                     LogUtils.log( "onBannerAdLoaded");
                     //由于默认情况下横幅容器“消失”，我们需要在横幅准备就绪后立即使其可见
-                    mBannerParentLayout.setVisibility(View.VISIBLE);
+//                    mBannerParentLayout.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onBannerAdLoadFailed(IronSourceError error) {
-                    Log.d(TAG, "onBannerAdLoadFailed" + " " + error);
+                     LogUtils.log( "onBannerAdLoadFailed" + "IronSourceError： " + error);
                 }
 
                 @Override
                 public void onBannerAdClicked() {
-                    Log.d(TAG, "onBannerAdClicked");
+                     LogUtils.log( "onBannerAdClicked");
                 }
 
                 @Override
                 public void onBannerAdScreenPresented() {
-                    Log.d(TAG, "onBannerAdScreenPresented");
+                     LogUtils.log( "onBannerAdScreenPresented");
                 }
 
                 @Override
                 public void onBannerAdScreenDismissed() {
-                    Log.d(TAG, "onBannerAdScreenDismissed");
+                     LogUtils.log( "onBannerAdScreenDismissed");
                 }
 
                 @Override
                 public void onBannerAdLeftApplication() {
-                    Log.d(TAG, "onBannerAdLeftApplication");
+                     LogUtils.log( "onBannerAdLeftApplication");
                 }
             });
-
             //将广告加载到创建的横幅中
             IronSource.loadBanner(mIronSourceBannerLayout);
         } else {
@@ -197,13 +202,13 @@ public class SourceNetWork implements RewardedVideoListener, InterstitialListene
     @Override
     public void onRewardedVideoAdOpened() {
         //打开视频时调用
-        Log.d(TAG, "onRewardedVideoAdOpened");
+         LogUtils.log( "onRewardedVideoAdOpened");
     }
 
     @Override
     public void onRewardedVideoAdClosed() {
         //视频关闭时调用
-        Log.d(TAG, "onRewardedVideoAdClosed");
+         LogUtils.log( "onRewardedVideoAdClosed");
         //这里我们向用户显示一个对话框，如果他得到了奖励
         listener.onRewardedVideoAdClosed();
     }
@@ -211,26 +216,26 @@ public class SourceNetWork implements RewardedVideoListener, InterstitialListene
     @Override
     public void onRewardedVideoAvailabilityChanged(boolean b) {
         //视频可用性更改时调用
-        Log.d(TAG, "onRewardedVideoAvailabilityChanged" + " " + b);
+         LogUtils.log( "onRewardedVideoAvailabilityChanged" + " " + b);
 
     }
 
     @Override
     public void onRewardedVideoAdStarted() {
         //视频开始时调用
-        Log.d(TAG, "onRewardedVideoAdStarted");
+         LogUtils.log( "onRewardedVideoAdStarted");
     }
 
     @Override
     public void onRewardedVideoAdEnded() {
         //视频结束时调用
-        Log.d(TAG, "onRewardedVideoAdEnded");
+         LogUtils.log( "onRewardedVideoAdEnded");
     }
 
     @Override
     public void onRewardedVideoAdRewarded(Placement placement) {
         //当视频得到奖励并且可以给用户奖励时调用
-        Log.d(TAG, "onRewardedVideoAdRewarded" + " " + placement);
+         LogUtils.log( "onRewardedVideoAdRewarded" + " " + placement);
         listener.onRewardedVideoAdRewarded(new ISPlacement(placement));
     }
 
@@ -240,7 +245,7 @@ public class SourceNetWork implements RewardedVideoListener, InterstitialListene
         //您可以通过访问IronSourceError对象来获取错误数据
         // IronSourceError.getErrorCode();
         // IronSourceError.getErrorMessage();
-        Log.d(TAG, "onRewardedVideoAdShowFailed" + " " + ironSourceError);
+         LogUtils.log( "onRewardedVideoAdShowFailed" + "ironSourceError： " + ironSourceError);
     }
 
     @Override
@@ -253,14 +258,14 @@ public class SourceNetWork implements RewardedVideoListener, InterstitialListene
     @Override
     public void onInterstitialAdClicked() {
         //单击间隙时调用
-        Log.d(TAG, "onInterstitialAdClicked");
+         LogUtils.log( "onInterstitialAdClicked");
     }
 
     @Override
     public void onInterstitialAdReady() {
         //当间隙准备好时调用
 
-        Log.d(TAG, "onInterstitialAdReady");
+         LogUtils.log( "onInterstitialAdReady");
     }
 
     @Override
@@ -269,27 +274,27 @@ public class SourceNetWork implements RewardedVideoListener, InterstitialListene
 //您可以通过访问IronSourceError对象来获取错误数据
 //         IronSourceError.getErrorCode();
 //         IronSourceError.getErrorMessage();
-        Log.d(TAG, "onInterstitialAdLoadFailed" + " " + ironSourceError);
+         LogUtils.log( "onInterstitialAdLoadFailed" + "ironSourceError： " + ironSourceError);
 
     }
 
     @Override
     public void onInterstitialAdOpened() {
         //显示间隙时调用
-        Log.d(TAG, "onInterstitialAdOpened");
+         LogUtils.log( "onInterstitialAdOpened");
     }
 
     @Override
     public void onInterstitialAdClosed() {
         //当间隙闭合时调用
-        Log.d(TAG, "onInterstitialAdClosed");
+         LogUtils.log( "onInterstitialAdClosed");
 
     }
 
     @Override
     public void onInterstitialAdShowSucceeded() {
         //成功显示间隙时调用
-        Log.d(TAG, "onInterstitialAdShowSucceeded");
+         LogUtils.log( "onInterstitialAdShowSucceeded");
     }
 
     @Override
@@ -299,14 +304,14 @@ public class SourceNetWork implements RewardedVideoListener, InterstitialListene
 //您可以通过访问IronSourceError对象来获取错误数据
         // IronSourceError.getErrorCode();
         // IronSourceError.getErrorMessage();
-        Log.d(TAG, "onInterstitialAdShowFailed" + " " + ironSourceError);
+         LogUtils.log( "onInterstitialAdShowFailed" + "ironSourceError： " + ironSourceError);
 
     }
 
     @Override
     public void onImpressionSuccess(ImpressionData impressionData) {
         if (impressionData != null) {
-            Log.d(TAG, "onImpressionSuccess " + impressionData);
+             LogUtils.log( "onImpressionSuccess " + impressionData);
         }
     }
 }

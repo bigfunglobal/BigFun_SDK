@@ -2,7 +2,7 @@ package com.bigfun.sdk.NetWork;
 
 import com.bigfun.sdk.model.ISPlacement;
 
-public interface ISRewardedVideoListener {
+public interface BFRewardedVideoListener {
 
     void onRewardedVideoAdClosed();
 

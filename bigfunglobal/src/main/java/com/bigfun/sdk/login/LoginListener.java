@@ -3,13 +3,16 @@ package com.bigfun.sdk.login;
 
 import androidx.annotation.Keep;
 
+import com.bigfun.sdk.model.BFLoginModel;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
+
 
 import org.json.JSONObject;
 
 @Keep
 public interface LoginListener {
+
     /**
      * 取消
      */
@@ -20,7 +23,7 @@ public interface LoginListener {
      * 错误
      */
     @Keep
-    void onError(FacebookException error);
+    void onError(String error);
 
     /**
      * 完成
@@ -28,5 +31,5 @@ public interface LoginListener {
      * @param loginResult
      */
     @Keep
-    void onComplete(LoginResult loginResult);
+    void onComplete(BFLoginModel loginResult);
 }

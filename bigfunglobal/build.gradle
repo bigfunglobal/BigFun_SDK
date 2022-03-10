@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
-//apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.google.gms.google-services'
-//group = 'com.github.hzyouliang'
+
 
 
 android {
@@ -40,7 +39,7 @@ dependencies {
 
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation fileTree(dir: "libs", include: ["*.aar"])
+
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation files('libs\\SaaS_TalkingDataSDK_Android_V5.0.1.jar')
     testImplementation 'junit:junit:4.12'
@@ -48,34 +47,31 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
 
-    //zendesk
-//    api group: 'com.zendesk', name: 'messaging', version: '4.3.1'
-//    api group: 'com.zendesk', name: 'chat', version: '2.2.0'
-//    implementation group: 'com.zendesk', name: 'chat-providers', version: '2.2.0'
     //kochava
     implementation platform('com.google.firebase:firebase-bom:29.1.0')
     implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.squareup.okhttp3:okhttp:3.14.+'
-    implementation 'com.google.code.gson:gson:2.8.8'
-    implementation 'com.just.agentweb:agentweb:4.1.4'
-    implementation 'com.kochava.base:tracker:3.9.0'
+
+    implementation 'com.squareup.okhttp3:okhttp:3.4.1'
+    implementation 'com.google.code.gson:gson:2.7'
+
+
     implementation 'com.facebook.android:facebook-login:latest.release'
     implementation 'com.facebook.android:facebook-share:latest.release'
-    implementation 'com.facebook.android:facebook-android-sdk:latest.release'
-    implementation 'com.facebook.android:audience-network-sdk:6.+'
+
 
     implementation 'com.adjust.sdk:adjust-android:4.28.2'
     implementation 'com.android.installreferrer:installreferrer:2.2'
+
     implementation 'com.google.android.gms:play-services-ads-identifier:17.0.0'
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
     implementation 'com.google.android.gms:play-services-location:19.0.1'
     implementation 'com.android.billingclient:billing:4.0.0'
     implementation 'com.google.android.gms:play-services-wallet:18.1.3'
 
+    //判断虚拟机
+    implementation 'io.github.happylishang:antifake:1.5.0'
+
     implementation 'com.ironsource.sdk:mediationsdk:7.2.0'
 
-//    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.32'
-//    implementation 'org.jetbrains.kotlin:kotlin-stdlib-common:1.4.32'
-//    implementation 'com.android.support:appcompat-v7:24.1.1'
 
 }

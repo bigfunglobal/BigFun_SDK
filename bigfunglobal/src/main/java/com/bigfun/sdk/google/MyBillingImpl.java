@@ -1,7 +1,11 @@
 package com.bigfun.sdk.google;
 
+import static android.content.ContentValues.TAG;
+
+
 import android.app.Activity;
 import android.content.Context;
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -16,67 +20,102 @@ import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.ConsumeParams;
 import com.android.billingclient.api.ConsumeResponseListener;
 import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.bigfun.sdk.google.GoogleCommodityListener;
+import com.bigfun.sdk.google.GoogleQueryPayListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyBillingImpl implements PurchasesUpdatedListener, ConsumeResponseListener {
-    private BillingClient billingClient;
-    private GooglePayUpdatedListener listener;
-    public MyBillingImpl(){
+public class MyBillingImpl implements PurchasesUpdatedListener, SkuDetailsResponseListener {
+    private static BillingClient billingClient;
+
+    public MyBillingImpl() {
 
     }
-
+    private static MyBillingImpl instance;
+    //
+    public static MyBillingImpl getInstance() {
+        if (instance == null) {
+            synchronized (MyBillingImpl.class) {
+                if (instance == null) {
+                    instance = new MyBillingImpl();
+                }
+            }
+        }
+        return instance;
+    }
+    //初始化
     public void initialize(Context context) {
-        billingClient = BillingClient.newBuilder(context).setListener(this).enablePendingPurchases().build();
-        billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingSetupFinished(BillingResult billingResult) {
-                // Logic from ServiceConnection.onServiceConnected should be moved here.
-                Log.e("onBillingSetupFinished",billingResult.getResponseCode()+"");
-            }
 
-            @Override
-            public void onBillingServiceDisconnected() {
-                // Logic from ServiceConnection.onServiceDisconnected should be moved here.
-                Log.e("onBillingServicected","1231313");
-            }
-        });
+        billingClient = BillingClient.newBuilder(context).setListener(this).enablePendingPurchases().build();
     }
 
+    //            int SERVICE_TIMEOUT = -3;//服务超时,在 Google Play 响应之前，请求已达到最大超时。
+//            int FEATURE_NOT_SUPPORTED = -2;//当前设备上的 Play 商店不支持请求的功能。
+//            int SERVICE_DISCONNECTED = -1;//服务单元已断开,Play 商店服务现在未连接 - 可能是暂时状态。
+//            int OK = 0;//成功
+//            int USER_CANCELED = 1;//用户按上一步或取消对话框
+//            int SERVICE_UNAVAILABLE = 2;//网络连接断开
+//            int BILLING_UNAVAILABLE = 3;//所请求的类型不支持 Google Play 结算服务 AIDL 版本
+//            int ITEM_UNAVAILABLE = 4;//请求的商品已不再出售。请求的产品不可购买。
+//            int DEVELOPER_ERROR = 5;//提供给 API 的参数无效。此错误也可能说明应用未针对结算服务正确签名或设置，或者在其清单中缺少必要的权限。
+//            int ERROR = 6;//API 操作期间出现严重错误
+//            int ITEM_ALREADY_OWNED = 7;//未能购买，因为已经拥有此商品
+//            int ITEM_NOT_OWNED = 8;//未能消费，因为尚未拥有此商品,由于物品不属于自己而未能消费。
+
+    //支付回调
     @Override
     public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
         // 在这里处理从 Billing 库更新购买的回，对 purchases 进行处理
-        Log.e("onPurchasesUpdated","11111111111111");
-        listener.onPurchasesUpdated(billingResult, list);
-        if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK
-                && list != null) {
-            for (Purchase purchase : list) {
-                handlePurchase(purchase);
-            }
-        } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
-            // Handle an error caused by a user cancelling the purchase flow.
-        } else {
-            // Handle any other error codes.
+
+        switch (billingResult.getResponseCode()) {
+            case BillingClient.BillingResponseCode.OK:
+                if (null != list) {
+                    for (Purchase purchase : list) {
+                        handlePurchase(purchase);
+                    }
+                    return;
+                } else {
+                    Log.d(TAG, "Null Purchase List Returned from OK response!");
+                }
+                break;
+            case BillingClient.BillingResponseCode.USER_CANCELED:
+                Log.i(TAG, "onPurchasesUpdated: User canceled the purchase");
+                break;
+            case BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED:
+                Log.i(TAG, "onPurchasesUpdated: The user already owns this item");
+                break;
+            case BillingClient.BillingResponseCode.DEVELOPER_ERROR:
+                Log.e(TAG, "onPurchasesUpdated: Developer error means that Google Play " +
+                        "does not recognize the configuration. If you are just getting started, " +
+                        "make sure you have configured the application correctly in the " +
+                        "Google Play Console. The SKU product ID must match and the APK you " +
+                        "are using must be signed with release keys."
+                );
+                break;
+            default:
+                Log.d(TAG, "BillingResult [" + billingResult.getResponseCode() + "]: "
+                        + billingResult.getDebugMessage());
         }
+
     }
-    AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener=new AcknowledgePurchaseResponseListener() {
+
+    //确认购买完成
+    static AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener = new AcknowledgePurchaseResponseListener() {
         @Override
         public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
-
+            //调用以通知确认购买操作已完成。
+            googleQueryPayListener.onPurchaseResponse(billingResult);
         }
     };
-    public void handlePurchase(Purchase purchase) {
-        // Purchase retrieved from BillingClient#queryPurchasesAsync or your PurchasesUpdatedListener.
-//        Purchase purchase = ...;
 
-        // Verify the purchase.
-        // Ensure entitlement was not already granted for this purchaseToken.
-        // Grant entitlement to the user.
+    //商品成功后消费流程
+    public static void handlePurchase(Purchase purchase) {
 
         if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
             if (!purchase.isAcknowledged()) {
@@ -86,65 +125,202 @@ public class MyBillingImpl implements PurchasesUpdatedListener, ConsumeResponseL
                                 .build();
                 billingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
             }
-        }
 
+        }
+    }
+
+
+    //商品消费成功
+    static ConsumeResponseListener listener = new ConsumeResponseListener() {
+        @Override
+        public void onConsumeResponse(BillingResult billingResult, String purchaseToken) {
+            purchaseListener.onConsumePurchase(billingResult, purchaseToken);
+
+        }
+    };
+    private static GoogleConsumePurchaseListener purchaseListener;
+
+    //商品消耗掉，才能从新购买该商品
+    public void consumePurchase(Purchase purchase, GoogleConsumePurchaseListener purchaseListener) {
+        this.purchaseListener = purchaseListener;
+        //核实购买情况。
+        //确保尚未为此purchaseToken授予权限。
+        //授予用户权限。
         ConsumeParams consumeParams =
                 ConsumeParams.newBuilder()
                         .setPurchaseToken(purchase.getPurchaseToken())
                         .build();
 
-        ConsumeResponseListener listener = new ConsumeResponseListener() {
-            @Override
-            public void onConsumeResponse(BillingResult billingResult, String purchaseToken) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    // Handle the success of the consume operation.
-                }
-            }
-        };
-
         billingClient.consumeAsync(consumeParams, listener);
     }
-    @Override
-    public void onConsumeResponse(@NonNull BillingResult billingResult, @NonNull String s) {
+
+    /**
+     * 查询最近的购买交易
+     * 使用 Google Play 商店应用的缓存，而不发起网络请求
+     * 建议在应用启动时和 onResume() 方法中调用 至少调用两次
+     */
+    private static List<Purchase> purchaseList = new ArrayList<>();
+
+    public static void queryPurchase(GoogleQueryPurchaseListener queryPurchaseListener) {
+
+        billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP, new PurchasesResponseListener() {
+            @Override
+            public void onQueryPurchasesResponse(@NonNull BillingResult billingResult, @NonNull List<Purchase> list) {
+                queryPurchaseListener.onQueryPurchasesResponse(billingResult, list);
+            }
+        });
 
     }
+    //执行成功之后再次处理消费流程handlePurchase(purchase, false);
+
+
+    //自定义内购商品展示页，商品回调
+    public void googleQueryPay(GoogleCommodityListener googleCommodityListener) {
+
+        billingClient.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingSetupFinished(BillingResult billingResult) {
+                // Logic from ServiceConnection.onServiceConnected should be moved here.
+                pay(googleCommodityListener);
+            }
+
+            @Override
+            public void onBillingServiceDisconnected() {
+                // 来自ServiceConnection的逻辑。onServiceDisconnected应该移到这里。
+
+            }
+        });
+    }
+
+    //自定义购买商品查询
+    public static void googleQueryPurchase(GoogleQueryPurchaseListener queryPurchaseListener) {
+        billingClient.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingSetupFinished(BillingResult billingResult) {
+                // Logic from ServiceConnection.onServiceConnected should be moved here.
+
+                queryPurchase(queryPurchaseListener);
+            }
+
+            @Override
+            public void onBillingServiceDisconnected() {
+                // 来自ServiceConnection的逻辑。onServiceDisconnected应该移到这里。
+
+            }
+        });
+    }
+
+
+    private static GoogleQueryPayListener googleQueryPayListener;
+    private static GoogleCommodityListener googleCommodityListener;
     List<String> skuList = new ArrayList<>();
-    List<SkuDetails> skuDetailsList=new ArrayList<>();
-    // Retrieve a value for "skuDetails" by calling querySkuDetailsAsync().
+    List<String> skuLists = new ArrayList<>();
+    private boolean inapp = true, subs = true;
 
-    public void googlepay(Activity activity,String premium_upgrade,GooglePayUpdatedListener googlePayUpdatedListener){
-        listener=googlePayUpdatedListener;
-        skuList.add(premium_upgrade);
-        SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-        params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
-        billingClient.querySkuDetailsAsync(params.build(),
-                new SkuDetailsResponseListener() {
-                    @Override
-                    public void onSkuDetailsResponse(BillingResult billingResult,
-                                                     List<SkuDetails> skuDetailsList) {
-                        Log.e("1111","11111");
-                    }
-                });
+    //查询内购商品
+    public void pay(GoogleCommodityListener googleCommodityListener) {
 
-// SkuDetails object obtained above.
-        SkuDetails skuDetails = null;
-        if(skuDetailsList.size()>0)
-         skuDetails = skuDetailsList.get(0);
-
-
-        BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
-                .setSkuDetails(skuDetails)
-                .build();
-        int responseCode = billingClient.launchBillingFlow(activity, billingFlowParams).getResponseCode();
-
-//        BillingFlowParams purchaseParams =
-//                BillingFlowParams.newBuilder()
-//                        .setSkuDetails(skuDetails)
-//                        .build();
-//
-//        billingClient.launchBillingFlow(activity, purchaseParams);
+        this.googleCommodityListener = googleCommodityListener;
+        skuLists.add("infinite_gas_monthly");
+        skuLists.add("infinite_gas_yearly");
+        skuList.add("premium");
+        skuList.add("gas");
+        if (!skudetails) {
+            skuDetails.clear();
+            if (null != skuList && !skuList.isEmpty()) {
+                inapp = false;
+                billingClient.querySkuDetailsAsync(SkuDetailsParams.newBuilder()
+                        .setType(BillingClient.SkuType.INAPP)
+                        .setSkusList(skuList)
+                        .build(), this);
+            }
+            if (null != skuLists && !skuLists.isEmpty()) {
+                subs = false;
+                billingClient.querySkuDetailsAsync(SkuDetailsParams.newBuilder()
+                        .setType(BillingClient.SkuType.SUBS)
+                        .setSkusList(skuLists)
+                        .build(), this);
+            }
+        }else {
+            googleCommodityListener.onSkuDetailsResponse(result, skuDetails);
+        }
     }
 
 
+    //内购商品的购买
+    public void initiatePurchaseFlow(Activity activity, final SkuDetails skuDetails, GoogleQueryPayListener googleQueryPayListener) {
+        this.googleQueryPayListener = googleQueryPayListener;
+        BillingFlowParams purchaseParams = BillingFlowParams.newBuilder().
+                setSkuDetails(skuDetails)
+                .build();
+        billingClient.launchBillingFlow(activity, purchaseParams);
+
+    }
+
+    private List<SkuDetails> skuDetailsinapp = new ArrayList<>();
+    private List<SkuDetails> skuDetailssubs = new ArrayList<>();
+    private static List<SkuDetails> skuDetails = new ArrayList<>();
+    private boolean skudetails = false;
+    private BillingResult result;
+
+    @Override
+    public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable List<SkuDetails> skuDetailsList) {
+
+        // Process the result.
+
+        int responseCode = billingResult.getResponseCode();
+        String debugMessage = billingResult.getDebugMessage();
+        switch (responseCode) {
+            case BillingClient.BillingResponseCode.OK:
+                Log.i(TAG, "onSkuDetailsResponse: " + responseCode + " " + debugMessage);
+                if (skuDetailsList == null || skuDetailsList.isEmpty()) {
+                    Log.e(TAG, "onSkuDetailsResponse: " +
+                            "Found null or empty SkuDetails. " +
+                            "Check to see if the SKUs you requested are correctly published " +
+                            "in the Google Play Console.");
+                } else {
+
+                    skuDetailsinapp.clear();
+                    skuDetailssubs.clear();
+                    for (int i = 0; i < skuDetailsList.size(); i++) {
+                        if (skuDetailsList.get(i).getType().equals(BillingClient.SkuType.INAPP)) {
+                            inapp = true;
+                            skuDetailsinapp.add(skuDetailsList.get(i));
+                        }
+                        if (skuDetailsList.get(i).getType().equals(BillingClient.SkuType.SUBS)) {
+                            subs = true;
+                            skuDetailssubs.add(skuDetailsList.get(i));
+                        }
+//
+                    }
+                    skuDetails.addAll(skuDetailsinapp);
+                    skuDetails.addAll(skuDetailssubs);
+                    if (inapp && subs) {
+                        result=billingResult;
+                        googleCommodityListener.onSkuDetailsResponse(billingResult, skuDetails);
+                        skudetails = true;
+                    }
+                }
+                break;
+            case BillingClient.BillingResponseCode.SERVICE_DISCONNECTED:
+            case BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE:
+            case BillingClient.BillingResponseCode.BILLING_UNAVAILABLE:
+            case BillingClient.BillingResponseCode.ITEM_UNAVAILABLE:
+            case BillingClient.BillingResponseCode.DEVELOPER_ERROR:
+            case BillingClient.BillingResponseCode.ERROR:
+                Log.e(TAG, "onSkuDetailsResponse: " + responseCode + " " + debugMessage);
+                break;
+            case BillingClient.BillingResponseCode.USER_CANCELED:
+                Log.i(TAG, "onSkuDetailsResponse: " + responseCode + " " + debugMessage);
+                break;
+            // These response codes are not expected.
+            case BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED:
+            case BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED:
+            case BillingClient.BillingResponseCode.ITEM_NOT_OWNED:
+            default:
+                Log.wtf(TAG, "onSkuDetailsResponse: " + responseCode + " " + debugMessage);
+        }
+
+    }
 }
 

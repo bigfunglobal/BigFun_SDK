@@ -19,9 +19,7 @@
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
             android:value="true" />
-<!--        <activity-->
-<!--            android:name="zendesk.messaging.MessagingActivity"-->
-<!--            android:theme="@style/MessagingStyle" />-->
-<!--        <activity android:name=".facebook.SDKFacebookActivity" />-->
+
+
     </application>
 </manifest>

@@ -6,8 +6,6 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.bigfun.sdk.database.EventBean;
-import com.bigfun.sdk.database.EventManager;
 import com.bigfun.sdk.encrypt.EncryptUtil;
 import com.bigfun.sdk.utils.LocationUtils;
 import com.bigfun.sdk.utils.SystemUtil;
@@ -28,15 +26,11 @@ import okhttp3.ResponseBody;
 
 public class ReportTask implements Runnable {
 
-    private List<EventBean> mEventBeanList;
     private Activity activity;
     private Gson gson=new Gson();
     private MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
 
-    public ReportTask(List<EventBean> list,Activity activity) {
-        this.activity=activity;
-        mEventBeanList = list;
-    }
+
     public ReportTask(Activity activity) {
         this.activity=activity;
     }

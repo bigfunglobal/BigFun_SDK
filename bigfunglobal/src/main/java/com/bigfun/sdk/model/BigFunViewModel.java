@@ -6,7 +6,7 @@ import com.bigfun.sdk.NetWork.SourceNetWork;
 
 
 public class BigFunViewModel {
-    public static boolean google=false,ISoure=false,sms = false, sdk = false, shar = false, fblonig = false, adjust = false, tkdata = false,firebase=false,adnet=false;
+    public static boolean google=false,ISoure=false,sms = false, sdk = false, shar = false, fblonig = false, adjust = false, tkdata = false,firebase=false,FBnet=false,TMnet=false;
     public static String bannerAdId = "",interstitialId="",rewardedVideoId="",SourceAppKey="";
     public static int insetAdTM,insetAdFB,incentiveVideoTM,incentiveVideoFB,streamerAdFB,streamerAdTM;
     private static BigFunViewModel instance;
@@ -24,27 +24,35 @@ public class BigFunViewModel {
         return instance;
     }
     public void BigFunViewModelGosn(SdkConfigurationInfoBean bean){
+        sdk = true;
         if (!TextUtils.isEmpty(bean.getAdjustAppToken()) && !TextUtils.isEmpty(bean.getBuriedPointType()) && bean.getBuriedPointType().contains("3")) {
             adjust = true;
         }
-        if(!TextUtils.isEmpty(bean.getIronSourceAppKey())){
+//        if(!TextUtils.isEmpty(bean.getIronSourceAppKey())){
+//            ISoure=true;
+//            SourceAppKey=bean.getIronSourceAppKey();
+//            SourceNetWork.getInstance();
+//        }
+        if (!TextUtils.isEmpty(bean.getAdjustAppToken()) && !TextUtils.isEmpty(bean.getBuriedPointType()) && bean.getBuriedPointType().contains("2")) {
+            firebase = true;
+        }
+        if (!TextUtils.isEmpty(bean.getAdsType())&&bean.getAdsType().contains("1")&&!TextUtils.isEmpty(bean.getIronSourceAppKey())) {
             ISoure=true;
             SourceAppKey=bean.getIronSourceAppKey();
             SourceNetWork.getInstance();
-        }if (!TextUtils.isEmpty(bean.getAdjustAppToken()) && !TextUtils.isEmpty(bean.getBuriedPointType()) && bean.getBuriedPointType().contains("2")) {
-            firebase = true;
+            //            FBnet=true;
+//            if (!TextUtils.isEmpty(bean.getBannerAdId())) {
+//                bannerAdId = bean.getPlacementIdProduction();
+//            }
+//            if (!TextUtils.isEmpty(bean.getInterstitialId())) {
+//                interstitialId = bean.getPlacementIdTest();
+//            }
+//            if (!TextUtils.isEmpty(bean.getRewardedVideoId())) {
+//                rewardedVideoId = bean.getPlacementIdTest();
+//            }
         }
-        if (!TextUtils.isEmpty(bean.getAdsType())) {
-            adnet=true;
-            if (!TextUtils.isEmpty(bean.getBannerAdId())) {
-                bannerAdId = bean.getPlacementIdProduction();
-            }
-            if (!TextUtils.isEmpty(bean.getInterstitialId())) {
-                interstitialId = bean.getPlacementIdTest();
-            }
-            if (!TextUtils.isEmpty(bean.getRewardedVideoId())) {
-                rewardedVideoId = bean.getPlacementIdTest();
-            }
+        if (!TextUtils.isEmpty(bean.getAdsType())&&bean.getAdsType().contains("2")) {
+            TMnet=true;
         }
         if (!TextUtils.isEmpty(bean.getTalkingDataAppId()) && !TextUtils.isEmpty(bean.getBuriedPointType()) && bean.getBuriedPointType().contains("2")) {
             tkdata = true;
@@ -81,7 +89,6 @@ public class BigFunViewModel {
         if(!TextUtils.isEmpty(bean.getStreamerAdTM())){
             streamerAdTM= Integer.parseInt(bean.getStreamerAdTM());
         }
-        sdk = true;
 
     }
 }

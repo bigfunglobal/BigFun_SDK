@@ -13,6 +13,6 @@ public class LogUtils {
         if (!BigFunSDK.isDebug) {
             return;
         }
-        Log.d(TAG, "" + message);
+         Log.d(TAG, "" + message);
     }
 }
