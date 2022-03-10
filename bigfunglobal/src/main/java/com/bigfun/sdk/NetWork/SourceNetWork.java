@@ -90,7 +90,7 @@ public class SourceNetWork{
     }
 
     private void initIronSource() {
-
+        IntegrationHelper.validateIntegration(mActivity);
             //设置IronSource用户id
             IronSource.setUserId(IronSource.getAdvertiserId(mContext));
              //初始化IronSource SDK
