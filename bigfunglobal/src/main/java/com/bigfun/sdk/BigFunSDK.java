@@ -117,7 +117,7 @@ public class BigFunSDK {
         mChannelCode = channelCode;
         SourceNetWork.initListener();
         LoginModel.getInstance();
-        MyBillingImpl.getInstance().initialize(mContext);
+        MyBillingImpl.initialize(mContext);
         ExceptionHandler.install(new ExceptionHandler.CustomExceptionHandler() {
             @Override
             public void handlerException(Thread thread, Throwable throwable) {
@@ -260,6 +260,17 @@ public class BigFunSDK {
 
     }
 
+    @Keep
+    public static String getDeviceId() {
+        return TalkingDataSDK.getDeviceId(mContext);
+    }
+
+    @Keep
+    public static String getOAID() {
+        return TalkingDataSDK.getOAID(mContext);
+    }
+
+
     /**
      * @param context 上下文
      * @param eventId 自定义事件名称。
@@ -286,7 +297,7 @@ public class BigFunSDK {
      */
     @Keep
     public static void googleQueryPay(GoogleCommodityListener googleCommodityListener){
-        MyBillingImpl.getInstance().googleQueryPay(googleCommodityListener);
+        MyBillingImpl.googleQueryPay(googleCommodityListener);
     }
 
     /**
@@ -295,7 +306,7 @@ public class BigFunSDK {
      */
     @Keep
     public static void googleQueryPurchase(GoogleQueryPurchaseListener queryPurchaseListener){
-        MyBillingImpl.getInstance().googleQueryPurchase(queryPurchaseListener);
+        MyBillingImpl.googleQueryPurchase(queryPurchaseListener);
     }
 
     /**
@@ -306,7 +317,7 @@ public class BigFunSDK {
      */
     @Keep
     public static void initiatePurchaseFlow(Activity activity, final SkuDetails skuDetails, GoogleQueryPayListener googleQueryPayListener){
-        MyBillingImpl.getInstance().initiatePurchaseFlow(activity,skuDetails,googleQueryPayListener);
+        MyBillingImpl.initiatePurchaseFlow(activity,skuDetails,googleQueryPayListener);
     }
 
     @Keep
@@ -321,7 +332,7 @@ public class BigFunSDK {
      */
     @Keep
     public static void consumePurchase(Purchase purchase, GoogleConsumePurchaseListener purchaseListener){
-        MyBillingImpl.getInstance().consumePurchase(purchase,purchaseListener);
+        MyBillingImpl.consumePurchase(purchase,purchaseListener);
     }
     /**
      * @param activity
