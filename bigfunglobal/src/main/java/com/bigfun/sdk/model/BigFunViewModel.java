@@ -28,12 +28,16 @@ public class BigFunViewModel {
         if (!TextUtils.isEmpty(bean.getAdjustAppToken()) && !TextUtils.isEmpty(bean.getBuriedPointType()) && bean.getBuriedPointType().contains("3")) {
             adjust = true;
         }
+        if (!TextUtils.isEmpty(bean.getTalkingDataAppId()) && !TextUtils.isEmpty(bean.getBuriedPointType()) && bean.getBuriedPointType().contains("2")) {
+            tkdata = true;
+
+        }
 //        if(!TextUtils.isEmpty(bean.getIronSourceAppKey())){
 //            ISoure=true;
 //            SourceAppKey=bean.getIronSourceAppKey();
 //            SourceNetWork.getInstance();
 //        }
-        if (!TextUtils.isEmpty(bean.getAdjustAppToken()) && !TextUtils.isEmpty(bean.getBuriedPointType()) && bean.getBuriedPointType().contains("2")) {
+        if (!TextUtils.isEmpty(bean.getAdjustAppToken()) && !TextUtils.isEmpty(bean.getBuriedPointType()) && bean.getBuriedPointType().contains("1")) {
             firebase = true;
         }
         if (!TextUtils.isEmpty(bean.getAdsType())&&bean.getAdsType().contains("1")&&!TextUtils.isEmpty(bean.getIronSourceAppKey())) {
@@ -54,10 +58,7 @@ public class BigFunViewModel {
         if (!TextUtils.isEmpty(bean.getAdsType())&&bean.getAdsType().contains("2")) {
             TMnet=true;
         }
-        if (!TextUtils.isEmpty(bean.getTalkingDataAppId()) && !TextUtils.isEmpty(bean.getBuriedPointType()) && bean.getBuriedPointType().contains("2")) {
-            tkdata = true;
 
-        }
         if (!TextUtils.isEmpty(bean.getLoginType()) && bean.getLoginType().contains("1")) {
             fblonig = true;
 
@@ -71,24 +72,24 @@ public class BigFunViewModel {
         if (!TextUtils.isEmpty(bean.getShareType())) {
             shar = true;
         }
-        if(!TextUtils.isEmpty(bean.getInsetAdTM())){
-            insetAdTM= Integer.parseInt(bean.getInsetAdTM());
-        }
-        if(!TextUtils.isEmpty(bean.getInsetAdFB())){
-            insetAdFB= Integer.parseInt(bean.getInsetAdFB());
-        }
-        if(!TextUtils.isEmpty(bean.getIncentiveVideoTM())){
-            incentiveVideoTM= Integer.parseInt(bean.getIncentiveVideoTM());
-        }
-        if(!TextUtils.isEmpty(bean.getIncentiveVideoFB())){
-            incentiveVideoFB= Integer.parseInt(bean.getIncentiveVideoFB());
-        }
-        if(!TextUtils.isEmpty(bean.getStreamerAdFB())){
-            streamerAdFB= Integer.parseInt(bean.getStreamerAdFB());
-        }
-        if(!TextUtils.isEmpty(bean.getStreamerAdTM())){
-            streamerAdTM= Integer.parseInt(bean.getStreamerAdTM());
-        }
+//        if(!TextUtils.isEmpty(bean.getInsetAdTM())){
+//            insetAdTM= Integer.parseInt(bean.getInsetAdTM());
+//        }
+//        if(!TextUtils.isEmpty(bean.getInsetAdFB())){
+//            insetAdFB= Integer.parseInt(bean.getInsetAdFB());
+//        }
+//        if(!TextUtils.isEmpty(bean.getIncentiveVideoTM())){
+//            incentiveVideoTM= Integer.parseInt(bean.getIncentiveVideoTM());
+//        }
+//        if(!TextUtils.isEmpty(bean.getIncentiveVideoFB())){
+//            incentiveVideoFB= Integer.parseInt(bean.getIncentiveVideoFB());
+//        }
+//        if(!TextUtils.isEmpty(bean.getStreamerAdFB())){
+//            streamerAdFB= Integer.parseInt(bean.getStreamerAdFB());
+//        }
+//        if(!TextUtils.isEmpty(bean.getStreamerAdTM())){
+//            streamerAdTM= Integer.parseInt(bean.getStreamerAdTM());
+//        }
 
     }
 }
