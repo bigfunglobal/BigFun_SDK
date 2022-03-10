@@ -39,7 +39,7 @@ public class BigFunViewModel {
         if (!TextUtils.isEmpty(bean.getAdsType())&&bean.getAdsType().contains("1")&&!TextUtils.isEmpty(bean.getIronSourceAppKey())) {
             ISoure=true;
             SourceAppKey=bean.getIronSourceAppKey();
-            SourceNetWork.getInstance();
+            SourceNetWork.getInstance().TimerIronSource();
             //            FBnet=true;
 //            if (!TextUtils.isEmpty(bean.getBannerAdId())) {
 //                bannerAdId = bean.getPlacementIdProduction();

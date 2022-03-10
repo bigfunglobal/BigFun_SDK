@@ -29,6 +29,7 @@ public class LocationUtils {
     public static double longitude = 0.0;
     private static Context context;
     private static LocationUtils instance;
+    private static boolean per =false;
     private static LocationManager locationManager;
     public static LocationUtils getInstance(Context context) {
         if (instance == null) {
@@ -51,9 +52,12 @@ public class LocationUtils {
         List<String> needRequestList = checkPermission(context, PERMISSION_LIST);
         if (needRequestList.isEmpty()) {
             //已授权
+            per=true;
         } else {
             //申请权限
-            requestPermission(needRequestList);
+            per=false;
+            return;
+//            requestPermission(needRequestList);
         }
     }
     private static List<String> checkPermission(Context context, String[] checkList) {
@@ -78,6 +82,9 @@ public class LocationUtils {
      */
     @SuppressLint("MissingPermission")
     public static String initLocation() {
+        if(!per){
+            return "";
+        }
         locationManager = (LocationManager) context
                 .getSystemService(Context.LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {

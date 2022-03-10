@@ -115,6 +115,7 @@ public class BigFunSDK {
         mContext = application.getApplicationContext();
 //        mChannel = channel;
         mChannelCode = channelCode;
+        SourceNetWork.initListener();
         LoginModel.getInstance();
         MyBillingImpl.getInstance().initialize(mContext);
         ExceptionHandler.install(new ExceptionHandler.CustomExceptionHandler() {
