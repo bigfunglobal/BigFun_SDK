@@ -150,7 +150,7 @@ public class BigFunSDK {
         //IS广告SDK,与TM广告不能共存
 //        SourceNetWork.initListener();
         //TM广告SDK,与IS广告不能共存
-        TMNetWork.init();
+//        TMNetWork.init();
         LoginModel.getInstance();
         MyBillingImpl.getInstance().initialize(mContext);
         ExceptionHandler.install(new ExceptionHandler.CustomExceptionHandler() {
@@ -349,7 +349,7 @@ public class BigFunSDK {
             return;
         }
         if (BigFunViewModel.tkdata)
-            TalkingDataEvent.WKeeNM( eventId, map);
+            TalkingDataEvent.WKeeNM(eventId, map);
         if (BigFunViewModel.adjust)
             AdjustonEvent.TrackEvent(eventId, map);
     }
