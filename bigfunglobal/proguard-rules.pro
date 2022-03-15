@@ -70,7 +70,7 @@
 
 -dontwarn okio.**
 -keep class okio.**{*;}
-
+-keep class com.goldsource.sdk.**{*;}
 
 -dontwarn com.google.gson.**
 -keep class com.google.gson.**{*;}
