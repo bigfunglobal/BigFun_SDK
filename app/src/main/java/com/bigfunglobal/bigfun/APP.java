@@ -31,8 +31,8 @@ public class APP extends Application {
          * @param channel 短信渠道 “必填” 短信渠道由平台提供
          * @param ChannelCode 渠道编码 "必填" 由平台提供
          */
-        BigFunSDK.setDebug(true);
-        BigFunSDK.getInstance().init(this, "BRWF2O2A");
 
+        BigFunSDK.init(this, "BRWF2O2A");
+        BigFunSDK.setDebug(true);
     }
 }

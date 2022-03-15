@@ -53,9 +53,12 @@
 # # 包含有类名->混淆后类名的映射关系
 #-verbose
 -keep class com.adjust.sdk.** { *; }
+-keep class com.ironsource.mediationsdk.** { *; }
+-keep class com.tendcloud.tenddata.** { *; }
+-keep class com.android.billingclient.**{*;}
+-keep public class com.android.installreferrer.** { *; }
 -keep class okhttp3.**{*;}
 -keep final class okhttp3.**{*;}
--keep class com.android.billingclient.**{*;}
 -keep public class * extends android.app.Activity
 
 -keep class com.just.agentweb.** {
@@ -68,9 +71,6 @@
 -dontwarn okio.**
 -keep class okio.**{*;}
 
-
-
--keep class com.tendcloud.tenddata.** { *; }
 
 -dontwarn com.google.gson.**
 -keep class com.google.gson.**{*;}
@@ -93,10 +93,8 @@
     java.lang.String getId();
     boolean isLimitAdTrackingEnabled();
 }
--keep public class com.android.installreferrer.** { *; }
 
 
--keep public class com.android.installreferrer.** { *; }
 #<基础>
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application
@@ -121,18 +119,16 @@
  *;
 }
 -keep interface *{
-void onAdError(*);
-}
--keep @interface *{
-final *;
+ *;
 }
 
 
--keepclassmembers class com.bigfun.sdk.BigFunSDK{
+
+#-keepclassmembers class com.bigfun.sdk.BigFunSDK{
 #public static void init(*);
 #public static void getSwitch(*);
 #public static void PlCFEe(*);
-}
+#}
 
 -optimizationpasses 5
 # 混淆时不会产生形形色色的类名(混淆时不使用大小写混合类名)

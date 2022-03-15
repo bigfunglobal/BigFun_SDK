@@ -3,7 +3,7 @@ package com.bigfun.sdk.model;
 
 import androidx.annotation.Keep;
 
-@Keep
+
 public class LoginBean {
 
     /**
@@ -40,7 +40,7 @@ public class LoginBean {
         this.data = data;
     }
 
-    @Keep
+
     public static class DataBean {
         /**
          * headImg : unknow

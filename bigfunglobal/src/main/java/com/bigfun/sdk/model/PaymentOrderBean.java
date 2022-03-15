@@ -3,7 +3,7 @@ package com.bigfun.sdk.model;
 
 import androidx.annotation.Keep;
 
-@Keep
+
 public class PaymentOrderBean {
 
     /**
@@ -40,7 +40,7 @@ public class PaymentOrderBean {
         this.data = data;
     }
 
-    @Keep
+
     public static class DataBean {
         /**
          * orderId : xxxxx

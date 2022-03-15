@@ -1,23 +1,26 @@
-package com.bigfun.sdk;
+package com.bigfun.sdk.utils;
 
 import android.app.Activity;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import com.bigfun.sdk.BigFunSDK;
+import com.bigfun.sdk.Constant;
+import com.bigfun.sdk.ExceptionHandler;
+import com.bigfun.sdk.LogUtils;
+import com.bigfun.sdk.ReportTask;
 import com.bigfun.sdk.encrypt.EncryptUtil;
 
+import com.bigfun.sdk.listener.ResponseListener;
 import com.bigfun.sdk.model.SendSmsBean;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -208,7 +211,7 @@ public class HttpUtils{
 //        mPhone = params.get("mobile").toString();
         String json = null;
         try {
-            json = EncryptUtil.encryptsdkreData(gson.toJson(params));
+            json = EncryptUtil.encryptData(gson.toJson(params));
 //            json = gson.toJson(params);
             Request request = new Request.Builder()
                     .url(url)

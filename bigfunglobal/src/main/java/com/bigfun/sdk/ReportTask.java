@@ -1,21 +1,20 @@
 package com.bigfun.sdk;
 
 import android.app.Activity;
-import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.bigfun.sdk.encrypt.EncryptUtil;
+import com.bigfun.sdk.utils.HttpUtils;
+import com.bigfun.sdk.utils.IpUtils;
 import com.bigfun.sdk.utils.LocationUtils;
 import com.bigfun.sdk.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -57,6 +56,7 @@ public class ReportTask implements Runnable {
 //                        jsonObject.put("gaid", "11111111111");
 //                    }
                 String s=map.toString();
+                LogUtils.log(s);
                 String json = EncryptUtil.encryptsdkreData(gson.toJson(map));
                 Request request = new Request.Builder()
                         .url(NetConstant.REPORT_URL)

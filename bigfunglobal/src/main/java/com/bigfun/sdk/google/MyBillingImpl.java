@@ -3,6 +3,9 @@ package com.bigfun.sdk.google;
 import static android.content.ContentValues.TAG;
 
 
+import static com.bigfun.sdk.model.BigFunViewModel.stringins;
+import static com.bigfun.sdk.model.BigFunViewModel.stringsus;
+
 import android.app.Activity;
 import android.content.Context;
 
@@ -25,8 +28,10 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
-import com.bigfun.sdk.google.GoogleCommodityListener;
-import com.bigfun.sdk.google.GoogleQueryPayListener;
+import com.bigfun.sdk.listener.GoogleCommodityListener;
+import com.bigfun.sdk.listener.GoogleConsumePurchaseListener;
+import com.bigfun.sdk.listener.GoogleQueryPayListener;
+import com.bigfun.sdk.listener.GoogleQueryPurchaseListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +60,7 @@ public class MyBillingImpl {
         billingClient = BillingClient.newBuilder(context).setListener(purchasesUpdatedListener).enablePendingPurchases().build();
     }
 
-    //            int SERVICE_TIMEOUT = -3;//服务超时,在 Google Play 响应之前，请求已达到最大超时。
+//            int SERVICE_TIMEOUT = -3;//服务超时,在 Google Play 响应之前，请求已达到最大超时。
 //            int FEATURE_NOT_SUPPORTED = -2;//当前设备上的 Play 商店不支持请求的功能。
 //            int SERVICE_DISCONNECTED = -1;//服务单元已断开,Play 商店服务现在未连接 - 可能是暂时状态。
 //            int OK = 0;//成功
@@ -226,10 +231,8 @@ public class MyBillingImpl {
     public static void pay(GoogleCommodityListener googlepayCommodityListener) {
 
         googleCommodityListener = googlepayCommodityListener;
-        skuLists.add("infinite_gas_monthly");
-        skuLists.add("infinite_gas_yearly");
-        skuList.add("premium");
-        skuList.add("gas");
+        skuLists=stringsus;
+        skuList=stringins;
         if (!skudetails) {
             skuDetails.clear();
             if (null != skuList && !skuList.isEmpty()) {

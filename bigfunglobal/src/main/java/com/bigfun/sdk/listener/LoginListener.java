@@ -1,4 +1,4 @@
-package com.bigfun.sdk.login;
+package com.bigfun.sdk.listener;
 
 
 import androidx.annotation.Keep;
@@ -10,19 +10,19 @@ import com.facebook.login.LoginResult;
 
 import org.json.JSONObject;
 
-@Keep
+
 public interface LoginListener {
 
     /**
      * 取消
      */
-    @Keep
+
     void onCancel();
 
     /**
      * 错误
      */
-    @Keep
+
     void onError(String error);
 
     /**
@@ -30,6 +30,6 @@ public interface LoginListener {
      *
      * @param loginResult
      */
-    @Keep
+
     void onComplete(BFLoginModel loginResult);
 }

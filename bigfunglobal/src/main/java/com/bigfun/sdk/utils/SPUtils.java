@@ -1,4 +1,4 @@
-package com.bigfun.sdk;
+package com.bigfun.sdk.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

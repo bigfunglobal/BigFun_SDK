@@ -1,18 +1,7 @@
-//apply plugin: 'com.android.library'
 apply plugin: 'com.android.application'
-//apply plugin: 'com.google.gms.google-services'
-//apply plugin: 'kotlin-android'
-//apply plugin: 'kotlin-android-extensions'
 
 android {
-//        signingConfigs {
-//        config {
-//            storeFile file('E:\\AndroidStudioProjects\\crossplatform-opencart-app-master\\Attachment\\BigFunSDK-master\\Test124.jks')
-//            storePassword 'Test124'
-//            keyAlias 'Test124'
-//            keyPassword 'Test124'
-//        }
-//    }
+
     compileSdk 30
 
     defaultConfig {

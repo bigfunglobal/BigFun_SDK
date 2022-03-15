@@ -154,6 +154,7 @@ public class EncryptUtil {
 
         return new Gson().toJson(map);
     }
+
     public static String encryptsdkreData(String data) throws Exception {
         RSAEncrypt rsa = new RSAEncrypt();
         String aos = rsa.encrypt(data, getPublicKey(rsa.publicKey));// key加密

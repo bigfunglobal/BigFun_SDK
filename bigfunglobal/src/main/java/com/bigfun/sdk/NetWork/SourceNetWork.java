@@ -102,12 +102,19 @@ public class SourceNetWork{
             IronSource.loadInterstitial();
     }
 
-
     public static void showRewardedVideo(BFRewardedVideoListener bflistener) {
         Map<String, Object> map = new HashMap<>();
         map.put("adBFPlatForm", "IronSource");
         onEvent(mContext, "BFAd_IS_RewardedVideo", map);
         listener = bflistener;
+        if (IronSource.isRewardedVideoAvailable())
+            //show rewarded video
+            IronSource.showRewardedVideo();
+    }
+    public static void showRewardedVideo() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("adBFPlatForm", "IronSource");
+        onEvent(mContext, "BFAd_IS_RewardedVideo", map);
         if (IronSource.isRewardedVideoAvailable())
             //show rewarded video
             IronSource.showRewardedVideo();

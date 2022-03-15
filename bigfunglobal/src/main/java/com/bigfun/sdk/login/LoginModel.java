@@ -16,6 +16,8 @@ import androidx.annotation.Nullable;
 
 
 import com.bigfun.sdk.LogUtils;
+import com.bigfun.sdk.listener.LoginListener;
+import com.bigfun.sdk.listener.ShareListener;
 import com.bigfun.sdk.model.BFLoginModel;
 import com.bigfun.sdk.model.BFShareModel;
 import com.facebook.CallbackManager;
@@ -25,8 +27,6 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareContent;
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.auth.api.identity.GetSignInIntentRequest;
 import com.google.android.gms.auth.api.identity.Identity;

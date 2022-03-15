@@ -1,4 +1,4 @@
-package com.bigfun.sdk.login;
+package com.bigfun.sdk.listener;
 
 import androidx.annotation.Keep;
 
@@ -10,19 +10,19 @@ public interface ShareListener {
     /**
      * 取消
      */
-    @Keep
+
     void onCancel();
 
     /**
      * 错误
      */
-    @Keep
+
     void onError(String error);
 
     /**
      * 完成
      * @param result
      */
-    @Keep
+
     void onComplete(BFShareModel result);
 }

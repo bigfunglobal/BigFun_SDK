@@ -3,7 +3,7 @@ package com.bigfun.sdk.model;
 
 import androidx.annotation.Keep;
 
-@Keep
+
 public class ChannelConfigBean {
 
     /**

@@ -1,10 +1,10 @@
-package com.bigfun.sdk.login;
+package com.bigfun.sdk.listener;
 
 import androidx.annotation.Keep;
 
 import com.adjust.sdk.AdjustAttribution;
 
-@Keep
+
 public interface BFAdjustListener {
     void onAttributionChanged(AdjustAttribution attribution);
 }

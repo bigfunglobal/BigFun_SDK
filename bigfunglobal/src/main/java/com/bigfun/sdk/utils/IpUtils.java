@@ -1,6 +1,8 @@
-package com.bigfun.sdk;
+package com.bigfun.sdk.utils;
 
 import android.content.Context;
+
+import com.bigfun.sdk.utils.Utils;
 
 import org.json.JSONObject;
 
