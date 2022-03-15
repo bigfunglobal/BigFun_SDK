@@ -110,7 +110,7 @@
 -keep class android.support.** {*;}
 
 
-#-keep class com.bigfun.sdk.**{ *; }
+-keep class com.bigfun.sdk.**{ *; }
 
 -keep enum *{
  *;
