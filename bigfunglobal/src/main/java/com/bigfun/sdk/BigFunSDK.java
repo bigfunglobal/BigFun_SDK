@@ -414,7 +414,10 @@ public class BigFunSDK {
         MyBillingImpl.initiatePurchaseFlow(activity,skuDetails,googleQueryPayListener);
     }
 
-
+    /**
+     * 是否真机
+     * @return
+     */
     public static boolean insad(){
         return EmulatorDetector.with(mContext).detects();
     }
