@@ -40,8 +40,9 @@ public class TMNetWork {
     }
 
     private static BFRewardedVideoListener listener;
+
     public static void init() {
-        GoldSource.setInterstitialListener(interstitialListener);
+//        GoldSource.setInterstitialListener(interstitialListener);
         GoldSource.setRewardedVideoListener(rewardedVideoListener);
     }
 //
@@ -68,42 +69,42 @@ public class TMNetWork {
     }
 
     //----------插页-----------
-    static InterstitialListener interstitialListener = new InterstitialListener() {
-        @Override
-        public void onInterstitialAdReady() {
-            LogUtils.log("onInterstitialAdReady");
-        }
-
-        @Override
-        public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
-            LogUtils.log("onInterstitialAdLoadFailed(" + ironSourceError.getErrorCode() + "：" + ironSourceError.getErrorMessage() + ")");
-        }
-
-        @Override
-        public void onInterstitialAdOpened() {
-            LogUtils.log("onInterstitialAdOpened");
-        }
-
-        @Override
-        public void onInterstitialAdClosed() {
-            LogUtils.log("onInterstitialAdClosed");
-        }
-
-        @Override
-        public void onInterstitialAdShowSucceeded() {
-            LogUtils.log("onInterstitialAdShowSucceeded");
-        }
-
-        @Override
-        public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
-            LogUtils.log("onInterstitialAdShowFailed(" + ironSourceError.getErrorCode() + "：" + ironSourceError.getErrorMessage() + ")");
-        }
-
-        @Override
-        public void onInterstitialAdClicked() {
-            LogUtils.log("onInterstitialAdClicked");
-        }
-    };
+//    static InterstitialListener interstitialListener = new InterstitialListener() {
+//        @Override
+//        public void onInterstitialAdReady() {
+//            LogUtils.log("onInterstitialAdReady");
+//        }
+//
+//        @Override
+//        public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
+//            LogUtils.log("onInterstitialAdLoadFailed(" + ironSourceError.getErrorCode() + "：" + ironSourceError.getErrorMessage() + ")");
+//        }
+//
+//        @Override
+//        public void onInterstitialAdOpened() {
+//            LogUtils.log("onInterstitialAdOpened");
+//        }
+//
+//        @Override
+//        public void onInterstitialAdClosed() {
+//            LogUtils.log("onInterstitialAdClosed");
+//        }
+//
+//        @Override
+//        public void onInterstitialAdShowSucceeded() {
+//            LogUtils.log("onInterstitialAdShowSucceeded");
+//        }
+//
+//        @Override
+//        public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
+//            LogUtils.log("onInterstitialAdShowFailed(" + ironSourceError.getErrorCode() + "：" + ironSourceError.getErrorMessage() + ")");
+//        }
+//
+//        @Override
+//        public void onInterstitialAdClicked() {
+//            LogUtils.log("onInterstitialAdClicked");
+//        }
+//    };
 
 
     //--------奖励视屏-------------

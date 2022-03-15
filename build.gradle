@@ -22,9 +22,6 @@ allprojects {
 //            //IronSource
 //            url "https://android-sdk.is.com/"
 //        }
-        flatDir {
-            dirs 'libs'
-        }
     }
 
 }

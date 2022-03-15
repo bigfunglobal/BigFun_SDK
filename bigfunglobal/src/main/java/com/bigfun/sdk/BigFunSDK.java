@@ -27,7 +27,7 @@ import com.adjust.sdk.OnAttributionChangedListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.SkuDetails;
 import com.bigfun.sdk.NetWork.BFRewardedVideoListener;
-import com.bigfun.sdk.NetWork.SourceNetWork;
+
 
 import com.bigfun.sdk.NetWork.TMNetWork;
 import com.bigfun.sdk.listener.BFSuccessListener;
@@ -148,7 +148,7 @@ public class BigFunSDK {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static void BFinit(BFAdjustListener listener,BFSuccessListener bfSuccessListener){
         //IS广告SDK,与TM广告不能共存
-        SourceNetWork.initListener();
+//        SourceNetWork.initListener();
         //TM广告SDK,与IS广告不能共存
         TMNetWork.init();
         LoginModel.getInstance();
@@ -369,6 +369,9 @@ public class BigFunSDK {
      */
 
     public static void googleQueryPay(GoogleCommodityListener googleCommodityListener){
+        if (checkSdkNotInit()) {
+            return;
+        }
         if(!goopay){
             Log.e("BigFunSDK", "后台未配置");
         }
@@ -381,6 +384,9 @@ public class BigFunSDK {
      */
 
     public static void googleQueryPurchase(GoogleQueryPurchaseListener queryPurchaseListener){
+        if (checkSdkNotInit()) {
+            return;
+        }
         if(!goopay){
             Log.e("BigFunSDK", "后台未配置");
         }
@@ -395,6 +401,9 @@ public class BigFunSDK {
      */
 
     public static void initiatePurchaseFlow(Activity activity, final SkuDetails skuDetails, GoogleQueryPayListener googleQueryPayListener){
+        if (checkSdkNotInit()) {
+            return;
+        }
         MyBillingImpl.initiatePurchaseFlow(activity,skuDetails,googleQueryPayListener);
     }
 
@@ -410,13 +419,11 @@ public class BigFunSDK {
      */
 
     public static void consumePurchase(Purchase purchase, GoogleConsumePurchaseListener purchaseListener){
+        if (checkSdkNotInit()) {
+            return;
+        }
         MyBillingImpl.consumePurchase(purchase,purchaseListener);
     }
-    /**
-     * @param activity
-     * @param premium_upgrade
-     * @param googlePayUpdatedListener
-     */
 
 
 
@@ -493,6 +500,9 @@ public class BigFunSDK {
      * 退出Facebook登录
      */
     public static void BigFunLogout() {
+        if (checkSdkNotInit()) {
+            return;
+        }
         LoginModel.BigFunLogout();
     }
 
@@ -525,6 +535,9 @@ public class BigFunSDK {
      */
 
     public static void BigFunShare(Context activity, String textContent) {
+        if (checkSdkNotInit()) {
+            return;
+        }
         Map<String, Object> map = new HashMap<>();
         map.put("textContent", textContent);
         onEvent(mContext, "BFShare_SYS", map);
@@ -535,6 +548,9 @@ public class BigFunSDK {
     }
 
     public static void BigFunShare(Context activity, Uri shareFileUri) {
+        if (checkSdkNotInit()) {
+            return;
+        }
         Map<String, Object> map = new HashMap<>();
         map.put("shareFileUri", shareFileUri);
         onEvent(mContext, "BFShare_SYS", map);
@@ -556,7 +572,8 @@ public class BigFunSDK {
             return;
         }
         if (BigFunViewModel.ISoure) {
-            SourceNetWork.showInterstitial();
+//            SourceNetWork.showInterstitial();
+            TMNetWork.showInterstitial();
         }else if(BigFunViewModel.TMnet){
             TMNetWork.showInterstitial();
         }else {
@@ -577,7 +594,8 @@ public class BigFunSDK {
             return;
         }
         if (BigFunViewModel.ISoure) {
-            SourceNetWork.showRewardedVideo(listener);
+//            SourceNetWork.showRewardedVideo(listener);
+            TMNetWork.showRewardedVideo(listener);
         }else if(BigFunViewModel.TMnet){
             TMNetWork.showRewardedVideo(listener);
         }else {
@@ -594,8 +612,8 @@ public class BigFunSDK {
             return;
         }
         if (BigFunViewModel.ISoure) {
-            SourceNetWork.showRewardedVideo();
-
+//            SourceNetWork.showRewardedVideo();
+            TMNetWork.showRewardedVideo();
         }else if(BigFunViewModel.TMnet){
             TMNetWork.showRewardedVideo();
         }else {
@@ -618,7 +636,7 @@ public class BigFunSDK {
             return;
         }
         if (BigFunViewModel.ISoure) {
-            SourceNetWork.createAndloadBanner(mBannerParentLayout, size);
+//            SourceNetWork.createAndloadBanner(mBannerParentLayout, size);
 
         }else {
             Log.e("BigFunSDK", "后台未配置 广告");
@@ -636,7 +654,7 @@ public class BigFunSDK {
             return;
         }
 //        AdNetwork.getInstance().dstroy();
-        SourceNetWork.onDestroy();
+//        SourceNetWork.onDestroy();
     }
 
     /**
@@ -658,6 +676,7 @@ public class BigFunSDK {
     private static boolean checkSdkNotInit() {
         if (TextUtils.isEmpty(mChannelCode) || mContext == null || !BigFunViewModel.sdk) {
             Log.e("BigFunSDK", "sdk not init");
+            talkingDataSDK(BigFunSDK.getTDID(),mChannelCode);
             return true;
         }
         return false;

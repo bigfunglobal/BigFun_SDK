@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import androidx.annotation.Keep;
 
 import com.bigfun.sdk.LogUtils;
-import com.bigfun.sdk.NetWork.SourceNetWork;
+
 import com.goldsource.sdk.GoldListener;
 import com.goldsource.sdk.GoldSource;
 
@@ -65,17 +65,8 @@ public class BigFunViewModel {
         if (!TextUtils.isEmpty(bean.getAdsType())&&bean.getAdsType().contains("1")&&!TextUtils.isEmpty(bean.getIronSourceAppKey())) {
             ISoure=true;
             SourceAppKey=bean.getIronSourceAppKey();
-            SourceNetWork.getInstance().TimerIronSource();
-            //            FBnet=true;
-//            if (!TextUtils.isEmpty(bean.getBannerAdId())) {
-//                bannerAdId = bean.getPlacementIdProduction();
-//            }
-//            if (!TextUtils.isEmpty(bean.getInterstitialId())) {
-//                interstitialId = bean.getPlacementIdTest();
-//            }
-//            if (!TextUtils.isEmpty(bean.getRewardedVideoId())) {
-//                rewardedVideoId = bean.getPlacementIdTest();
-//            }
+//            SourceNetWork.getInstance().TimerIronSource();
+
         }
         if (!TextUtils.isEmpty(bean.getAdsType())&&bean.getAdsType().contains("2")&&!TextUtils.isEmpty(bean.getIronSourceAppKey())) {
             TMnet=true;
