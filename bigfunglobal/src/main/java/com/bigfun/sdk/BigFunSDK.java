@@ -126,6 +126,12 @@ public class BigFunSDK {
         mContext = application.getApplicationContext();
 //        mChannel = channel;
         mChannelCode = channelCode;
+        ExceptionHandler.install(new ExceptionHandler.CustomExceptionHandler() {
+            @Override
+            public void handlerException(Thread thread, Throwable throwable) {
+                Log.e("SDK", throwable.getMessage());
+            }
+        });
         BFinit(null,null);
     }
 
@@ -142,6 +148,12 @@ public class BigFunSDK {
         mContext = application.getApplicationContext();
         mChannelCode = channelCode;
 //        mChannel = channel;
+        ExceptionHandler.install(new ExceptionHandler.CustomExceptionHandler() {
+            @Override
+            public void handlerException(Thread thread, Throwable throwable) {
+                Log.e("SDK", throwable.getMessage());
+            }
+        });
         BFinit(listener,bfSuccessListener);
     }
 
@@ -153,12 +165,7 @@ public class BigFunSDK {
 //        TMNetWork.init();
         LoginModel.getInstance();
         MyBillingImpl.getInstance().initialize(mContext);
-        ExceptionHandler.install(new ExceptionHandler.CustomExceptionHandler() {
-            @Override
-            public void handlerException(Thread thread, Throwable throwable) {
-                Log.e("SDK", throwable.getMessage());
-            }
-        });
+
 
         mApplication.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override

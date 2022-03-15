@@ -3,6 +3,8 @@ package com.bigfun.sdk;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.annotation.Keep;
+
 public class ExceptionHandler {
     //你自己定义的处理异常类
     private static CustomExceptionHandler mCustomExceptionHandler;
@@ -117,6 +119,7 @@ public class ExceptionHandler {
     /**
      * 自定义的处理异常
      */
+    @Keep
     public interface CustomExceptionHandler {
 
         void handlerException(Thread thread, Throwable throwable);
