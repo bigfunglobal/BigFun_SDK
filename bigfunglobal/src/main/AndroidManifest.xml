@@ -36,8 +36,5 @@
             android:hardwareAccelerated="true"
             android:theme="@android:style/Theme.Translucent" />
 
-        <provider
-            android:name="com.ironsource.lifecycle.IronsourceLifecycleProvider"
-            android:authorities="${applicationId}.IronsourceLifecycleProvider" />
     </application>
 </manifest>
