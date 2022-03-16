@@ -55,6 +55,8 @@ import com.facebook.FacebookSdk;
 
 import com.facebook.share.model.ShareContent;
 
+import com.goldsource.sdk.GoldListener;
+import com.goldsource.sdk.GoldSource;
 import com.google.android.gms.auth.api.identity.GetSignInIntentRequest;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
@@ -238,6 +240,12 @@ public class BigFunSDK {
                 }
                 if(bfSuccessListener!=null)
                 bfSuccessListener.onSuccess();
+                GoldSource.initialize(mContext, "2a935f695894e3d17e982c6bd0778b8f", bean.getIronSourceAppKey(), new GoldListener() {
+                    @Override
+                    public void onInitializationCompleted() {
+                        LogUtils.log("tm init succeeded");
+                    }
+                });
                 Log.e("BigFun", "tm init succeeded");
             }
 
