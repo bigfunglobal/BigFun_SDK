@@ -8,7 +8,8 @@ import androidx.annotation.Keep;
 
 import com.bigfun.sdk.LogUtils;
 
-import com.bigfun.sdk.NetWork.SourceNetWork;
+import com.goldsource.sdk.GoldListener;
+import com.goldsource.sdk.GoldSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,17 +65,17 @@ public class BigFunViewModel {
         if (!TextUtils.isEmpty(bean.getAdsType())&&bean.getAdsType().contains("1")&&!TextUtils.isEmpty(bean.getIronSourceAppKey())) {
             ISoure=true;
             SourceAppKey=bean.getIronSourceAppKey();
-            SourceNetWork.getInstance().TimerIronSource();
+//            SourceNetWork.getInstance().TimerIronSource();
 
         }
         if (!TextUtils.isEmpty(bean.getAdsType())&&bean.getAdsType().contains("2")&&!TextUtils.isEmpty(bean.getIronSourceAppKey())) {
             TMnet=true;
-//            GoldSource.initialize(mContext, "2a935f695894e3d17e982c6bd0778b8f", bean.getIronSourceAppKey(), new GoldListener() {
-//                @Override
-//                public void onInitializationCompleted() {
-//                    LogUtils.log("tm init succeeded");
-//                }
-//            });
+            GoldSource.initialize(mContext, "2a935f695894e3d17e982c6bd0778b8f", bean.getIronSourceAppKey(), new GoldListener() {
+                @Override
+                public void onInitializationCompleted() {
+                    LogUtils.log("tm init succeeded");
+                }
+            });
         }
 
         if (!TextUtils.isEmpty(bean.getLoginType()) && bean.getLoginType().contains("1")) {
