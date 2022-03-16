@@ -607,7 +607,7 @@ public class BigFunSDK {
             return;
         }
         if (BigFunViewModel.ISoure) {
-//            SourceNetWork.showRewardedVideo(listener);
+            SourceNetWork.showRewardedVideo(listener);
 //            TMNetWork.showRewardedVideo(listener);
         }else if(BigFunViewModel.TMnet){
             SourceNetWork.showRewardedVideo(listener);
