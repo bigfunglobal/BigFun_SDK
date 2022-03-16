@@ -29,7 +29,7 @@ import com.android.billingclient.api.SkuDetails;
 import com.bigfun.sdk.NetWork.BFRewardedVideoListener;
 
 
-import com.bigfun.sdk.NetWork.TMNetWork;
+import com.bigfun.sdk.NetWork.SourceNetWork;
 import com.bigfun.sdk.listener.BFSuccessListener;
 import com.bigfun.sdk.listener.GoogleCommodityListener;
 import com.bigfun.sdk.listener.GoogleConsumePurchaseListener;
@@ -160,7 +160,7 @@ public class BigFunSDK {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static void BFinit(BFAdjustListener listener,BFSuccessListener bfSuccessListener){
         //IS广告SDK,与TM广告不能共存
-//        SourceNetWork.initListener();
+        SourceNetWork.initListener();
         //TM广告SDK,与IS广告不能共存
 //        TMNetWork.init();
         LoginModel.getInstance();
@@ -582,11 +582,14 @@ public class BigFunSDK {
             return;
         }
         if (BigFunViewModel.ISoure) {
-//            SourceNetWork.showInterstitial();
-            TMNetWork.showInterstitial();
-        }else if(BigFunViewModel.TMnet){
-            TMNetWork.showInterstitial();
-        }else {
+            SourceNetWork.showInterstitial();
+//            TMNetWork.showInterstitial();
+        }
+        else if(BigFunViewModel.TMnet){
+            SourceNetWork.showInterstitial();
+//            TMNetWork.showInterstitial();
+        }
+        else {
             Log.e("BigFunSDK", "后台未配置 广告");
             return;
         }
@@ -605,9 +608,10 @@ public class BigFunSDK {
         }
         if (BigFunViewModel.ISoure) {
 //            SourceNetWork.showRewardedVideo(listener);
-            TMNetWork.showRewardedVideo(listener);
+//            TMNetWork.showRewardedVideo(listener);
         }else if(BigFunViewModel.TMnet){
-            TMNetWork.showRewardedVideo(listener);
+            SourceNetWork.showRewardedVideo(listener);
+//            TMNetWork.showRewardedVideo(listener);
         }else {
             Log.e("BigFunSDK", "后台未配置 广告");
             return;
@@ -622,10 +626,11 @@ public class BigFunSDK {
             return;
         }
         if (BigFunViewModel.ISoure) {
-//            SourceNetWork.showRewardedVideo();
-            TMNetWork.showRewardedVideo();
+            SourceNetWork.showRewardedVideo();
+//            TMNetWork.showRewardedVideo();
         }else if(BigFunViewModel.TMnet){
-            TMNetWork.showRewardedVideo();
+            SourceNetWork.showRewardedVideo();
+//            TMNetWork.showRewardedVideo();
         }else {
             Log.e("BigFunSDK", "后台未配置 广告");
             return;
@@ -646,7 +651,7 @@ public class BigFunSDK {
             return;
         }
         if (BigFunViewModel.ISoure) {
-//            SourceNetWork.createAndloadBanner(mBannerParentLayout, size);
+            SourceNetWork.createAndloadBanner(mBannerParentLayout, size);
 
         }else {
             Log.e("BigFunSDK", "后台未配置 广告");
