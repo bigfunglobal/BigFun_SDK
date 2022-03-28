@@ -35,7 +35,6 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.share.widget.ShareDialog;
-import com.ironsource.mediationsdk.ISBannerSize;
 
 
 import java.security.MessageDigest;
@@ -133,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         AdView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BigFunSDK.ShowBanner(mBannerParentLayout, ISBannerSize.BANNER);
+                BigFunSDK.ShowBanner(mBannerParentLayout,AdBFSize.BANNER_HEIGHT_50);
             }
         });
         Inter.setOnClickListener(new View.OnClickListener() {

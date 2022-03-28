@@ -793,13 +793,32 @@ public class BigFunSDK {
     }
 
     /**
+     * 插页，全屏是否可用
+     * @return
+     */
+    @Keep
+    public static boolean isInterstitialReady(){
+        return SourceNetWork.isInterstitialReady();
+    }
+
+    /**
+     * 广告视屏是否可以用
+     * @return
+     */
+    @Keep
+    public static boolean isRewardedVideoAvailable(){
+        return SourceNetWork.isRewardedVideoAvailable();
+    }
+
+
+    /**
      * 横屏
      *
      * @param mBannerParentLayout
      * @param size
      */
-
-    public static void ShowBanner(FrameLayout mBannerParentLayout, ISBannerSize size) {
+    @Keep
+    public static void ShowBanner(FrameLayout mBannerParentLayout, AdBFSize size) {
         if (checkSdkNotInit()) {
             return;
         }

@@ -29,7 +29,6 @@ import com.ironsource.mediationsdk.logger.IronSourceError;
 import com.ironsource.mediationsdk.model.Placement;
 import com.ironsource.mediationsdk.sdk.BannerListener;
 
-import com.ironsource.mediationsdk.sdk.InitializationListener;
 import com.ironsource.mediationsdk.sdk.InterstitialListener;
 import com.ironsource.mediationsdk.sdk.RewardedVideoListener;
 
@@ -99,7 +98,7 @@ public class SourceNetWork{
             IronSource.setUserId(IronSource.getAdvertiserId(mContext));
              //初始化IronSource SDK
             IronSource.getAdvertiserId(mContext);
-            IronSource.init(mActivity, BigFunViewModel.SourceAppKey,initializationListener);
+            IronSource.init(mActivity, BigFunViewModel.SourceAppKey);
 //        网络连接状态
             IronSource.shouldTrackNetworkState(mContext, true);
             IronSource.isRewardedVideoAvailable();
@@ -118,6 +117,12 @@ public class SourceNetWork{
         if (IronSource.isRewardedVideoAvailable())
             //show rewarded video
             IronSource.showRewardedVideo();
+    }
+    public static boolean isRewardedVideoAvailable(){
+        return IronSource.isRewardedVideoAvailable();
+    }
+    public static boolean isInterstitialReady(){
+        return IronSource.isInterstitialReady();
     }
 
     public static void showInterstitial() {
@@ -145,19 +150,19 @@ public class SourceNetWork{
      */
     private static ISBannerSize isBannerSize = ISBannerSize.BANNER;
 
-    public static void createAndloadBanner(FrameLayout mbannerParentLayout, ISBannerSize size) {
+    public static void createAndloadBanner(FrameLayout mbannerParentLayout, AdBFSize size) {
 
-//        if (size.equals(AdBFSize.BANNER_HEIGHT_50))
-//            isBannerSize = ISBannerSize.BANNER;
-//        if (size.equals(AdBFSize.BANNER_HEIGHT_90))
-//            isBannerSize = ISBannerSize.LARGE;
-//        if (size.equals(AdBFSize.RECTANGLE_HEIGHT_250))
-//            isBannerSize = ISBannerSize.RECTANGLE;
+        if (size.equals(AdBFSize.BANNER_HEIGHT_50))
+            isBannerSize = ISBannerSize.BANNER;
+        if (size.equals(AdBFSize.BANNER_HEIGHT_90))
+            isBannerSize = ISBannerSize.LARGE;
+        if (size.equals(AdBFSize.RECTANGLE_HEIGHT_250))
+            isBannerSize = ISBannerSize.RECTANGLE;
 
         mBannerParentLayout = mbannerParentLayout;
 
         //使用IronSource实例化IronSourceBanner对象。createBanner API
-        mIronSourceBannerLayout = IronSource.createBanner(mActivity, size);
+        mIronSourceBannerLayout = IronSource.createBanner(mActivity, isBannerSize);
 
         //将IronSourceBanner添加到容器中
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
@@ -171,7 +176,7 @@ public class SourceNetWork{
                 public void onBannerAdLoaded() {
                      LogUtils.log( "onBannerAdLoaded");
                     //由于默认情况下横幅容器“消失”，我们需要在横幅准备就绪后立即使其可见
-//                    mBannerParentLayout.setVisibility(View.VISIBLE);
+                    mBannerParentLayout.setVisibility(View.VISIBLE);
                 }
 
                 @Override
@@ -206,14 +211,8 @@ public class SourceNetWork{
         }
     }
 
-    //--------------初始化完成---------------------
-    static InitializationListener initializationListener=new InitializationListener() {
-        @Override
-        public void onInitializationComplete() {
-            successListener.onSuccess();
-        }
+    private static boolean complete=true;
 
-    };
 
     // --------- IronSource视频监听器 ---------
     static RewardedVideoListener rewardedVideoListener=new RewardedVideoListener() {
@@ -234,6 +233,10 @@ public class SourceNetWork{
         @Override
         public void onRewardedVideoAvailabilityChanged(boolean b) {
             //视频可用性更改时调用
+            if(b&&complete) {
+                complete = false;
+                successListener.onSuccess();
+            }
             LogUtils.log( "onRewardedVideoAvailabilityChanged" + " " + b);
 
         }

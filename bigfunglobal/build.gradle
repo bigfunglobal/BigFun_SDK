@@ -75,11 +75,13 @@ dependencies {
 //    implementation 'io.github.happylishang:antifake:1.5.0'CustomExceptionHandler
     //ISSDK
     implementation 'com.ironsource.sdk:mediationsdk:7.2.1'
+    implementation 'com.google.android.gms:play-services-ads-identifier:17.0.0'
     //TMSDk
 //        implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.32'
 //    implementation 'org.jetbrains.kotlin:kotlin-stdlib-common:1.4.32'
-    implementation 'com.google.android.gms:play-services-ads-identifier:17.0.0'
-    implementation 'com.google.android.gms:play-services-basement:17.1.1'
+//    implementation 'com.google.android.gms:play-services-appset:16.0.0'
+
+//    implementation 'com.google.android.gms:play-services-basement:17.1.1'
 //    implementation files('libs\\tm-d120.jar')
 
 }
