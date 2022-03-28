@@ -807,7 +807,7 @@ public class BigFunSDK {
             SourceNetWork.createAndloadBanner(mBannerParentLayout, size);
 
         }else {
-            Log.e("BigFunSDK", "Background not configured 广告");
+            Log.e("BigFunSDK", "Background not configured");
             return;
         }
     }
