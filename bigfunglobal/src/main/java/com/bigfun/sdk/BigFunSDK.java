@@ -212,6 +212,7 @@ public class BigFunSDK {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static void BFinit(BFAdjustListener listener, BFSuccessListener bfSuccessListener) {
+
         //IS广告SDK,与TM广告不能共存
         SourceNetWork.initListener(bfSuccessListener);
         //TM广告SDK,与IS广告不能共存

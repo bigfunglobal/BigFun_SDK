@@ -81,6 +81,7 @@ public class SourceNetWork{
     }
     static BFSuccessListener successListener;
     public static void initListener(BFSuccessListener bfSuccessListener){
+        if(bfSuccessListener!=null)
         successListener=bfSuccessListener;
         //确保为正在启动的每个产品设置一个侦听器
         //设置视频侦听器

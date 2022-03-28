@@ -232,6 +232,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("dadad",placement+"");
                     }
                 });
+                BigFunSDK.ShowRewardedVideo();
             }
         });
 
