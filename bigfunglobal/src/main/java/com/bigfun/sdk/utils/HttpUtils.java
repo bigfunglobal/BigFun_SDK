@@ -65,7 +65,6 @@ public class HttpUtils{
     }
 
 
-    private String token = (String) SPUtils.getInstance().get(BigFunSDK.mContext, "accessToken", "");
     private static final long TIME_OUT = 30L;
     public static String mCode = "";
     public static String mPhone = "";
@@ -96,9 +95,7 @@ public class HttpUtils{
             Request request = new Request.Builder()
                     .url(url)
                     .addHeader(
-                            "accessToken",
-                            (String) SPUtils.getInstance().get(BigFunSDK.mContext, Constant.KEY_TOKEN, "")
-                    )
+                            "accessToken", "")
                     .post(RequestBody.create(mediaType, json))
                     .build();
             okHttpClient.newCall(request).enqueue(new Callback() {
@@ -148,9 +145,7 @@ public class HttpUtils{
             Request request = new Request.Builder()
                     .url(url)
                     .addHeader(
-                            "accessToken",
-                            (String) SPUtils.getInstance().get(BigFunSDK.mContext, Constant.KEY_TOKEN, "")
-                    )
+                            "accessToken", "")
                     .post(RequestBody.create(mediaType, json))
                     .build();
             okHttpClient.newCall(request).enqueue(new Callback() {
@@ -172,12 +167,72 @@ public class HttpUtils{
                                             );
                                     if (Integer.parseInt(bean.getCode()) == 0) {
                                         mCode = bean.getData();
-                                        SPUtils.getInstance().put(
-                                                BigFunSDK.mContext,
-                                                Constant.KEY_DATA,
-                                                EncryptUtil.decryptDataSDK(bean.getData()));
 
-                                        listener.onSuccess();
+                                        listener.onSuccess(EncryptUtil.decryptDataSDK(bean.getData()));
+                                    } else {
+                                        listener.onFail(bean.getMsg());
+                                    }
+                                } else {
+                                    listener.onFail(response.message());
+                                }
+                            } else {
+                                listener.onFail(response.message());
+                            }
+                        } else {
+                            listener.onFail(response.code() + "--" + response.message());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        listener.onFail(e.getMessage());
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            listener.onFail(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取真金区域
+     * @param url
+     * @param params
+     * @param listener
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void bigfunip(String url, String params, ResponseListener listener) {
+        if (TextUtils.isEmpty(url)) throw new IllegalArgumentException("url.length() == 0");
+        if (params.isEmpty()) throw new IllegalArgumentException("params.size == 0");
+        String json = null;
+        try {
+            json = EncryptUtil.encryptsdkData(params);
+            Request request = new Request.Builder()
+                    .url(url)
+                    .addHeader(
+                            "accessToken", "")
+                    .post(RequestBody.create(mediaType, json))
+                    .build();
+            okHttpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    listener.onFail(e.getMessage());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    try {
+                        if (response.isSuccessful()) {
+                            if (response.code() == 200) {
+                                if (response.body() != null) {
+                                    SendSmsBean bean =
+                                            gson.fromJson(
+                                                    response.body().string(),
+                                                    SendSmsBean.class
+                                            );
+                                    if (Integer.parseInt(bean.getCode()) == 0) {
+                                        mCode = bean.getData();
+
+                                        listener.onSuccess(EncryptUtil.decryptDataSDK(bean.getData()));
                                     } else {
                                         listener.onFail(bean.getMsg());
                                     }
@@ -216,9 +271,7 @@ public class HttpUtils{
             Request request = new Request.Builder()
                     .url(url)
                     .addHeader(
-                            "accessToken",
-                            (String) SPUtils.getInstance().get(BigFunSDK.mContext, Constant.KEY_TOKEN, "")
-                    )
+                            "accessToken", "")
                     .post(RequestBody.create(mediaType, json))
                     .build();
             okHttpClient.newCall(request).enqueue(new Callback() {
@@ -240,7 +293,7 @@ public class HttpUtils{
                                             );
                                     if (Integer.parseInt(bean.getCode()) == 0) {
                                         mCode = bean.getData();
-                                        listener.onSuccess();
+//                                        listener.onSuccess();
                                     } else {
                                         listener.onFail(bean.getMsg());
                                     }
@@ -290,7 +343,7 @@ public class HttpUtils{
             LogUtils.log(requestUrl.toString());
             Request request = new Request.Builder()
                     .url(requestUrl.toString())
-                    .addHeader("accessToken", token)
+//                    .addHeader("accessToken", token)
                     .get()
                     .build();
             okHttpClient.newCall(request).enqueue(new Callback() {
@@ -316,6 +369,5 @@ public class HttpUtils{
     public synchronized void upload(Activity activity) {
         mExecutors.execute(new ReportTask(activity));
     }
-
 
 }

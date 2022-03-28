@@ -28,6 +28,7 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.bigfun.sdk.ExceptionHandler;
 import com.bigfun.sdk.listener.GoogleCommodityListener;
 import com.bigfun.sdk.listener.GoogleConsumePurchaseListener;
 import com.bigfun.sdk.listener.GoogleQueryPayListener;
@@ -56,7 +57,12 @@ public class MyBillingImpl {
     }
     //初始化
     public static void initialize(Context context) {
-
+        ExceptionHandler.install(new ExceptionHandler.CustomExceptionHandler() {
+            @Override
+            public void handlerException(Thread thread, Throwable throwable) {
+                Log.e("SDK", throwable.getMessage());
+            }
+        });
         billingClient = BillingClient.newBuilder(context).setListener(purchasesUpdatedListener).enablePendingPurchases().build();
     }
 

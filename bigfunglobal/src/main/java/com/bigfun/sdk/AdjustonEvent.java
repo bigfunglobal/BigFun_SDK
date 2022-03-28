@@ -11,20 +11,26 @@ import java.util.Set;
 
 public class AdjustonEvent {
 
-    public static void TrackEvent(String eventId, Map map){
-        AdjustEvent adjustEvent = new AdjustEvent(eventId);
-        Set set = map.keySet();
-        Iterator iter = set.iterator();
-        while (iter.hasNext()) {
-            String key = (String) iter.next();
-            adjustEvent.addCallbackParameter(key,map.get(key)+"");
-        }
-        Adjust.trackEvent(adjustEvent);
-    }
 
     public static void TrackEvent(String eventId){
         AdjustEvent adjustEvent = new AdjustEvent(eventId);
         Adjust.trackEvent(adjustEvent);
     }
-
+    public static void TrackOrderIdEvent(String eventId,String id){
+        AdjustEvent adjustEvent = new AdjustEvent(eventId);
+        if(!id.isEmpty())
+        adjustEvent.setOrderId(id);
+        Adjust.trackEvent(adjustEvent);
+    }
+    public static void TrackRevenueEvent(String eventId,double hqia,String moey,String id){
+        AdjustEvent adjustEvent = new AdjustEvent(eventId);
+        adjustEvent.setRevenue(hqia,moey);
+        adjustEvent.setOrderId(id);
+        Adjust.trackEvent(adjustEvent);
+    }
+    public static void TrackRevenueEvent(String eventId,double hqia,String moey){
+        AdjustEvent adjustEvent = new AdjustEvent(eventId);
+        adjustEvent.setRevenue(hqia,moey);
+        Adjust.trackEvent(adjustEvent);
+    }
 }

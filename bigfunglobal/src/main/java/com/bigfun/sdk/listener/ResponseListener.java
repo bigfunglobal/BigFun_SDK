@@ -7,7 +7,7 @@ public interface ResponseListener {
     /**
      * 成功
      */
-    void onSuccess();
+    void onSuccess(String data);
 
     /**
      * 错误信息

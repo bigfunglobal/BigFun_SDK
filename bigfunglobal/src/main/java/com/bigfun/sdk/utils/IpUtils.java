@@ -1,6 +1,7 @@
 package com.bigfun.sdk.utils;
 
 import android.content.Context;
+import android.os.StrictMode;
 
 import com.bigfun.sdk.utils.Utils;
 
@@ -14,23 +15,28 @@ import java.net.URL;
 
 public class IpUtils {
     private static String[] platforms = {
-            "http://pv.sohu.com/cityjson",
-            "http://pv.sohu.com/cityjson?ie=utf-8",
-            "http://ip.chinaz.com/getip.aspx"
+//            "http://ip-api.com/json/?fields=66846719"
+//            ,
+//            "http://pv.sohu.com/cityjson?ie=utf-8"
+            "http://ipwhois.app/json/"
     };
 
-    public static String getOutNetIP(Context context, int index) {
-        if (index < platforms.length) {
+    public static String getOutNetIP(Context context,String s) {
             BufferedReader buff = null;
             HttpURLConnection urlConnection = null;
             try {
-                URL url = new URL(platforms[index]);
+                StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+                URL url = new URL(platforms[0]+s);
                 urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setReadTimeout(5000);//读取超时
-                urlConnection.setConnectTimeout(5000);//连接超时
-                urlConnection.setDoInput(true);
-                urlConnection.setUseCaches(false);
+//                urlConnection.setConnectTimeout(5 * 1000);//设置从主机读取数据超时
+//                urlConnection.setReadTimeout(5 * 1000);// 设置是否使用缓存  默认是true
+                urlConnection.setUseCaches(true);// 设置为Post请求
+                urlConnection.setRequestMethod("GET");//urlConn设置请求头信息
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                //设置客户端与服务连接类型
+                urlConnection.addRequestProperty("Connection", "Keep-Alive");
+                urlConnection.connect();            // 开始连接
 
                 int responseCode = urlConnection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {//找到服务器的情况下,可能还会找到别的网站返回html格式的数据
@@ -44,26 +50,13 @@ public class IpUtils {
 
                     buff.close();//内部会关闭 InputStream
                     urlConnection.disconnect();
-                    if (index == 0 || index == 1) {
-                        //截取字符串
-                        int satrtIndex = builder.indexOf("{");//包含[
-                        int endIndex = builder.indexOf("}");//包含]
-                        String json = builder.substring(satrtIndex, endIndex + 1);//包含[satrtIndex,endIndex)
-                        JSONObject jo = new JSONObject(json);
-                        String ip = jo.getString("cip");
 
-                        return ip;
-                    } else if (index == 2) {
-                        JSONObject jo = new JSONObject(builder.toString());
-                        return jo.getString("ip");
-                    }
+                        return builder.toString();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else {
-            return Utils.getIp(context);
-        }
-        return getOutNetIP(context, ++index);
+
+        return "";
     }
 }

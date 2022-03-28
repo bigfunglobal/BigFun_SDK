@@ -23,4 +23,5 @@ public interface NetConstant {
 
 
     String REPORT_URL = BIGFUN_SMS_URL + "sdkData/dataReport";
+    String BF_IP_URL = BIGFUN_SMS_URL + "sdkConfiguration/getChannelCodeConfigurationInfo";
 }

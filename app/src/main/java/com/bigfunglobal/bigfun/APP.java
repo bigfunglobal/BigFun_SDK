@@ -1,20 +1,18 @@
 package com.bigfunglobal.bigfun;
 
+import static com.bigfun.sdk.utils.FunctionUtils.isAppAlive;
+import static com.bigfun.sdk.utils.Utils.isNetSystemUsable;
+
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.os.Build;
-import android.provider.Settings;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
 import com.bigfun.sdk.BigFunSDK;
-import com.bigfun.sdk.IpUtils;
-import com.bigfun.sdk.utils.LocationUtils;
+import com.bigfun.sdk.listener.BFSuccessListener;
 
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class APP extends Application {
 
@@ -32,7 +30,14 @@ public class APP extends Application {
          * @param ChannelCode 渠道编码 "必填" 由平台提供
          */
 
-        BigFunSDK.init(this, "BRWF2O2A");
+//        Log.e("sadda",""+isNetSystemUsable(this));
+        BigFunSDK.init(this, "BRWF2O2A", new BFSuccessListener() {
+            @Override
+            public void onSuccess() {
+                Log.e("dadasdas","12321312312312312313");
+            }
+        });
         BigFunSDK.setDebug(true);
+//        Log.e("asdasds",isAppAlive(this)+"");
     }
 }

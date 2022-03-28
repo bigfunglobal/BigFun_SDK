@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.text.TextUtils;
@@ -146,5 +147,24 @@ public class Utils {
             return Integer.signum(diff);
         }
         return Integer.signum(vals1.length - vals2.length);
+    }
+    /**
+     * 判断当前网络是否可用(6.0以上版本)
+     * 实时
+     * @param context
+     * @return
+     */
+    public static boolean isNetSystemUsable(Context context) {
+        boolean isNetUsable = false;
+        ConnectivityManager manager = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            NetworkCapabilities networkCapabilities =
+                    manager.getNetworkCapabilities(manager.getActiveNetwork());
+            if (networkCapabilities != null) {
+                isNetUsable = networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED);
+            }
+        }
+        return isNetUsable;
     }
 }

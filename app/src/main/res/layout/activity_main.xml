@@ -243,6 +243,7 @@
                 android:layout_height="wrap_content"
                 android:text="google_pay"
                 android:id="@+id/google"/>
+
             <FrameLayout
                 android:id="@+id/bannerContainer"
                 android:layout_width="match_parent"

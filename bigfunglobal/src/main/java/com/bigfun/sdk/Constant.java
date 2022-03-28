@@ -3,6 +3,7 @@ package com.bigfun.sdk;
 public interface Constant {
     String KEY_TOKEN = "KEY_TOKEN";
     String KEY_DATA = "KEY_DATA";
+    String KEY_IP = "BF_IP";
     String EXTRA_KEY_PAY_URL = "EXTRA_KEY_PAY_URL";
     String PAY_TAG = "BigFunSDK--";
     String KEY_EMAIL = "KEY_EMAIL";

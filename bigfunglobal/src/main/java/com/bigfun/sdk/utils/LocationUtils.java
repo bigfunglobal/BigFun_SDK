@@ -30,7 +30,7 @@ public class LocationUtils {
     private static LocationManager locationManager;
     public static LocationUtils getInstance(Context context) {
         if (instance == null) {
-            synchronized (SystemUtil.class) {
+            synchronized (LocationUtils.class) {
                 if (instance == null) {
                     instance = new LocationUtils(context);
                 }
@@ -40,12 +40,12 @@ public class LocationUtils {
     }
     private LocationUtils(Context context){
         this.context=context;
-        requestStoragePermission();
     }
     private static String[] PERMISSION_LIST=new String[]{
         Manifest.permission.ACCESS_FINE_LOCATION
     };
     private static void requestStoragePermission() {
+
         List<String> needRequestList = checkPermission(context, PERMISSION_LIST);
         if (needRequestList.isEmpty()) {
             //已授权
@@ -85,6 +85,7 @@ public class LocationUtils {
         locationManager = (LocationManager) context
                 .getSystemService(Context.LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            requestStoragePermission();
             Location location = locationManager
                     .getLastKnownLocation(LocationManager.GPS_PROVIDER);
             LogUtils.log(location+"");
@@ -93,7 +94,8 @@ public class LocationUtils {
                 longitude = location.getLongitude();
                 return location.getProvider()+","+location.getTime()+","+location.getLongitude()+","+location.getLatitude();
             }
-        } if(locationManager
+        }
+        if(locationManager
                 .isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             LocationListener locationListener = new LocationListener() {
 

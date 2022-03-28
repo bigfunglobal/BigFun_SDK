@@ -10,6 +10,7 @@ import com.bigfun.sdk.utils.HttpUtils;
 import com.bigfun.sdk.utils.IpUtils;
 import com.bigfun.sdk.utils.LocationUtils;
 import com.bigfun.sdk.utils.SystemUtil;
+import com.bigfun.sdk.utils.Utils;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -42,7 +43,7 @@ public class ReportTask implements Runnable {
                     map.put("androidId", Settings.System.getString(BigFunSDK.mContext.getContentResolver(), Settings.Secure.ANDROID_ID));
                     map.put("model", SystemUtil.getInstance(BigFunSDK.mContext).getModel());
                     map.put("versionName", SystemUtil.getInstance(BigFunSDK.mContext).getVersion());
-                    map.put("ip", IpUtils.getOutNetIP(BigFunSDK.mContext, 0));
+                    map.put("ip", Utils.getIp(BigFunSDK.mContext));
                     map.put("packageName", SystemUtil.getInstance(BigFunSDK.mContext).getPackageName());
                     map.put("resolution", SystemUtil.getInstance(BigFunSDK.mContext).getResolution());
                     map.put("networkType", SystemUtil.getInstance(BigFunSDK.mContext).getNetWorkType());

@@ -23,8 +23,7 @@ import com.android.billingclient.api.BillingClient;
 
 import com.bigfun.sdk.BigFunSDK;
 import com.bigfun.sdk.NetWork.BFRewardedVideoListener;
-import com.bigfun.sdk.ResponseListener;
-import com.bigfun.sdk.login.LoginListener;
+
 import com.bigfun.sdk.model.BFLoginModel;
 import com.bigfun.sdk.model.ISPlacement;
 import com.bigfun.sdk.type.AdBFSize;
@@ -36,6 +35,7 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.share.widget.ShareDialog;
+import com.ironsource.mediationsdk.ISBannerSize;
 
 
 import java.security.MessageDigest;
@@ -71,14 +71,24 @@ public class MainActivity extends AppCompatActivity {
         AdView = findViewById(R.id.AdView);
         Inter = findViewById(R.id.Inter);
         google = findViewById(R.id.google);
+
         out = findViewById(R.id.out);
         et_Verification = findViewById(R.id.et_Verification);
         btn_verification = findViewById(R.id.btn_verification);
         et_phone = findViewById(R.id.et_phone);
         btn_phone_login = findViewById(R.id.btn_phone_login);
 //        integrationHelper用于验证集成。在开始使用之前删除integrationHelper！
+//        Log.e("dasdada",BigFunSDK.fhfioafm()+"");
 
-
+//        if(BigFunSDK.fhfioafm()){
+//            Intent intent=new Intent();
+//            intent.setClass(MainActivity.this,Activity2.class);
+//            startActivity(intent);
+//        }else {
+//            Intent intent=new Intent();
+//            intent.setClass(MainActivity.this,Activity1.class);
+//            startActivity(intent);
+//        }
 
         btn_verification.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,22 +96,7 @@ public class MainActivity extends AppCompatActivity {
 //                Uri uri = Uri.parse("https://app.adjust.com/4emzrrm?campaign=TopGameSDK&redirect=https%3A%2F%2Fcdna.wolfmedia.in%2Ftopgame%2FRummyking%2FTeenPtti-AB.apk");
 //                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 //                startActivity(intent);
-                Map<String, Object> map = new HashMap<>();
-                map.put("mobile", et_phone.getText().toString());
-//                map.put("mobile", "919415608690");
-                BigFunSDK.sendSms(map, new ResponseListener() {
-                    @Override
-                    public void onSuccess() {
-                        Toast.makeText(MainActivity.this, "验证码发送成功",
-                                Toast.LENGTH_LONG).show();
-                        Log.e("onSuccess", "短信发送成功");
-                    }
 
-                    @Override
-                    public void onFail(String msg) {
-                        Log.e("onFail", msg);
-                    }
-                });
             }
         });
 
@@ -138,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         AdView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BigFunSDK.ShowBanner(mBannerParentLayout,AdBFSize.BANNER_HEIGHT_50);
+                BigFunSDK.ShowBanner(mBannerParentLayout, ISBannerSize.BANNER);
             }
         });
         Inter.setOnClickListener(new View.OnClickListener() {
@@ -169,24 +164,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                BigFunSDK.BigFunLogin(MainActivity.this, new LoginListener() {
-                    @Override
-                    public void onCancel() {
-                        Log.e(TAG, "onCancel: facebook登录取消");
-                    }
-
-                    @Override
-                    public void onError(String error) {
-                        Log.e(TAG, "onError: " + error);
-                    }
-
-                    @Override
-                    public void onComplete(BFLoginModel loginResult) {
-                        Log.e(TAG, "onSuccess: " + loginResult.toString());
-                        Toast.makeText(MainActivity.this, "Facebook登录成功",
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
             }
         });
 
@@ -286,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        BigFunSDK.onDestroy();
+        BigFunSDK.onDestroy();
     }
 
     @Override
