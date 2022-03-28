@@ -31,12 +31,7 @@ public class APP extends Application {
          */
 
 //        Log.e("sadda",""+isNetSystemUsable(this));
-        BigFunSDK.init(this, "BRWF2O2A", new BFSuccessListener() {
-            @Override
-            public void onSuccess() {
-                Log.e("dadasdas","12321312312312312313");
-            }
-        });
+        BigFunSDK.init(this, "BRWF2O2A");
         BigFunSDK.setDebug(true);
 //        Log.e("asdasds",isAppAlive(this)+"");
     }
