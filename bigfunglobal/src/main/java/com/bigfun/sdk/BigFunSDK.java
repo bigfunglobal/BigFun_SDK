@@ -54,9 +54,9 @@ import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareContent;
 
 
-import com.google.android.gms.auth.api.identity.GetSignInIntentRequest;
-import com.google.android.gms.auth.api.identity.Identity;
-import com.google.android.gms.auth.api.identity.SignInClient;
+//import com.google.android.gms.auth.api.identity.GetSignInIntentRequest;
+//import com.google.android.gms.auth.api.identity.Identity;
+//import com.google.android.gms.auth.api.identity.SignInClient;
 
 import com.google.gson.Gson;
 import com.ironsource.mediationsdk.ISBannerSize;
@@ -90,7 +90,7 @@ public class BigFunSDK {
     public final static int SUT_BF = 1010;
 
     //    private MyBillingImpl myBilling;
-    private static GetSignInIntentRequest mGetSignInIntentRequest;
+//    private static GetSignInIntentRequest mGetSignInIntentRequest;
     private static JSONObject fbgv = new JSONObject();
 
     //获取时间
@@ -616,10 +616,10 @@ public class BigFunSDK {
     }
 
     private static void Googleinit(String clientId) {
-        mGetSignInIntentRequest =
-                GetSignInIntentRequest.builder()
-                        .setServerClientId(clientId)
-                        .build();
+//        mGetSignInIntentRequest =
+//                GetSignInIntentRequest.builder()
+//                        .setServerClientId(clientId)
+//                        .build();
     }
 
     /**
@@ -628,22 +628,22 @@ public class BigFunSDK {
     private static Activity bactivity;
 
 
-    public static void BigFunLogin(Activity activity) {
-        bactivity = activity;
-        if (checkSdkNotInit()) {
-            return;
-        }
-        if (!BigFunViewModel.google || mGetSignInIntentRequest == null) {
-            Log.e("BigFunSDK", "Background not set");
-            return;
-        }
-        LoginModel.Login(activity, mGetSignInIntentRequest);
-    }
+//    public static void BigFunLogin(Activity activity) {
+//        bactivity = activity;
+//        if (checkSdkNotInit()) {
+//            return;
+//        }
+//        if (!BigFunViewModel.google || mGetSignInIntentRequest == null) {
+//            Log.e("BigFunSDK", "Background not set");
+//            return;
+//        }
+//        LoginModel.Login(activity, mGetSignInIntentRequest);
+//    }
 
 
-    public static SignInClient BigFunIdentity() {
-        return Identity.getSignInClient(bactivity);
-    }
+//    public static SignInClient BigFunIdentity() {
+//        return Identity.getSignInClient(bactivity);
+//    }
 
 
     /**

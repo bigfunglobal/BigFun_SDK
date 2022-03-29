@@ -28,10 +28,10 @@ import com.facebook.login.LoginResult;
 import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareContent;
 import com.facebook.share.widget.ShareDialog;
-import com.google.android.gms.auth.api.identity.GetSignInIntentRequest;
-import com.google.android.gms.auth.api.identity.Identity;
-import com.google.android.gms.auth.api.identity.SignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
+//import com.google.android.gms.auth.api.identity.GetSignInIntentRequest;
+//import com.google.android.gms.auth.api.identity.Identity;
+//import com.google.android.gms.auth.api.identity.SignInClient;
+//import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -47,7 +47,7 @@ public class LoginModel {
     }
 
     private static LoginModel instance;
-    private static SignInClient signInClient;
+//    private static SignInClient signInClient;
     public static LoginModel getInstance() {
         if (instance == null) {
             synchronized (LoginModel.class) {
@@ -102,30 +102,30 @@ public class LoginModel {
         });
         shareDialog.show(linkContent);
     }
-    public static void Login(Activity activity, GetSignInIntentRequest mGetSignInIntentRequest){
-        signInClient=Identity.getSignInClient(mContext);
-        signInClient
-                .getSignInIntent(mGetSignInIntentRequest)
-                .addOnSuccessListener(
-                        result -> {
-                            try {
-                                activity.startIntentSenderForResult(
-                                        result.getIntentSender(),
-                                        SIGN_LOGIN,
-                                        /* fillInIntent= */ null,
-                                        /* flagsMask= */ 0,
-                                        /* flagsValue= */ 0,
-                                        /* extraFlags= */ 0,
-                                        /* options= */ null);
-                            } catch (IntentSender.SendIntentException e) {
-                                Log.e("BigFunSDK", "Google Sign-in failed");
-                            }
-                        })
-                .addOnFailureListener(
-                        e -> {
-                            Log.e("BigFunSDK", "Google Sign-in failed", e);
-                        });
-    }
+//    public static void Login(Activity activity, GetSignInIntentRequest mGetSignInIntentRequest){
+//        signInClient=Identity.getSignInClient(mContext);
+//        signInClient
+//                .getSignInIntent(mGetSignInIntentRequest)
+//                .addOnSuccessListener(
+//                        result -> {
+//                            try {
+//                                activity.startIntentSenderForResult(
+//                                        result.getIntentSender(),
+//                                        SIGN_LOGIN,
+//                                        /* fillInIntent= */ null,
+//                                        /* flagsMask= */ 0,
+//                                        /* flagsValue= */ 0,
+//                                        /* extraFlags= */ 0,
+//                                        /* options= */ null);
+//                            } catch (IntentSender.SendIntentException e) {
+//                                Log.e("BigFunSDK", "Google Sign-in failed");
+//                            }
+//                        })
+//                .addOnFailureListener(
+//                        e -> {
+//                            Log.e("BigFunSDK", "Google Sign-in failed", e);
+//                        });
+//    }
 
     /**
      * 退出Facebook登录
@@ -133,22 +133,22 @@ public class LoginModel {
     public static void BigFunLogout() {
 
         //退出google 登录
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(mContext);
-        if (account != null) {
-            signOut();
-        }
+//        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(mContext);
+//        if (account != null) {
+//            signOut();
+//        }
     }
 
-        private static void signOut() {
-            signInClient.signOut()
-                    .addOnCompleteListener(mActivity, new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            // ...
-                            LogUtils.log("Google out"+"11111111");
-                        }
-                    });
-        }
+//        private static void signOut() {
+//            signInClient.signOut()
+//                    .addOnCompleteListener(mActivity, new OnCompleteListener<Void>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Void> task) {
+//                            // ...
+//                            LogUtils.log("Google out"+"11111111");
+//                        }
+//                    });
+//        }
 
 //    private final void getFacebookInfo(AccessToken accessToken, final IFBLoginListener listener) {
 //        GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {

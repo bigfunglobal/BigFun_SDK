@@ -132,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
         AdView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                                FrameLayout adContainer=new FrameLayout(MainActivity.this);
+//                adContainer.setLayoutParams(new FrameLayout.LayoutParams(100,300));
                 BigFunSDK.ShowBanner(mBannerParentLayout,AdBFSize.BANNER_HEIGHT_50);
             }
         });
@@ -242,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
                 /**
                  *
                  */
-                BigFunSDK.BigFunLogin(MainActivity.this);
+//                BigFunSDK.BigFunLogin(MainActivity.this);
 //                BigFunSDK.GooglePay(MainActivity.this, "premium_upgrade", new GooglePayUpdatedListener() {
 //                    @Override
 //                    public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {

@@ -41,6 +41,7 @@ public class SourceNetWork{
     private static FrameLayout mBannerParentLayout;
     private static IronSourceBannerLayout mIronSourceBannerLayout;
     private static BFRewardedVideoListener listener;
+    private static String userId;
 
     public SourceNetWork() {
     }
@@ -91,14 +92,14 @@ public class SourceNetWork{
         //添加Impression数据侦听器
         IronSource.addImpressionDataListener(impressionDataListener);
         IronSource.isRewardedVideoAvailable();
+        userId=IronSource.getAdvertiserId(mContext);
     }
 
     private void initIronSource() {
         IntegrationHelper.validateIntegration(mActivity);
             //设置IronSource用户id
-            IronSource.setUserId(IronSource.getAdvertiserId(mContext));
+            IronSource.setUserId(userId);
              //初始化IronSource SDK
-            IronSource.getAdvertiserId(mContext);
             IronSource.init(mActivity, BigFunViewModel.SourceAppKey);
 //        网络连接状态
             IronSource.shouldTrackNetworkState(mContext, true);
