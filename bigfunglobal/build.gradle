@@ -4,10 +4,10 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion '29.0.2'
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 10
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -49,7 +49,6 @@ dependencies {
 //    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
 //    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    implementation files('libs\\SaaS_GameAnalytics_Android_SDK_V4.0.68.jar')
     //kochava
 //    implementation platform('com.google.firebase:firebase-bom:29.1.0')
 //    implementation 'com.google.firebase:firebase-analytics'
@@ -63,7 +62,7 @@ dependencies {
     implementation 'com.adjust.sdk:adjust-android:4.28.2'
     implementation 'com.android.installreferrer:installreferrer:2.2'
 
-//    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
 //    implementation 'com.google.android.gms:play-services-location:17.0.1'
     implementation 'com.android.billingclient:billing:4.0.0'
     implementation 'com.google.android.gms:play-services-wallet:18.1.3'
@@ -76,6 +75,7 @@ dependencies {
     //ISSDK
     implementation 'com.ironsource.sdk:mediationsdk:7.2.1'
     implementation 'com.google.android.gms:play-services-ads-identifier:17.0.0'
+    implementation files('libs\\GooglePlay_AppAnalytics_Android_SDK_V4.0.69.jar')
     //TMSDk
 //        implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.32'
 //    implementation 'org.jetbrains.kotlin:kotlin-stdlib-common:1.4.32'

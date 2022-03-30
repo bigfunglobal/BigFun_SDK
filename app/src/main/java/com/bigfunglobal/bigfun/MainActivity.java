@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.android.billingclient.api.BillingClient;
 
 import com.bigfun.sdk.BigFunSDK;
+import com.bigfun.sdk.LogUtils;
 import com.bigfun.sdk.NetWork.BFRewardedVideoListener;
 
 import com.bigfun.sdk.model.BFLoginModel;
@@ -35,6 +36,10 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.share.widget.ShareDialog;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 
 
 import java.security.MessageDigest;
@@ -164,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                BigFunSDK.BigFunLogout();
             }
         });
 
@@ -252,6 +257,7 @@ public class MainActivity extends AppCompatActivity {
 //                    }
 //                });
 //                BigFunSDK.BigFunGoogleLogin(MainActivity.this,"539033930849-l4gkqgs24fm72fh2hu5u9bkn2csajn6l.apps.googleusercontent.com");
+                BigFunSDK.BigFunLogin(MainActivity.this);
             }
         });
 
@@ -279,6 +285,8 @@ public class MainActivity extends AppCompatActivity {
 
         } else if (requestCode == REQUEST_SHARE_FILE_CODE) {
             // todo share complete.
+        }else if(requestCode==BigFunSDK.SIGN_GP_LOGIN){
+            Log.e("1231231",BigFunSDK.onResult(requestCode, resultCode, data));
         }
 //        else if(requestCode == BigFunSDK.SIGN_LOGIN) {
 //                try {

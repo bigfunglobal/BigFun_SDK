@@ -1,6 +1,5 @@
 package com.bigfun.sdk.login;
 
-import static com.bigfun.sdk.BigFunSDK.SIGN_LOGIN;
 import static com.bigfun.sdk.BigFunSDK.mActivity;
 import static com.bigfun.sdk.BigFunSDK.mContext;
 import static com.bigfun.sdk.BigFunSDK.onEvent;
