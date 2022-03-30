@@ -34,7 +34,7 @@ public class APP extends Application {
         BigFunSDK.init(this, "BRWF2O2A", new BFSuccessListener() {
             @Override
             public void onSuccess() {
-
+                Log.e("asdasda","213123123");
             }
         });
         BigFunSDK.setDebug(true);
