@@ -114,6 +114,7 @@ public class TMNetWork {
             //视频关闭时调用
             LogUtils.log("onRewardedVideoAdClosed");
             //这里我们向用户显示一个对话框，如果他得到了奖励
+            if(listener!=null)
             listener.onRewardedVideoAdClosed();
         }
 
@@ -136,6 +137,7 @@ public class TMNetWork {
         public void onRewardedVideoAdRewarded(Placement placement) {
             //当视频得到奖励并且可以给用户奖励时调用
             LogUtils.log("onRewardedVideoAdRewarded" + " " + placement);
+            if(listener!=null)
             listener.onRewardedVideoAdRewarded(new ISPlacement(placement));
         }
 

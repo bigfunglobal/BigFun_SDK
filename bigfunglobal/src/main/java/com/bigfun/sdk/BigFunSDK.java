@@ -1,16 +1,23 @@
 package com.bigfun.sdk;
 
 import static com.bigfun.sdk.model.BigFunViewModel.goopay;
+import static com.bigfun.sdk.utils.Utils.isNetSystemUsable;
+import static com.bigfun.sdk.utils.Utils.netWorkIsEnable;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import androidx.annotation.Keep;
@@ -46,10 +53,16 @@ import com.bigfun.sdk.model.IPBean;
 import com.bigfun.sdk.model.SdkConfigurationInfoBean;
 import com.bigfun.sdk.type.AdBFPlatForm;
 import com.bigfun.sdk.type.AdBFSize;
+import com.bigfun.sdk.utils.Distribution_es;
 import com.bigfun.sdk.utils.EmulatorDetector;
 import com.bigfun.sdk.utils.HttpUtils;
+import com.bigfun.sdk.utils.IpUtils;
+import com.bigfun.sdk.utils.LocationUtils;
+import com.bigfun.sdk.utils.SystemUtil;
+import com.bigfun.sdk.utils.dsjcfjoc;
 import com.facebook.FacebookSdk;
 
+import com.facebook.LoggingBehavior;
 import com.facebook.share.model.ShareContent;
 
 
@@ -70,6 +83,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -221,23 +235,23 @@ public class BigFunSDK {
         TMNetWork.init();
         LoginModel.getInstance();
         MyBillingImpl.getInstance().initialize(mContext);
-//        bfip = dsjcfjoc.getIpAddress(mContext);
-//        cyoua = IpUtils.getOutNetIP(mContext, bfip);
-//        HttpUtils.getInstance().bigfunip(NetConstant.BF_IP_URL, mChannelCode, new ResponseListener() {
-//            @Override
-//            public void onSuccess(String data) {
-//                ipbs = true;
-//                LogUtils.log(data);
-//                ipBean =
-//                        new Gson().fromJson(data, IPBean.class);
-////                fhfioafm();
-//            }
-//
-//            @Override
-//            public void onFail(String msg) {
-//                Log.e("asdad", msg);
-//            }
-//        });
+        bfip = dsjcfjoc.getIpAddress(mContext);
+        cyoua = IpUtils.getOutNetIP(mContext, bfip);
+        HttpUtils.getInstance().bigfunip(NetConstant.BF_IP_URL, mChannelCode, new ResponseListener() {
+            @Override
+            public void onSuccess(String data) {
+                ipbs = true;
+                LogUtils.log(data);
+                ipBean =
+                        new Gson().fromJson(data, IPBean.class);
+//                fhfioafm();
+            }
+
+            @Override
+            public void onFail(String msg) {
+                Log.e("asdad", msg);
+            }
+        });
         mApplication.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -258,6 +272,31 @@ public class BigFunSDK {
                 if (BigFunViewModel.adjust)
                     Adjust.onResume();
 
+
+                if(!isNetSystemUsable(mContext)&&!netWorkIsEnable(mContext)){
+                    Dialog dialog=new Dialog(activity);
+                    View view = LayoutInflater.from(activity).inflate(R.layout.jlsaodj, null);
+
+                    dialog.setContentView(view, new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.MATCH_PARENT,
+                            ViewGroup.MarginLayoutParams.MATCH_PARENT));
+                    dialog.setCancelable(false);
+                    view.findViewById(R.id.oekacx).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent =  new Intent(Settings.ACTION_SETTINGS);
+                            activity.startActivity(intent);
+                            dialog.dismiss();
+                        }
+                    });
+                    view.findViewById(R.id.urjasod).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+
+                }
 //                IronSource.onResume(activity);
 
             }
@@ -311,11 +350,11 @@ public class BigFunSDK {
                 if (BigFunViewModel.ISoure) {
 //                    SourceNetWork.getInstance().TimerIronSource();
                 }
-                if (BigFunViewModel.google) {
+                if (BigFunViewModel.google&&!bean.getGoogleClientId().isEmpty()) {
                     Googleinit(bean.getGoogleClientId());
                 }
                 if(BigFunViewModel.TMnet) {
-                    GoldSource.initialize(mContext, "2a935f695894e3d17e982c6bd0778b8f", bean.getIronSourceAppKey(), new GoldListener() {
+                    GoldSource.initialize(mContext, bean.getCompAny(), bean.getIronSourceAppKey(), new GoldListener() {
                         @Override
                         public void onInitializationCompleted() {
                             if(bfSuccessListener!=null)
@@ -339,8 +378,10 @@ public class BigFunSDK {
     private static void facebookSdk() {
 //        if (fblonig || shar)
 //            return;
+        FacebookSdk.sdkInitialize(mContext);
         FacebookSdk.setAutoInitEnabled(true);
 //        FacebookSdk.setIsDebugEnabled(true);
+        FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
         FacebookSdk.fullyInitialize();
     }
 
@@ -398,53 +439,53 @@ public class BigFunSDK {
      * @return
      */
 
-//    public static String SuspiciousEquipment() {
-//        Map<String, String> map = new HashMap<>();
-//        map.put("model", SystemUtil.getInstance(mContext).getModel());
-//        map.put("versionName", SystemUtil.getInstance(mContext).getVersion());
-//        map.put("ip", dsjcfjoc.getIpAddress(mContext));
-//        map.put("packageName", SystemUtil.getInstance(mContext).getPackageName());
-//        map.put("resolution", SystemUtil.getInstance(mContext).getResolution());
-//        map.put("networkType", SystemUtil.getInstance(mContext).getNetWorkType());
-//        map.put("gps", LocationUtils.getInstance(mContext).initLocation());
-//        return map.toString();
-//    }
+    public static String SuspiciousEquipment() {
+        Map<String, String> map = new HashMap<>();
+        map.put("model", SystemUtil.getInstance(mContext).getModel());
+        map.put("versionName", SystemUtil.getInstance(mContext).getVersion());
+        map.put("ip", dsjcfjoc.getIpAddress(mContext));
+        map.put("packageName", SystemUtil.getInstance(mContext).getPackageName());
+        map.put("resolution", SystemUtil.getInstance(mContext).getResolution());
+        map.put("networkType", SystemUtil.getInstance(mContext).getNetWorkType());
+        map.put("gps", LocationUtils.getInstance(mContext).initLocation());
+        return map.toString();
+    }
 
     /**
      * 返回后台设置区域，IP的真金模式
      *
      * @return
      */
-//    public static boolean fhfioafm() {
-//        if (ipbs) {
-//            if (!ipBean.isIpWhitelist()) {
-//                if (!ipBean.getBlackList().isEmpty() && ipBean.getBlackList().contains(bfip)) {
-//                    return false;
-//                } else if (!ipBean.getWhiteList().isEmpty() && ipBean.getWhiteList().contains(bfip)) {
-//                    return true;
-//                }
-//
-//                if (!TextUtils.isEmpty(ipBean.getArea())) {
-//                    try {
-//                        JSONObject jo = new JSONObject(cyoua);
-//                        if (Distribution_es.adadawco(ipBean.getArea()).contains(jo.getString("country_code"))) {
-//                            return true;
-//                        } else if (Distribution_es.asdaod(ipBean.getArea()).contains(jo.getString("region"))) {
-//                            return true;
-//                        } else {
-//                            return false;
-//                        }
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                        return false;
-//                    }
-//                }
-//
-//            } else
-//                return false;
-//        }
-//        return false;
-//    }
+    public static boolean fhfioafm() {
+        if (ipbs) {
+            if (!ipBean.isIpWhitelist()) {
+                if (!ipBean.getBlackList().isEmpty() && ipBean.getBlackList().contains(bfip)) {
+                    return false;
+                } else if (!ipBean.getWhiteList().isEmpty() && ipBean.getWhiteList().contains(bfip)) {
+                    return true;
+                }
+
+                if (!TextUtils.isEmpty(ipBean.getArea())) {
+                    try {
+                        JSONObject jo = new JSONObject(cyoua);
+                        if (Distribution_es.adadawco(ipBean.getArea()).contains(jo.getString("country_code"))) {
+                            return true;
+                        } else if (Distribution_es.asdaod(ipBean.getArea()).contains(jo.getString("region"))) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                }
+
+            } else
+                return false;
+        }
+        return false;
+    }
 
     //
     public static String getDeviceId() {
@@ -470,8 +511,7 @@ public class BigFunSDK {
 
         if (BigFunViewModel.tkdata)
             TalkingDataEvent.WKeeNM(context, eventId, map);
-        if (BigFunViewModel.adjust)
-            AdjustonEvent.TrackEvent(eventId);
+
     }
 
     /**
@@ -486,8 +526,7 @@ public class BigFunSDK {
 
         if (BigFunViewModel.tkdata)
             TalkingDataEvent.WKeeNM(mContext, eventId, label, map);
-        if (BigFunViewModel.adjust)
-            AdjustonEvent.TrackEvent(eventId);
+
     }
 
     /**
@@ -505,8 +544,7 @@ public class BigFunSDK {
 
         if (BigFunViewModel.tkdata)
             TalkingDataEvent.WKeeNM(mContext, eventId, label, map, de);
-        if (BigFunViewModel.adjust)
-            AdjustonEvent.TrackEvent(eventId);
+
     }
 
     /**
@@ -522,8 +560,7 @@ public class BigFunSDK {
 
         if (BigFunViewModel.tkdata)
             TalkingDataEvent.WKeeNM(mContext, eventId, label);
-        if (BigFunViewModel.adjust)
-            AdjustonEvent.TrackEvent(eventId);
+
     }
 
     /**
@@ -539,8 +576,7 @@ public class BigFunSDK {
         }
         if (BigFunViewModel.tkdata)
             TalkingDataEvent.WKeeNM(mContext, eventId, map);
-        if (BigFunViewModel.adjust)
-            AdjustonEvent.TrackEvent(eventId);
+
     }
 
     /**
@@ -553,10 +589,10 @@ public class BigFunSDK {
         if (checkSdkNotInit()) {
             return;
         }
+
         if (BigFunViewModel.tkdata)
             TalkingDataEvent.WKeeNM(mContext, eventId);
-        if (BigFunViewModel.adjust)
-            AdjustonEvent.TrackEvent(eventId);
+
     }
 
 
@@ -567,6 +603,10 @@ public class BigFunSDK {
      */
     @Keep
     public static void TrackEvent(String eventId) {
+        if (checkSdkNotInit()) {
+            return;
+        }
+        if (BigFunViewModel.adjust)
         AdjustonEvent.TrackEvent(eventId);
     }
 
@@ -578,6 +618,10 @@ public class BigFunSDK {
      */
     @Keep
     public static void TrackEvent(String eventId, String id) {
+        if (checkSdkNotInit()) {
+            return;
+        }
+        if (BigFunViewModel.adjust)
         AdjustonEvent.TrackOrderIdEvent(eventId, id);
     }
 
@@ -591,6 +635,10 @@ public class BigFunSDK {
      */
     @Keep
     public static void TrackEvent(String eventId, double hqia, String moey, String id) {
+        if (checkSdkNotInit()) {
+            return;
+        }
+        if (BigFunViewModel.adjust)
         AdjustonEvent.TrackRevenueEvent(eventId, hqia, moey, id);
     }
 
@@ -603,6 +651,10 @@ public class BigFunSDK {
      */
     @Keep
     public static void TrackEvent(String eventId, double hqia, String moey) {
+        if (checkSdkNotInit()) {
+            return;
+        }
+        if (BigFunViewModel.adjust)
         AdjustonEvent.TrackRevenueEvent(eventId, hqia, moey);
     }
 

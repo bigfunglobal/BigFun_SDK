@@ -12,7 +12,7 @@ import java.util.List;
 @Keep
 public class BigFunViewModel {
     public static boolean google=false,ISoure=false,sms = false,goopay=false, sdk = false, shar = false, fblonig = false, adjust = false, tkdata = false,firebase=false,FBnet=false,TMnet=false;
-    public static String bannerAdId = "",interstitialId="",rewardedVideoId="",SourceAppKey="";
+    public static String bannerAdId = "",interstitialId="",rewardedVideoId="",SourceAppKey="",compAny="";
     public static int insetAdTM,insetAdFB,incentiveVideoTM,incentiveVideoFB,streamerAdFB,streamerAdTM;
     private static BigFunViewModel instance;
     public static List<String> stringins=new ArrayList<>(),stringsus=new ArrayList<>();
@@ -61,8 +61,9 @@ public class BigFunViewModel {
             ISoure=true;
             SourceAppKey=bean.getIronSourceAppKey();
         }
-        if (!TextUtils.isEmpty(bean.getAdsType())&&bean.getAdsType().contains("2")&&!TextUtils.isEmpty(bean.getIronSourceAppKey())) {
+        if (!TextUtils.isEmpty(bean.getAdsType())&&bean.getAdsType().contains("2")&&!TextUtils.isEmpty(bean.getIronSourceAppKey())&&!bean.getCompAny().isEmpty()) {
             TMnet=true;
+            compAny= bean.getCompAny();
         }
 
         if (!TextUtils.isEmpty(bean.getLoginType()) && bean.getLoginType().contains("1")) {

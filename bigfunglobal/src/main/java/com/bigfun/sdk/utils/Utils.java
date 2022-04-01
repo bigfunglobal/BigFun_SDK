@@ -1,5 +1,7 @@
 package com.bigfun.sdk.utils;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -9,10 +11,12 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.text.TextUtils;
 
+import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -166,5 +170,35 @@ public class Utils {
             }
         }
         return isNetUsable;
+    }
+//    public static boolean isOnline(){
+//        URL url;
+//        try {
+//            url = new URL("https://www.baidu.com");
+//            InputStream stream = url.openStream();
+//            return true;
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return false;
+//    }
+
+    public static boolean netWorkIsEnable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        try {
+            // 通过ping百度检测网络是否可用
+            Process p = Runtime.getRuntime().exec("/system/bin/ping -c " + 1 + " 202.108.22.5");
+            int status = p.waitFor(); // 只有0时表示正常返回
+            return (connectivityManager.getActiveNetworkInfo() != null && status == 0);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 }

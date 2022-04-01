@@ -32,6 +32,18 @@ public class SdkConfigurationInfoBean {
     private String skuTypeInAppSkuList;
 
     //--------------get --------------------------------
+    public String getCompAny() {
+        return compAny == null ? "" : compAny;
+    }
+
+    //---------------set----------------------------------
+    public void setCompAny(String compAny) {
+        this.compAny = compAny == null ? "" : compAny;
+    }
+
+    private String compAny;
+
+    //--------------get --------------------------------
     public String getAdjustAppToken() {
         return adjustAppToken == null ? "" : adjustAppToken;
     }

@@ -228,17 +228,17 @@ public class MainActivity extends AppCompatActivity {
         out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BigFunSDK.ShowRewardedVideo(new BFRewardedVideoListener() {
-                    @Override
-                    public void onRewardedVideoAdClosed() {
-
-                    }
-
-                    @Override
-                    public void onRewardedVideoAdRewarded(ISPlacement placement) {
-                        Log.e("dadad",placement+"");
-                    }
-                });
+//                BigFunSDK.ShowRewardedVideo(new BFRewardedVideoListener() {
+//                    @Override
+//                    public void onRewardedVideoAdClosed() {
+//
+//                    }
+//
+//                    @Override
+//                    public void onRewardedVideoAdRewarded(ISPlacement placement) {
+//                        Log.e("dadad",placement+"");
+//                    }
+//                });
                 BigFunSDK.ShowRewardedVideo();
             }
         });
