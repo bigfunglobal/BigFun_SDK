@@ -68,13 +68,11 @@ public class BigFunViewModel {
 
         if (!TextUtils.isEmpty(bean.getLoginType()) && bean.getLoginType().contains("1")) {
             fblonig = true;
-
         }
         if (!TextUtils.isEmpty(bean.getLoginType()) && bean.getLoginType().contains("2")) {
             sms = true;
-        }if (!TextUtils.isEmpty(bean.getLoginType()) && bean.getLoginType().contains("3")) {
+        }if (!TextUtils.isEmpty(bean.getLoginType()) && bean.getLoginType().contains("3")&&!bean.getGoogleClientId().isEmpty()) {
             google = true;
-
         }
         if (!TextUtils.isEmpty(bean.getShareType())) {
             shar = true;

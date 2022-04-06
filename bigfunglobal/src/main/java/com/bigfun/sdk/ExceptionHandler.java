@@ -5,6 +5,7 @@ import android.os.Looper;
 
 import androidx.annotation.Keep;
 
+@Keep
 public class ExceptionHandler {
     //你自己定义的处理异常类
     private static CustomExceptionHandler mCustomExceptionHandler;

@@ -84,8 +84,8 @@ public class dsjcfjoc {
                     "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.7 Safari/537.36"); //设置浏览器ua 保证不出现503
 
             //设置客户端与服务连接类型
-            connection.addRequestProperty("Connection", "Keep-Alive");
-            connection.connect();            // 开始连接
+//            connection.addRequestProperty("Connection", "Keep-Alive");
+//            connection.connect();            // 开始连接
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 InputStream in = connection.getInputStream();

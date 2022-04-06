@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.bigfun.sdk.LogUtils;
 import com.bigfun.sdk.model.ISPlacement;
+import com.bigfun.sdk.model.TMISPlacement;
 import com.goldsource.sdk.GoldSource;
 import com.ironsource.mediationsdk.IronSource;
 import com.ironsource.mediationsdk.logger.IronSourceError;
@@ -39,7 +40,7 @@ public class TMNetWork {
         return instance;
     }
 
-    private static BFRewardedVideoListener listener;
+    private static BFTMRewardedVideoListener listener;
 
     public static void init() {
         GoldSource.setInterstitialListener(interstitialListener);
@@ -47,8 +48,7 @@ public class TMNetWork {
     }
 //
 //
-    public static void showRewardedVideo(BFRewardedVideoListener bflistener) {
-
+    public static void showRewardedVideo(BFTMRewardedVideoListener bflistener) {
         listener = bflistener;
         GoldSource.showRewardedVideo();
     }
@@ -107,6 +107,8 @@ public class TMNetWork {
         @Override
         public void onRewardedVideoAdOpened() {
             LogUtils.log("onRewardedVideoAdOpened");
+            if(listener!=null)
+            listener.onRewardedVideoAdOpened();
         }
 
         @Override
@@ -121,16 +123,22 @@ public class TMNetWork {
         @Override
         public void onRewardedVideoAvailabilityChanged(boolean b) {
             LogUtils.log("onRewardedVideoAvailabilityChanged");
+            if(listener!=null)
+            listener.onRewardedVideoAvailabilityChanged(b);
         }
 
         @Override
         public void onRewardedVideoAdStarted() {
             LogUtils.log("onRewardedVideoAdStarted");
+            if(listener!=null)
+            listener.onRewardedVideoAdStarted();
         }
 
         @Override
         public void onRewardedVideoAdEnded() {
             LogUtils.log("onRewardedVideoAdEnded");
+            if(listener!=null)
+            listener.onRewardedVideoAdEnded();
         }
 
         @Override
@@ -138,17 +146,21 @@ public class TMNetWork {
             //当视频得到奖励并且可以给用户奖励时调用
             LogUtils.log("onRewardedVideoAdRewarded" + " " + placement);
             if(listener!=null)
-            listener.onRewardedVideoAdRewarded(new ISPlacement(placement));
+            listener.onRewardedVideoAdRewarded(new TMISPlacement(placement));
         }
 
         @Override
         public void onRewardedVideoAdShowFailed(IronSourceError ironSourceError) {
             LogUtils.log("onRewardedVideoAdShowFailed(" + ironSourceError.getErrorCode() + "：" + ironSourceError.getErrorMessage() + ")");
+            if(listener!=null)
+            listener.onRewardedVideoAdShowFailed(ironSourceError.getErrorCode()+"_"+ironSourceError.getErrorMessage());
         }
 
         @Override
         public void onRewardedVideoAdClicked(Placement placement) {
             LogUtils.log("onRewardedVideoAdClicked(" + placement.getPlacementId() + ")");
+            if(listener!=null)
+            listener.onRewardedVideoAdClicked(new TMISPlacement(placement));
         }
     };
 

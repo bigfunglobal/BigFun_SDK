@@ -35,6 +35,7 @@ import com.android.billingclient.api.SkuDetails;
 import com.bigfun.sdk.NetWork.BFRewardedVideoListener;
 
 
+import com.bigfun.sdk.NetWork.BFTMRewardedVideoListener;
 import com.bigfun.sdk.NetWork.TMNetWork;
 import com.bigfun.sdk.listener.BFSuccessListener;
 import com.bigfun.sdk.listener.GoogleCommodityListener;
@@ -119,7 +120,7 @@ public class BigFunSDK {
      */
 
     static boolean isDebug = false;
-    private static String environment = AdjustConfig.ENVIRONMENT_PRODUCTION;
+    private static String environment="";
 
     private static long mTime;
     public static Activity mActivity;
@@ -228,30 +229,30 @@ public class BigFunSDK {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static void BFinit(BFAdjustListener listener, BFSuccessListener bfSuccessListener) {
-
+        environment = AdjustConfig.ENVIRONMENT_PRODUCTION;
         //IS广告SDK,与TM广告不能共存
 //        SourceNetWork.initListener(bfSuccessListener);
         //TM广告SDK,与IS广告不能共存
         TMNetWork.init();
         LoginModel.getInstance();
         MyBillingImpl.getInstance().initialize(mContext);
-        bfip = dsjcfjoc.getIpAddress(mContext);
-        cyoua = IpUtils.getOutNetIP(mContext, bfip);
-        HttpUtils.getInstance().bigfunip(NetConstant.BF_IP_URL, mChannelCode, new ResponseListener() {
-            @Override
-            public void onSuccess(String data) {
-                ipbs = true;
-                LogUtils.log(data);
-                ipBean =
-                        new Gson().fromJson(data, IPBean.class);
-//                fhfioafm();
-            }
-
-            @Override
-            public void onFail(String msg) {
-                Log.e("asdad", msg);
-            }
-        });
+//        bfip = dsjcfjoc.getIpAddress(mContext);
+//        cyoua = IpUtils.getOutNetIP(mContext, bfip);
+//        HttpUtils.getInstance().bigfunip(NetConstant.BF_IP_URL, mChannelCode, new ResponseListener() {
+//            @Override
+//            public void onSuccess(String data) {
+//                ipbs = true;
+//                LogUtils.log(data);
+//                ipBean =
+//                        new Gson().fromJson(data, IPBean.class);
+////                fhfioafm();
+//            }
+//
+//            @Override
+//            public void onFail(String msg) {
+//                Log.e("asdad", msg);
+//            }
+//        });
         mApplication.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -378,7 +379,7 @@ public class BigFunSDK {
     private static void facebookSdk() {
 //        if (fblonig || shar)
 //            return;
-        FacebookSdk.sdkInitialize(mContext);
+//        FacebookSdk.sdkInitialize(mContext);
         FacebookSdk.setAutoInitEnabled(true);
 //        FacebookSdk.setIsDebugEnabled(true);
         FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
@@ -409,8 +410,8 @@ public class BigFunSDK {
                     long sub = afterTime - rgqwtime;
                     fbgv.put("timesub", sub);
                     LogUtils.log("atibunt: " + fbgv.toString());
-                    onEvent("A_Ev_Adgy", fbgv.toString());
-                    onEvent("A_Ev_Atibunt", atibunt.toString());
+                    onEvent("bg_Adgy", fbgv.toString());
+                    onEvent("bg_Atibunt", atibunt.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -456,36 +457,36 @@ public class BigFunSDK {
      *
      * @return
      */
-    public static boolean fhfioafm() {
-        if (ipbs) {
-            if (!ipBean.isIpWhitelist()) {
-                if (!ipBean.getBlackList().isEmpty() && ipBean.getBlackList().contains(bfip)) {
-                    return false;
-                } else if (!ipBean.getWhiteList().isEmpty() && ipBean.getWhiteList().contains(bfip)) {
-                    return true;
-                }
-
-                if (!TextUtils.isEmpty(ipBean.getArea())) {
-                    try {
-                        JSONObject jo = new JSONObject(cyoua);
-                        if (Distribution_es.adadawco(ipBean.getArea()).contains(jo.getString("country_code"))) {
-                            return true;
-                        } else if (Distribution_es.asdaod(ipBean.getArea()).contains(jo.getString("region"))) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        return false;
-                    }
-                }
-
-            } else
-                return false;
-        }
-        return false;
-    }
+//    public static boolean fhfioafm() {
+//        if (ipbs) {
+//            if (!ipBean.isIpWhitelist()) {
+//                if (!ipBean.getBlackList().isEmpty() && ipBean.getBlackList().contains(bfip)) {
+//                    return false;
+//                } else if (!ipBean.getWhiteList().isEmpty() && ipBean.getWhiteList().contains(bfip)) {
+//                    return true;
+//                }
+//
+//                if (!TextUtils.isEmpty(ipBean.getArea())) {
+//                    try {
+//                        JSONObject jo = new JSONObject(cyoua);
+//                        if (Distribution_es.adadawco(ipBean.getArea()).contains(jo.getString("country_code"))) {
+//                            return true;
+//                        } else if (Distribution_es.asdaod(ipBean.getArea()).contains(jo.getString("region"))) {
+//                            return true;
+//                        } else {
+//                            return false;
+//                        }
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                        return false;
+//                    }
+//                }
+//
+//            } else
+//                return false;
+//        }
+//        return false;
+//    }
 
     //
     public static String getDeviceId() {
@@ -901,15 +902,38 @@ public class BigFunSDK {
     }
 
     /**
-     * 奖励视屏
+     * IS奖励视屏
      */
 
+//    public static void ShowRewardedVideo(BFRewardedVideoListener listener) {
+//
+//        if (checkSdkNotInit()) {
+//            return;
+//        }
+//        if (BigFunViewModel.ISoure) {
+////            SourceNetWork.showRewardedVideo(listener);
+//            TMNetWork.showRewardedVideo(listener);
+//        } else if (BigFunViewModel.TMnet) {
+////            SourceNetWork.showRewardedVideo(listener);
+//            TMNetWork.showRewardedVideo(listener);
+//        } else {
+//            Log.e("BigFunSDK", "Background not configured ");
+//            return;
+//        }
+//
+//    }
 
-    public static void ShowRewardedVideo(BFRewardedVideoListener listener) {
+    /**
+     * TM奖励视屏回调
+     * @param listener
+     */
+    public static void ShowRewardedVideo(BFTMRewardedVideoListener listener) {
 
         if (checkSdkNotInit()) {
             return;
         }
+        if(listener==null)
+            TMNetWork.showRewardedVideo();
         if (BigFunViewModel.ISoure) {
 //            SourceNetWork.showRewardedVideo(listener);
             TMNetWork.showRewardedVideo(listener);
