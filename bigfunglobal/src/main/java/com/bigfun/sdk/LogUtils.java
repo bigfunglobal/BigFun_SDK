@@ -2,6 +2,8 @@ package com.bigfun.sdk;
 
 import android.util.Log;
 
+import com.adjust.sdk.AdjustConfig;
+
 public class LogUtils {
     private static final String TAG = "BigFunSDK>>>>";
 

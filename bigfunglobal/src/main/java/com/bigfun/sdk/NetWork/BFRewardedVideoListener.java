@@ -1,11 +1,11 @@
 package com.bigfun.sdk.NetWork;
 
-import com.bigfun.sdk.model.TMISPlacement;
+import com.bigfun.sdk.model.ISPlacement;
 
 public interface BFRewardedVideoListener {
 
     void onRewardedVideoAdClosed();
 
-    void onRewardedVideoAdRewarded(TMISPlacement placement);
+    void onRewardedVideoAdRewarded(ISPlacement placement);
 
 }

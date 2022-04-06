@@ -171,20 +171,12 @@ public class Utils {
         }
         return isNetUsable;
     }
-//    public static boolean isOnline(){
-//        URL url;
-//        try {
-//            url = new URL("https://www.baidu.com");
-//            InputStream stream = url.openStream();
-//            return true;
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }
 
+    /**
+     * 判断网络是否可用
+     * @param context
+     * @return
+     */
     public static boolean netWorkIsEnable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         try {

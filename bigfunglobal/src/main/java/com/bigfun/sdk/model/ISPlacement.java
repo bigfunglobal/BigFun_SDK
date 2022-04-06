@@ -1,7 +1,8 @@
 package com.bigfun.sdk.model;
 
 import com.ironsource.mediationsdk.model.Placement;
-import com.ironsource.mediationsdk.model.PlacementAvailabilitySettings;
+import com.ironsource.mediationsdk.model.l;
+
 
 public class ISPlacement {
     private int mPlacementId;
@@ -9,7 +10,7 @@ public class ISPlacement {
     private boolean mIsDefault;
     private String mRewardName;
     private int mRewardAmount;
-    private PlacementAvailabilitySettings mPlacementAvailabilitySettings;
+    private l f;
 
     public ISPlacement(Placement var1) {
         this.mPlacementId = var1.getPlacementId();
@@ -17,7 +18,7 @@ public class ISPlacement {
         this.mRewardName = var1.getRewardName();
         this.mIsDefault = var1.isDefault();
         this.mRewardAmount = var1.getRewardAmount();
-        this.mPlacementAvailabilitySettings=var1.getPlacementAvailabilitySettings();
+        this.f=var1.getPlacementAvailabilitySettings();
     }
     public int getPlacementId() {
         return this.mPlacementId;
@@ -39,13 +40,11 @@ public class ISPlacement {
         return this.mRewardAmount;
     }
 
-    public PlacementAvailabilitySettings getPlacementAvailabilitySettings() {
-        return this.mPlacementAvailabilitySettings;
+    public l getPlacementAvailabilitySettings() {
+        return this.f;
     }
-
     public String toString() {
         return "placement name: " + this.mPlacementName + ", reward name: " + this.mRewardName + " , amount: " + this.mRewardAmount;
     }
-
 
 }

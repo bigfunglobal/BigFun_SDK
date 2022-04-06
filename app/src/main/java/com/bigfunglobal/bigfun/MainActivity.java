@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 //                                FrameLayout adContainer=new FrameLayout(MainActivity.this);
 //                adContainer.setLayoutParams(new FrameLayout.LayoutParams(100,300));
-//                BigFunSDK.ShowBanner(mBannerParentLayout,AdBFSize.BANNER_HEIGHT_50);
+                BigFunSDK.ShowBanner(mBannerParentLayout,AdBFSize.BANNER_HEIGHT_50);
             }
         });
         Inter.setOnClickListener(new View.OnClickListener() {

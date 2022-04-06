@@ -4,7 +4,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion '28.0.3'
+    buildToolsVersion '29.0.3'
 
     defaultConfig {
         minSdkVersion 10
@@ -67,22 +67,21 @@ dependencies {
 //    implementation 'com.google.android.gms:play-services-location:17.0.1'
     implementation 'com.android.billingclient:billing:4.0.0'
     implementation 'com.google.android.gms:play-services-wallet:18.1.3'
-
+    implementation 'com.google.android.gms:play-services-ads-identifier:17.0.0'
+    implementation files('libs\\GooglePlay_AppAnalytics_Android_SDK_V4.0.69.jar')
 
 
 
     //判断虚拟机
 //    implementation 'io.github.happylishang:antifake:1.5.0'CustomExceptionHandler
     //ISSDK
-//    implementation 'com.ironsource.sdk:mediationsdk:7.2.1'
+    implementation 'com.ironsource.sdk:mediationsdk:7.2.1'
 
-    implementation 'com.google.android.gms:play-services-ads-identifier:17.0.0'
-    implementation files('libs\\GooglePlay_AppAnalytics_Android_SDK_V4.0.69.jar')
     //TMSDk
-        implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.32'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-common:1.4.32'
-    implementation 'com.google.android.gms:play-services-basement:17.1.1'
-    implementation files('libs\\tm-d120.jar')
+//        implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.32'
+//    implementation 'org.jetbrains.kotlin:kotlin-stdlib-common:1.4.32'
+//    implementation 'com.google.android.gms:play-services-basement:17.1.1'
+//    implementation files('libs\\tm-d120.jar')
 
 }
 
