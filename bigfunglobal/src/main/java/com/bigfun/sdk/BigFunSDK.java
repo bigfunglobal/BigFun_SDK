@@ -274,30 +274,30 @@ public class BigFunSDK {
                     Adjust.onResume();
 
 
-                if(!isNetSystemUsable(mContext)&&!netWorkIsEnable(mContext)){
-                    Dialog dialog=new Dialog(activity);
-                    View view = LayoutInflater.from(activity).inflate(R.layout.jlsaodj, null);
-
-                    dialog.setContentView(view, new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.MATCH_PARENT,
-                            ViewGroup.MarginLayoutParams.MATCH_PARENT));
-                    dialog.setCancelable(false);
-                    view.findViewById(R.id.oekacx).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent =  new Intent(Settings.ACTION_SETTINGS);
-                            activity.startActivity(intent);
-                            dialog.dismiss();
-                        }
-                    });
-                    view.findViewById(R.id.urjasod).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                        }
-                    });
-                    dialog.show();
-
-                }
+//                if(!isNetSystemUsable(mContext)&&!netWorkIsEnable(mContext)){
+//                    Dialog dialog=new Dialog(activity);
+//                    View view = LayoutInflater.from(activity).inflate(R.layout.jlsaodj, null);
+//
+//                    dialog.setContentView(view, new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.MATCH_PARENT,
+//                            ViewGroup.MarginLayoutParams.MATCH_PARENT));
+//                    dialog.setCancelable(false);
+//                    view.findViewById(R.id.oekacx).setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            Intent intent =  new Intent(Settings.ACTION_SETTINGS);
+//                            activity.startActivity(intent);
+//                            dialog.dismiss();
+//                        }
+//                    });
+//                    view.findViewById(R.id.urjasod).setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            dialog.dismiss();
+//                        }
+//                    });
+//                    dialog.show();
+//
+//                }
 //                IronSource.onResume(activity);
 
             }
