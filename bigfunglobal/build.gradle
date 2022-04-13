@@ -68,8 +68,8 @@ dependencies {
     implementation 'com.ironsource.sdk:mediationsdk:7.2.1.1'
 
     // Add AdColony Network
-    implementation 'com.ironsource.adapters:adcolonyadapter:4.3.11'
-    implementation 'com.adcolony:sdk:4.7.1'
+    implementation 'com.ironsource.adapters:adcolonyadapter:4.3.10'
+    implementation 'com.adcolony:sdk:4.6.5'
 //// Add AdMob and Ad Manager Network
 ////    implementation 'com.google.android.gms:play-services-ads:20.6.0'
 ////    implementation 'com.ironsource.adapters:admobadapter:4.3.27'
