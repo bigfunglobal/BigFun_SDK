@@ -10,7 +10,6 @@ public class ISPlacement {
     private boolean mIsDefault;
     private String mRewardName;
     private int mRewardAmount;
-    private l f;
 
     public ISPlacement(Placement var1) {
         this.mPlacementId = var1.getPlacementId();
@@ -18,7 +17,6 @@ public class ISPlacement {
         this.mRewardName = var1.getRewardName();
         this.mIsDefault = var1.isDefault();
         this.mRewardAmount = var1.getRewardAmount();
-        this.f=var1.getPlacementAvailabilitySettings();
     }
     public int getPlacementId() {
         return this.mPlacementId;
@@ -40,9 +38,6 @@ public class ISPlacement {
         return this.mRewardAmount;
     }
 
-    public l getPlacementAvailabilitySettings() {
-        return this.f;
-    }
     public String toString() {
         return "placement name: " + this.mPlacementName + ", reward name: " + this.mRewardName + " , amount: " + this.mRewardAmount;
     }
