@@ -19,6 +19,7 @@ import com.bigfun.sdk.model.BigFunViewModel;
 import com.bigfun.sdk.model.ISPlacement;
 import com.bigfun.sdk.type.AdBFSize;
 import com.bigfun.sdk.utils.FunctionUtils;
+import com.facebook.ads.AdSettings;
 import com.ironsource.adapters.supersonicads.SupersonicConfig;
 import com.ironsource.mediationsdk.ISBannerSize;
 import com.ironsource.mediationsdk.IronSource;
@@ -90,14 +91,15 @@ public class SourceNetWork{
         //设置视频侦听器
         IronSource.setRewardedVideoListener(rewardedVideoListener);
         // 设置防火墙侦听器的IronSource
-        IronSource.setOfferwallListener(offerwallListener);
+//        IronSource.setOfferwallListener(offerwallListener);
         // 为offerwall设置客户端回调
-        SupersonicConfig.getConfigObj().setClientSideCallbacks(true);
+//        SupersonicConfig.getConfigObj().setClientSideCallbacks(true);
         //设置插屏侦听器
         IronSource.setInterstitialListener(interstitialListener);
         //添加Impression数据侦听器
         IronSource.addImpressionDataListener(impressionDataListener);
         userId=IronSource.getAdvertiserId(mContext);
+        IronSource.isRewardedVideoAvailable();
     }
 
     private void initIronSource() {

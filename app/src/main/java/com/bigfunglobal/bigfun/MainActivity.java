@@ -30,12 +30,7 @@ import com.bigfun.sdk.model.ISPlacement;
 import com.bigfun.sdk.type.AdBFSize;
 
 
-import com.facebook.FacebookException;
 
-
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
@@ -48,10 +43,8 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private String text = "";
-    private LoginButton loginButton;
     private Button button, share, btn_phone_login, btn_init, btn_verification, out, AdView, Inter,google;
     private String TAG = "MainActivity";
-    private ShareDialog shareDialog;
     private static final int FILE_SELECT_CODE = 100;
     private static final int REQUEST_SHARE_FILE_CODE = 120;
     private static final int REQUEST_WRITE_STORAGE_PERMISSION = 121;

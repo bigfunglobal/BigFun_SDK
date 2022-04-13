@@ -1,8 +1,6 @@
 package com.bigfun.sdk;
 
 import static com.bigfun.sdk.model.BigFunViewModel.goopay;
-import static com.bigfun.sdk.utils.Utils.isNetSystemUsable;
-import static com.bigfun.sdk.utils.Utils.netWorkIsEnable;
 
 import android.app.Activity;
 import android.app.Application;
@@ -63,6 +61,7 @@ import com.bigfun.sdk.utils.dsjcfjoc;
 import com.facebook.FacebookSdk;
 
 import com.facebook.LoggingBehavior;
+import com.facebook.ads.AdSettings;
 import com.facebook.share.model.ShareContent;
 
 
@@ -271,7 +270,6 @@ public class BigFunSDK {
                 if (BigFunViewModel.adjust)
                     Adjust.onResume();
 
-
 //                if(!isNetSystemUsable(mContext)&&!netWorkIsEnable(mContext)){
 //                    Dialog dialog=new Dialog(activity);
 //                    View view = LayoutInflater.from(activity).inflate(R.layout.jlsaodj, null);
@@ -377,10 +375,7 @@ public class BigFunSDK {
     private static void facebookSdk() {
 //        if (fblonig || shar)
 //            return;
-//        FacebookSdk.sdkInitialize(mContext);
         FacebookSdk.setAutoInitEnabled(true);
-//        FacebookSdk.setIsDebugEnabled(true);
-        FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
         FacebookSdk.fullyInitialize();
     }
 
@@ -735,10 +730,12 @@ public class BigFunSDK {
      *
      * @param debug
      */
-
     public static void setDebug(boolean debug) {
-        environment = AdjustConfig.ENVIRONMENT_SANDBOX;
         isDebug = debug;
+        if(debug) {
+            environment = AdjustConfig.ENVIRONMENT_SANDBOX;
+            AdSettings.setTestMode(true);
+        }
     }
 
     private static GoogleSignInClient mGoogleSignInClient;

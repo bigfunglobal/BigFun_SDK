@@ -44,7 +44,7 @@ public class APP extends Application {
                 Log.e("asdasda", "213123123");
             }
         });
-//        BigFunSDK.setDebug(true);
+        BigFunSDK.setDebug(true);
 //        Log.e("asdasds",isAppAlive(this)+"");
     }
 }

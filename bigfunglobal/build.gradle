@@ -40,28 +40,18 @@ repositories {
 }
 
 dependencies {
-
-
     implementation fileTree(dir: "libs", include: ["*.jar"])
-//    implementation 'androidx.appcompat:appcompat:1.3.0'
-//
-//    testImplementation 'junit:junit:4.12'
-//    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-
-    //kochava
-//    implementation platform('com.google.firebase:firebase-bom:29.1.0')
-//    implementation 'com.google.firebase:firebase-analytics'
-
     implementation 'com.squareup.okhttp3:okhttp:3.4.1'
     implementation 'com.google.code.gson:gson:2.7'
 
     implementation 'com.facebook.android:facebook-login:[8,9)'
     implementation 'com.facebook.android:facebook-share:[8,9)'
-    implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
+
+//    implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
 
     implementation 'com.adjust.sdk:adjust-android:4.28.2'
     implementation 'com.android.installreferrer:installreferrer:2.2'
+
 
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
 //    implementation 'com.google.android.gms:play-services-location:17.0.1'
@@ -75,7 +65,24 @@ dependencies {
     //判断虚拟机
 //    implementation 'io.github.happylishang:antifake:1.5.0'CustomExceptionHandler
     //ISSDK
-    implementation 'com.ironsource.sdk:mediationsdk:7.2.1'
+    implementation 'com.ironsource.sdk:mediationsdk:7.2.1.1'
+
+    // Add AdColony Network
+    implementation 'com.ironsource.adapters:adcolonyadapter:4.3.11'
+    implementation 'com.adcolony:sdk:4.7.1'
+//// Add AdMob and Ad Manager Network
+////    implementation 'com.google.android.gms:play-services-ads:20.6.0'
+////    implementation 'com.ironsource.adapters:admobadapter:4.3.27'
+// Add Applovin Network
+    implementation 'com.ironsource.adapters:applovinadapter:4.3.31'
+    implementation 'com.applovin:applovin-sdk:11.3.3'
+// Add Facebook Network
+    implementation 'com.ironsource.adapters:facebookadapter:4.3.34'
+    implementation 'com.facebook.android:audience-network-sdk:6.8.0'
+// Add Fyber Network (Adapter only)
+    implementation 'com.ironsource.adapters:fyberadapter:4.3.19'
+    implementation "com.fyber:marketplace-sdk:8.1.3"
+
 
     //TMSDk
 //        implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.32'
