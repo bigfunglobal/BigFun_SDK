@@ -74,8 +74,8 @@ dependencies {
 ////    implementation 'com.google.android.gms:play-services-ads:20.6.0'
 ////    implementation 'com.ironsource.adapters:admobadapter:4.3.27'
 // Add Applovin Network
-    implementation 'com.ironsource.adapters:applovinadapter:4.3.31'
-    implementation 'com.applovin:applovin-sdk:11.3.3'
+    implementation 'com.ironsource.adapters:applovinadapter:4.3.30'
+    implementation 'com.applovin:applovin-sdk:11.2.2'
 // Add Facebook Network
     implementation 'com.ironsource.adapters:facebookadapter:4.3.34'
     implementation 'com.facebook.android:audience-network-sdk:6.8.0'
