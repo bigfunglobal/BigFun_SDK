@@ -65,23 +65,21 @@ dependencies {
     //判断虚拟机
 //    implementation 'io.github.happylishang:antifake:1.5.0'CustomExceptionHandler
     //ISSDK
-    implementation 'com.ironsource.sdk:mediationsdk:7.2.1.1'
+    implementation 'com.ironsource.sdk:mediationsdk:7.1.9'
 
     // Add AdColony Network
-    implementation 'com.ironsource.adapters:adcolonyadapter:4.3.10'
-    implementation 'com.adcolony:sdk:4.6.5'
+    implementation 'com.ironsource.adapters:adcolonyadapter:4.3.8'
+    implementation 'com.adcolony:sdk:4.5.0'
 //// Add AdMob and Ad Manager Network
 ////    implementation 'com.google.android.gms:play-services-ads:20.6.0'
 ////    implementation 'com.ironsource.adapters:admobadapter:4.3.27'
 // Add Applovin Network
-    implementation 'com.ironsource.adapters:applovinadapter:4.3.30'
-    implementation 'com.applovin:applovin-sdk:11.2.2'
+    implementation 'com.ironsource.adapters:applovinadapter:4.3.27'
+    implementation 'com.applovin:applovin-sdk:10.3.2'
 // Add Facebook Network
-    implementation 'com.ironsource.adapters:facebookadapter:4.3.30'
-    implementation 'com.facebook.android:audience-network-sdk:6.6.0'
-// Add Fyber Network (Adapter only)
-    implementation 'com.ironsource.adapters:fyberadapter:4.3.19'
-    implementation "com.fyber:marketplace-sdk:8.1.3"
+    implementation 'com.ironsource.adapters:facebookadapter:4.3.25'
+    implementation 'com.facebook.android:audience-network-sdk:6.3.0'
+
 
 
     //TMSDk
