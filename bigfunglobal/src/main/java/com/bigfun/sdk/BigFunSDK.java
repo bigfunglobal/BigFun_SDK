@@ -375,8 +375,8 @@ public class BigFunSDK {
     private static void facebookSdk() {
 //        if (fblonig || shar)
 //            return;
-        FacebookSdk.setAutoInitEnabled(true);
-        FacebookSdk.fullyInitialize();
+//        FacebookSdk.setAutoInitEnabled(true);
+//        FacebookSdk.fullyInitialize();
     }
 
 
