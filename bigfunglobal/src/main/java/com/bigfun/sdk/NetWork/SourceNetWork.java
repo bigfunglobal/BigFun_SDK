@@ -284,51 +284,6 @@ public class SourceNetWork{
         }
     };
 
-
-    //----------OfferwallListener-----
-    static OfferwallListener offerwallListener=new OfferwallListener() {
-        @Override
-        public void onOfferwallAvailable(boolean available) {
-//            handleOfferwallButtonState(available);
-            Log.d(TAG, "onOfferwallAvailable"+available);
-        }
-
-        @Override
-        public void onOfferwallOpened() {
-            // called when the offerwall has opened
-            Log.d(TAG, "onOfferwallOpened");
-        }
-
-        @Override
-        public void onOfferwallShowFailed(IronSourceError ironSourceError) {
-            // called when the offerwall failed to show
-            // you can get the error data by accessing the IronSourceError object
-            ironSourceError.getErrorCode();
-            ironSourceError.getErrorMessage();
-            Log.d(TAG, "onOfferwallShowFailed" + " " + ironSourceError);
-        }
-
-        @Override
-        public boolean onOfferwallAdCredited(int credits, int totalCredits, boolean totalCreditsFlag) {
-            Log.d(TAG, "onOfferwallAdCredited" + " credits:" + credits + " totalCredits:" + totalCredits + " totalCreditsFlag:" + totalCreditsFlag);
-            return false;
-        }
-
-        @Override
-        public void onGetOfferwallCreditsFailed(IronSourceError ironSourceError) {
-            // you can get the error data by accessing the IronSourceError object
-            // IronSourceError.getErrorCode();
-            // IronSourceError.getErrorMessage();
-            Log.d(TAG, "onGetOfferwallCreditsFailed" + " " + ironSourceError);
-        }
-
-        @Override
-        public void onOfferwallClosed() {
-            // called when the offerwall has closed
-            Log.d(TAG, "onOfferwallClosed");
-        }
-    };
-
     // --------- IronSource 插屏广告 Listener ---------
 
     static InterstitialListener interstitialListener=new InterstitialListener() {
