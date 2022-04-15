@@ -5,22 +5,20 @@ import static com.bigfun.sdk.BigFunSDK.mActivity;
 import static com.bigfun.sdk.BigFunSDK.mContext;
 import static com.bigfun.sdk.BigFunSDK.onEvent;
 
-import android.app.Activity;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.bigfun.sdk.BigFunSDK;
 import com.bigfun.sdk.LogUtils;
 import com.bigfun.sdk.listener.BFSuccessListener;
 import com.bigfun.sdk.model.BigFunViewModel;
 import com.bigfun.sdk.model.ISPlacement;
 import com.bigfun.sdk.type.AdBFSize;
 import com.bigfun.sdk.utils.FunctionUtils;
-import com.facebook.ads.AdSettings;
-import com.ironsource.adapters.supersonicads.SupersonicConfig;
+
 import com.ironsource.mediationsdk.ISBannerSize;
 import com.ironsource.mediationsdk.IronSource;
 import com.ironsource.mediationsdk.IronSourceBannerLayout;
@@ -394,6 +392,7 @@ public class SourceNetWork{
         public void onImpressionSuccess(ImpressionData impressionData) {
             if (impressionData != null) {
                 LogUtils.log( "onImpressionSuccess " + impressionData);
+
             }
         }
     };
