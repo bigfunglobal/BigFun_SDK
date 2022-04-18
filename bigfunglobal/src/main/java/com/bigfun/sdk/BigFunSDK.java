@@ -136,7 +136,6 @@ public class BigFunSDK {
         mTime = System.currentTimeMillis();
         mApplication = application;
         mContext = application.getApplicationContext();
-//        mChannel = channel;
         mChannelCode = channelCode;
         ExceptionHandler.install(new ExceptionHandler.CustomExceptionHandler() {
             @Override
@@ -160,7 +159,6 @@ public class BigFunSDK {
         mTime = System.currentTimeMillis();
         mApplication = application;
         mContext = application.getApplicationContext();
-//        mChannel = channel;
         mChannelCode = channelCode;
         ExceptionHandler.install(new ExceptionHandler.CustomExceptionHandler() {
             @Override
