@@ -30,10 +30,9 @@ import com.adjust.sdk.OnAttributionChangedListener;
 
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.SkuDetails;
-import com.bigfun.sdk.NetWork.BFRewardedVideoListener;
 
-
-import com.bigfun.sdk.NetWork.SourceNetWork;
+import com.bigfun.sdk.NetWork.BFTMRewardedVideoListener;
+import com.bigfun.sdk.NetWork.TMNetWork;
 import com.bigfun.sdk.listener.BFSuccessListener;
 import com.bigfun.sdk.listener.GoogleCommodityListener;
 import com.bigfun.sdk.listener.GoogleConsumePurchaseListener;
@@ -60,7 +59,8 @@ import com.bigfun.sdk.utils.dsjcfjoc;
 import com.facebook.ads.AdSettings;
 
 
-
+import com.goldsource.sdk.GoldListener;
+import com.goldsource.sdk.GoldSource;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -113,7 +113,7 @@ public class BigFunSDK {
      */
 
     static boolean isDebug = false;
-    static String environment="";
+    static String environment = "";
 
     private static long mTime;
     public static Activity mActivity;
@@ -222,9 +222,9 @@ public class BigFunSDK {
     private static void BFinit(BFAdjustListener listener, BFSuccessListener bfSuccessListener) {
         environment = AdjustConfig.ENVIRONMENT_PRODUCTION;
         //IS广告SDK,与TM广告不能共存
-        SourceNetWork.initListener(bfSuccessListener);
+//        SourceNetWork.initListener(bfSuccessListener);
         //TM广告SDK,与IS广告不能共存
-//        TMNetWork.init();
+        TMNetWork.init();
 //        LoginModel.getInstance();
         MyBillingImpl.getInstance().initialize(mContext);
 //        bfip = dsjcfjoc.getIpAddress(mContext);
@@ -339,21 +339,21 @@ public class BigFunSDK {
                     facebookSdk();
                 }
                 if (BigFunViewModel.ISoure) {
-                    SourceNetWork.getInstance().TimerIronSource();
+//                    SourceNetWork.getInstance().TimerIronSource();
                 }
-                if (BigFunViewModel.google&&!bean.getGoogleClientId().isEmpty()) {
+                if (BigFunViewModel.google && !bean.getGoogleClientId().isEmpty()) {
                     Googleinit(bean.getGoogleClientId());
                 }
-//                if(BigFunViewModel.TMnet) {
-//                    GoldSource.initialize(mContext, bean.getCompAny(), bean.getIronSourceAppKey(), new GoldListener() {
-//                        @Override
-//                        public void onInitializationCompleted() {
-//                            if(bfSuccessListener!=null)
-//                                bfSuccessListener.onSuccess();
-//                            LogUtils.log("tm init succeeded");
-//                        }
-//                    });
-//                }
+                if (BigFunViewModel.TMnet) {
+                    GoldSource.initialize(mContext, bean.getCompAny(), bean.getIronSourceAppKey(), new GoldListener() {
+                        @Override
+                        public void onInitializationCompleted() {
+                            if (bfSuccessListener != null)
+                                bfSuccessListener.onSuccess();
+                            LogUtils.log("tm init succeeded");
+                        }
+                    });
+                }
                 Log.e("BigFun", "tm init succeeded");
 
             }
@@ -381,7 +381,7 @@ public class BigFunSDK {
     }
 
     private static void adjust(String adjustAppToken, BFAdjustListener listener) {
-        Log.e("environment",environment);
+        Log.e("environment", environment);
         AdjustConfig acaaigxc = new AdjustConfig(mApplication, adjustAppToken, environment);
         //获取时间
         rgqwtime = xaPhax();
@@ -596,7 +596,7 @@ public class BigFunSDK {
             return;
         }
         if (BigFunViewModel.adjust)
-        AdjustonEvent.TrackEvent(eventId);
+            AdjustonEvent.TrackEvent(eventId);
     }
 
     /**
@@ -611,7 +611,7 @@ public class BigFunSDK {
             return;
         }
         if (BigFunViewModel.adjust)
-        AdjustonEvent.TrackOrderIdEvent(eventId, id);
+            AdjustonEvent.TrackOrderIdEvent(eventId, id);
     }
 
     /**
@@ -628,7 +628,7 @@ public class BigFunSDK {
             return;
         }
         if (BigFunViewModel.adjust)
-        AdjustonEvent.TrackRevenueEvent(eventId, hqia, moey, id);
+            AdjustonEvent.TrackRevenueEvent(eventId, hqia, moey, id);
     }
 
     /**
@@ -644,7 +644,7 @@ public class BigFunSDK {
             return;
         }
         if (BigFunViewModel.adjust)
-        AdjustonEvent.TrackRevenueEvent(eventId, hqia, moey);
+            AdjustonEvent.TrackRevenueEvent(eventId, hqia, moey);
     }
 
 
@@ -726,7 +726,7 @@ public class BigFunSDK {
      */
     public static void setDebug(boolean debug) {
         isDebug = debug;
-        if(debug) {
+        if (debug) {
             environment = AdjustConfig.ENVIRONMENT_SANDBOX;
             AdSettings.setTestMode(true);
         }
@@ -752,12 +752,12 @@ public class BigFunSDK {
 
     }
 
-    private static Intent getGoogleIntent(){
+    private static Intent getGoogleIntent() {
         return mGoogleSignInClient.getSignInIntent();
     }
 
     private static void getGoogle(Activity activity) {
-            activity.startActivityForResult(getGoogleIntent(),SIGN_GP_LOGIN);
+        activity.startActivityForResult(getGoogleIntent(), SIGN_GP_LOGIN);
     }
 
     /**
@@ -869,21 +869,21 @@ public class BigFunSDK {
 
     private AdBFPlatForm FBPlatForm;
 
+
     /**
      * 插屏
      */
-
 
     public static void ShowInterstitialAdLoadAd() {
         if (checkSdkNotInit()) {
             return;
         }
         if (BigFunViewModel.ISoure) {
-            SourceNetWork.showInterstitial();
-//            TMNetWork.showInterstitial();
+//            SourceNetWork.showInterstitial();
+            TMNetWork.showInterstitial();
         } else if (BigFunViewModel.TMnet) {
-            SourceNetWork.showInterstitial();
-//            TMNetWork.showInterstitial();
+//            SourceNetWork.showInterstitial();
+            TMNetWork.showInterstitial();
         } else {
             Log.e("BigFunSDK", "Background not configured ");
             return;
@@ -895,20 +895,44 @@ public class BigFunSDK {
      * IS奖励视屏
      */
 
-    public static void ShowRewardedVideo(BFRewardedVideoListener listener) {
+//    public static void ShowRewardedVideo(BFRewardedVideoListener listener) {
+//
+//        if (checkSdkNotInit()) {
+//            return;
+//        }
+//        if(listener==null)
+//            ShowRewardedVideo();
+//        else {
+//            if (BigFunViewModel.ISoure) {
+//                SourceNetWork.showRewardedVideo(listener);
+////            TMNetWork.showRewardedVideo(listener);
+//            } else if (BigFunViewModel.TMnet) {
+//                SourceNetWork.showRewardedVideo(listener);
+////            TMNetWork.showRewardedVideo(listener);
+//            } else {
+//                Log.e("BigFunSDK", "Background not configured ");
+//                return;
+//            }
+//        }
+//    }
+
+    /**
+     * TM奖励视屏回调
+     */
+    public static void ShowRewardedVideo(BFTMRewardedVideoListener listener) {
 
         if (checkSdkNotInit()) {
             return;
         }
-        if(listener==null)
-            ShowRewardedVideo();
+        if (listener == null)
+            TMNetWork.showRewardedVideo();
         else {
             if (BigFunViewModel.ISoure) {
-                SourceNetWork.showRewardedVideo(listener);
-//            TMNetWork.showRewardedVideo(listener);
+//            SourceNetWork.showRewardedVideo(listener);
+                TMNetWork.showRewardedVideo(listener);
             } else if (BigFunViewModel.TMnet) {
-                SourceNetWork.showRewardedVideo(listener);
-//            TMNetWork.showRewardedVideo(listener);
+//            SourceNetWork.showRewardedVideo(listener);
+                TMNetWork.showRewardedVideo(listener);
             } else {
                 Log.e("BigFunSDK", "Background not configured ");
                 return;
@@ -916,40 +940,17 @@ public class BigFunSDK {
         }
     }
 
-    /**
-     * TM奖励视屏回调
-     */
-//    public static void ShowRewardedVideo(BFTMRewardedVideoListener listener) {
-//
-//        if (checkSdkNotInit()) {
-//            return;
-//        }
-//        if(listener==null)
-////            TMNetWork.showRewardedVideo();
-//        if (BigFunViewModel.ISoure) {
-////            SourceNetWork.showRewardedVideo(listener);
-//            TMNetWork.showRewardedVideo(listener);
-//        } else if (BigFunViewModel.TMnet) {
-////            SourceNetWork.showRewardedVideo(listener);
-//            TMNetWork.showRewardedVideo(listener);
-//        } else {
-//            Log.e("BigFunSDK", "Background not configured ");
-//            return;
-//        }
-//
-//    }
-
     public static void ShowRewardedVideo() {
 
         if (checkSdkNotInit()) {
             return;
         }
         if (BigFunViewModel.ISoure) {
-            SourceNetWork.showRewardedVideo();
-//            TMNetWork.showRewardedVideo();
+//            SourceNetWork.showRewardedVideo();
+            TMNetWork.showRewardedVideo();
         } else if (BigFunViewModel.TMnet) {
-            SourceNetWork.showRewardedVideo();
-//            TMNetWork.showRewardedVideo();
+//            SourceNetWork.showRewardedVideo();
+            TMNetWork.showRewardedVideo();
         } else {
             Log.e("BigFunSDK", "Background not configured ");
             return;
@@ -966,8 +967,8 @@ public class BigFunSDK {
 
     @Keep
     public static boolean isInterstitialReady() {
-        return SourceNetWork.isInterstitialReady();
-//        return TMNetWork.showInterstitial();
+//        return SourceNetWork.isInterstitialReady();
+        return TMNetWork.showInterstitial();
     }
 
     /**
@@ -978,8 +979,8 @@ public class BigFunSDK {
 
     @Keep
     public static boolean isRewardedVideoAvailable() {
-        return SourceNetWork.isRewardedVideoAvailable();
-//        return TMNetWork.showRewardedVideo();
+//        return SourceNetWork.isRewardedVideoAvailable();
+        return TMNetWork.showRewardedVideo();
     }
 
 
@@ -989,19 +990,19 @@ public class BigFunSDK {
      * @param mBannerParentLayout
      * @param size
      */
-    @Keep
-    public static void ShowBanner(FrameLayout mBannerParentLayout, AdBFSize size) {
-        if (checkSdkNotInit()) {
-            return;
-        }
-        if (BigFunViewModel.ISoure) {
-            SourceNetWork.createAndloadBanner(mBannerParentLayout, size);
-
-        } else {
-            Log.e("BigFunSDK", "Background not configured");
-            return;
-        }
-    }
+//    @Keep
+//    public static void ShowBanner(FrameLayout mBannerParentLayout, AdBFSize size) {
+//        if (checkSdkNotInit()) {
+//            return;
+//        }
+//        if (BigFunViewModel.ISoure) {
+//            SourceNetWork.createAndloadBanner(mBannerParentLayout, size);
+//
+//        } else {
+//            Log.e("BigFunSDK", "Background not configured");
+//            return;
+//        }
+//    }
 
     /**
      * 资源释放
@@ -1013,7 +1014,7 @@ public class BigFunSDK {
             return;
         }
 //        AdNetwork.getInstance().dstroy();
-        SourceNetWork.onDestroy();
+//        SourceNetWork.onDestroy();
     }
 
     /**
@@ -1029,7 +1030,6 @@ public class BigFunSDK {
 //
 //        LoginModel.onActivityResult(requestCode, resultCode, data);
 //    }
-
     public static String onResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == SIGN_GP_LOGIN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -1044,7 +1044,7 @@ public class BigFunSDK {
             } catch (ApiException e) {
                 e.printStackTrace();
                 LogUtils.log("ApiException:" + e.getMessage());
-                return "{code:" + e.getMessage()+"}";
+                return "{code:" + e.getMessage() + "}";
             }
         }
         return "";
