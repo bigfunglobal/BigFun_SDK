@@ -42,9 +42,7 @@ import com.bigfun.sdk.listener.GoogleQueryPurchaseListener;
 import com.bigfun.sdk.google.MyBillingImpl;
 import com.bigfun.sdk.listener.ResponseListener;
 import com.bigfun.sdk.listener.BFAdjustListener;
-import com.bigfun.sdk.listener.LoginListener;
-import com.bigfun.sdk.login.LoginModel;
-import com.bigfun.sdk.listener.ShareListener;
+
 import com.bigfun.sdk.model.BigFunViewModel;
 import com.bigfun.sdk.model.GoogleBean;
 import com.bigfun.sdk.model.IPBean;
@@ -58,11 +56,9 @@ import com.bigfun.sdk.utils.IpUtils;
 import com.bigfun.sdk.utils.LocationUtils;
 import com.bigfun.sdk.utils.SystemUtil;
 import com.bigfun.sdk.utils.dsjcfjoc;
-import com.facebook.FacebookSdk;
 
-import com.facebook.LoggingBehavior;
 import com.facebook.ads.AdSettings;
-import com.facebook.share.model.ShareContent;
+
 
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -231,7 +227,7 @@ public class BigFunSDK {
         SourceNetWork.initListener(bfSuccessListener);
         //TM广告SDK,与IS广告不能共存
 //        TMNetWork.init();
-        LoginModel.getInstance();
+//        LoginModel.getInstance();
         MyBillingImpl.getInstance().initialize(mContext);
 //        bfip = dsjcfjoc.getIpAddress(mContext);
 //        cyoua = IpUtils.getOutNetIP(mContext, bfip);
@@ -375,8 +371,8 @@ public class BigFunSDK {
     private static void facebookSdk() {
 //        if (fblonig || shar)
 //            return;
-        FacebookSdk.setAutoInitEnabled(true);
-        FacebookSdk.fullyInitialize();
+//        FacebookSdk.setAutoInitEnabled(true);
+//        FacebookSdk.fullyInitialize();
     }
 
 
@@ -797,33 +793,33 @@ public class BigFunSDK {
      * @param listener 登录回调
      */
 
-    public static void BigFunLogin(Context context, LoginListener listener) {
-        if (checkSdkNotInit()) {
-            return;
-        }
-        if (!BigFunViewModel.fblonig) {
-            Log.e("BigFunSDK", "Background not configured Facebook");
-            return;
-        }
-        List<String> permissionList = new ArrayList<>();
-//        permissionList.add("public_profile");
-        permissionList.add("email");
-
-        LoginModel.facebookLogin(context, permissionList, listener);
-    }
+//    public static void BigFunLogin(Context context, LoginListener listener) {
+//        if (checkSdkNotInit()) {
+//            return;
+//        }
+//        if (!BigFunViewModel.fblonig) {
+//            Log.e("BigFunSDK", "Background not configured Facebook");
+//            return;
+//        }
+//        List<String> permissionList = new ArrayList<>();
+////        permissionList.add("public_profile");
+//        permissionList.add("email");
+//
+//        LoginModel.facebookLogin(context, permissionList, listener);
+//    }
 
     /**
      * 退出Facebook登录
      */
-    public static void BigFunLogout() {
-        if (checkSdkNotInit()) {
-            return;
-        }
-        GoogleSignInAccount account=GoogleSignIn.getLastSignedInAccount(mContext);
-        if(account!=null)
-        mGoogleSignInClient.signOut();
-        LoginModel.BigFunLogout();
-    }
+//    public static void BigFunLogout() {
+//        if (checkSdkNotInit()) {
+//            return;
+//        }
+//        GoogleSignInAccount account=GoogleSignIn.getLastSignedInAccount(mContext);
+//        if(account!=null)
+//        mGoogleSignInClient.signOut();
+//        LoginModel.BigFunLogout();
+//    }
 
 
     /**
@@ -833,18 +829,18 @@ public class BigFunSDK {
      * @param linkContent 分享类型 “必填”
      * @param listener    分享回调
      */
-
-    public static void BigFunShare(Context context, ShareContent linkContent, ShareListener listener) {
-        if (checkSdkNotInit()) {
-            return;
-        }
-        if (!BigFunViewModel.shar) {
-            Log.e("BigFunSDK", "Background not configured Facebook");
-            return;
-        }
-
-        LoginModel.facebookShare(context, linkContent, listener);
-    }
+//
+//    public static void BigFunShare(Context context, ShareContent linkContent, ShareListener listener) {
+//        if (checkSdkNotInit()) {
+//            return;
+//        }
+//        if (!BigFunViewModel.shar) {
+//            Log.e("BigFunSDK", "Background not configured Facebook");
+//            return;
+//        }
+//
+//        LoginModel.facebookShare(context, linkContent, listener);
+//    }
 
     /**
      * @param activity    必填
@@ -1031,10 +1027,10 @@ public class BigFunSDK {
      */
 
 
-    public static void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
-        LoginModel.onActivityResult(requestCode, resultCode, data);
-    }
+//    public static void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//
+//        LoginModel.onActivityResult(requestCode, resultCode, data);
+//    }
 
     public static String onResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == SIGN_GP_LOGIN) {

@@ -44,8 +44,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.4.1'
     implementation 'com.google.code.gson:gson:2.7'
 
-    implementation 'com.facebook.android:facebook-login:[8,9)'
-    implementation 'com.facebook.android:facebook-share:[8,9)'
+//    implementation 'com.facebook.android:facebook-login:[8,9)'
+//    implementation 'com.facebook.android:facebook-share:[8,9)'
 
 //    implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
 

@@ -1,7 +1,5 @@
 package com.bigfunglobal.bigfun;
 
-import static com.bigfun.sdk.utils.FunctionUtils.isAppAlive;
-import static com.bigfun.sdk.utils.Utils.isNetSystemUsable;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
@@ -33,7 +31,7 @@ public class APP extends Application {
          */
 
 //        Log.e("sadda",""+isNetSystemUsable(this));
-        BigFunSDK.init(this, "BRWF2O2A", new BFAdjustListener() {
+        BigFunSDK.init(this, "R0WS81OP", new BFAdjustListener() {
             @Override
             public void onAttributionChanged(AdjustAttribution attribution) {
                 Log.e("asdwa",attribution.network+"_"+attribution.campaign);

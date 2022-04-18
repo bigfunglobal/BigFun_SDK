@@ -31,9 +31,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+<!--        <meta-data-->
+<!--            android:name="com.facebook.sdk.ApplicationId"-->
+<!--            android:value="@string/facebook_app_id" />-->
 <!--&lt;!&ndash;        <meta-data android:name="com.google.android.gms.games.APP_ID"&ndash;&gt;-->
 <!--&lt;!&ndash;            android:value="@string/app_id" />&ndash;&gt;-->
 <!--        <activity-->
@@ -55,8 +55,7 @@
 <!--            android:exported="true"/>-->
 <!--        <queries><provider android:authorities="com.facebook.katana.provider.PlatformProvider" /></queries>-->
 <!--        <activity android:name="com.facebook.ads.AudienceNetworkActivity" android:hardwareAccelerated="true" />-->
-        <activity android:name=".Activity1"/>
-        <activity android:name=".Activity2"/>
+
     </application>
 
 </manifest>

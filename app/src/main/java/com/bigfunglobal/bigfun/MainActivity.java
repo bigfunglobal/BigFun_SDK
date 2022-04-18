@@ -22,19 +22,10 @@ import android.widget.Toast;
 import com.android.billingclient.api.BillingClient;
 
 import com.bigfun.sdk.BigFunSDK;
-import com.bigfun.sdk.LogUtils;
-import com.bigfun.sdk.NetWork.BFRewardedVideoListener;
 
-import com.bigfun.sdk.model.BFLoginModel;
-import com.bigfun.sdk.model.ISPlacement;
 import com.bigfun.sdk.type.AdBFSize;
 
 
-
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.Task;
 
 
 import java.security.MessageDigest;
@@ -162,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BigFunSDK.BigFunLogout();
+//                BigFunSDK.BigFunLogout();
             }
         });
 
@@ -270,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        BigFunSDK.onActivityResult(requestCode, resultCode, data);
+//        BigFunSDK.onActivityResult(requestCode, resultCode, data);
         Log.e("DemoActivity", "requestCode=" + requestCode + " resultCode=" + resultCode+" data=" + data.toString());
         if (requestCode == FILE_SELECT_CODE && resultCode == RESULT_OK) {
             shareFileUrl = data.getData();
